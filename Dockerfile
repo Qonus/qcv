@@ -10,8 +10,8 @@ WORKDIR /app
 COPY --from=vendor /app/vendor ./vendor
 COPY . .
 ENV APP_ENV=prod
-RUN php bin/console importmap:install --env=prod
-RUN php bin/console asset-map:compile --env=prod
-RUN php bin/console cache:warmup --env=prod
+RUN php bin/console importmap:install
+RUN php bin/console asset-map:compile
+RUN php bin/console cache:warmup
 ENV SERVER_NAME=":80"
 EXPOSE 80
