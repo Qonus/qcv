@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -36,7 +38,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private bool $isVerified = false;
+    #[ORM\Column]
+    private bool $isBlocked = false;
 
+    /**
+     * @var Collection<int, OAuthAccount>
+     */
+    #[ORM\OneToMany(targetEntity: OAuthAccount::class, mappedBy: 'userId', orphanRemoval: true)]
+    private Collection $oauthAccounts;
+
+    public function __construct()
+    {
+        $this->oauthAccounts = new ArrayCollection();
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -101,17 +115,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
-    public function __serialize(): array
-    {
-        $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
-
-        return $data;
-    }
-
     #[\Deprecated]
     public function eraseCredentials(): void
     {
@@ -126,6 +129,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function isBlocked(): bool
+    {
+        return $this->isBlocked;
+    }
+
+    public function setIsBlocked(bool $isBlocked): static
+    {
+        $this->isBlocked = $isBlocked;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OAuthAccount>
+     */
+    public function getOAuthAccounts(): Collection
+    {
+        return $this->oauthAccounts;
+    }
+
+    public function addOAuthAccount(OAuthAccount $oauthAccount): static
+    {
+        if (!$this->oauthAccounts->contains($oauthAccount)) {
+            $this->oauthAccounts->add($oauthAccount);
+            $oauthAccount->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOAuthAccount(OAuthAccount $oauthAccount): static
+    {
+        if ($this->oauthAccounts->removeElement($oauthAccount)) {
+            // set the owning side to null (unless already changed)
+            if ($oauthAccount->getUserId() === $this) {
+                $oauthAccount->setUserId(null);
+            }
+        }
 
         return $this;
     }

@@ -1,11 +1,13 @@
 <?php
-namespace App\Security;
+namespace App\Security\OAuth;
 
+use App\Entity\OAuthAccount;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
-use League\OAuth2\Client\Provider\GoogleUser;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,44 +19,58 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
-class GoogleAuthenticator extends OAuth2Authenticator
+abstract class AbstractOAuthAuthenticator extends OAuth2Authenticator
 {
     public function __construct(
         private ClientRegistry $clientRegistry,
         private EntityManagerInterface $entityManager,
-        private RouterInterface $router
+        private RouterInterface $router,
+        private Security $security
     ) {}
-
-    public function supports(Request $request): ?bool
-    {
-        // continue ONLY if the current ROUTE matches the check ROUTE
-        return $request->attributes->get('_route') === 'connect_google_check';
-    }
-
+    abstract protected function getClientKey(): string;
+    abstract protected function getEmail(ResourceOwnerInterface $resourceOwner): string;
     public function authenticate(Request $request): Passport
     {
-        $client = $this->clientRegistry->getClient('google_main');
+        $client = $this->clientRegistry->getClient($this->getClientKey());
         $accessToken = $this->fetchAccessToken($client);
-
+        
         return new SelfValidatingPassport(
             new UserBadge($accessToken->getToken(), function() use ($accessToken, $client) {
-                /** @var GoogleUser $googleUser */
-                $googleUser = $client->fetchUserFromToken($accessToken);
-
-                $email = $googleUser->getEmail();
+                $oauthUser = $client->fetchUserFromToken($accessToken);
+                $email = $this->getEmail($oauthUser);
+                // Search OAuth User
+                $oauthRepo = $this->entityManager->getRepository(OAuthAccount::class);
+                $providerName = explode('_', $this->getClientKey())[0];
+                $providerUserId = $oauthUser->getId();
+                $oauthAccount = $oauthRepo->findOneBy([
+                    'provider' => $providerName,
+                    'providerUserId' => $providerUserId,
+                ]);
+                if ($oauthAccount) {
+                    return $oauthAccount->getUser();
+                }
 
                 // Search for the User
-                $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
-
-                // Create User
+                $userRepo = $this->entityManager->getRepository(User::class);
+                $user = $email ? $userRepo->findOneBy(['email' => $email]) : null;
                 if (!$user) {
+                    // Create User
                     $user = new User();
                     $user->setEmail($email);
-                    // TODO: Set other properties
                     $this->entityManager->persist($user);
                     $this->entityManager->flush();
                 }
 
+                // Create OAuth Account
+                $newOauth = new OAuthAccount();
+                $newOauth->setProvider($providerName);
+                $newOauth->setProviderUserId($providerUserId);
+                $newOauth->setUser($user);
+                $this->entityManager->persist($newOauth);
+                $this->entityManager->flush();
+
+                // Login
+                $this->security->login($user, 'form_login', 'main');
                 return $user;
             })
         );
