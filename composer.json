@@ -10,6 +10,8 @@
         "doctrine/doctrine-bundle": "^2.19",
         "doctrine/doctrine-migrations-bundle": "^3.7",
         "doctrine/orm": "^3.6",
+        "knpuniversity/oauth2-client-bundle": "^2.20",
+        "league/oauth2-google": "^5.0",
         "symfony/asset": "7.4.*",
         "symfony/asset-mapper": "7.4.*",
         "symfony/console": "7.4.*",
