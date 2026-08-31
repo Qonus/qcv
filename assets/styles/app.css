@@ -5,3 +5,16 @@
 body {
     background-color: var(--bs-body-bg);
 }
+
+/* 
+form {
+    margin: auto;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+} */
+
+input {
+    padding: 20px;
+}

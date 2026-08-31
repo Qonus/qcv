@@ -23,7 +23,7 @@ class GitHubAuthenticator extends AbstractOAuthAuthenticator
             if (!empty($userArray['email'])) {
                 return $userArray['email'];
             }
-        } 
+        }
         return $email;
     }
     protected function getClientKey(): string {
