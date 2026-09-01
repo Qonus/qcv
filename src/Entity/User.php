@@ -47,9 +47,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: OAuthAccount::class, mappedBy: 'userId', orphanRemoval: true)]
     private Collection $oauthAccounts;
 
+    /**
+     * @var Collection<int, AttributeValue>
+     */
+    #[ORM\OneToMany(targetEntity: AttributeValue::class, mappedBy: 'candidate', orphanRemoval: true)]
+    private Collection $attributeValues;
+
     public function __construct()
     {
         $this->oauthAccounts = new ArrayCollection();
+        $this->attributeValues = new ArrayCollection();
     }
     public function getId(): ?int
     {
@@ -169,6 +176,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($oauthAccount->getUserId() === $this) {
                 $oauthAccount->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AttributeValue>
+     */
+    public function getAttributeValues(): Collection
+    {
+        return $this->attributeValues;
+    }
+
+    public function addAttributeValue(AttributeValue $attributeValue): static
+    {
+        if (!$this->attributeValues->contains($attributeValue)) {
+            $this->attributeValues->add($attributeValue);
+            $attributeValue->setCandidate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttributeValue(AttributeValue $attributeValue): static
+    {
+        if ($this->attributeValues->removeElement($attributeValue)) {
+            // set the owning side to null (unless already changed)
+            if ($attributeValue->getCandidate() === $this) {
+                $attributeValue->setCandidate(null);
             }
         }
 

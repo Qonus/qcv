@@ -6,6 +6,7 @@ use App\Repository\OAuthAccountRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OAuthAccountRepository::class)]
+#[ORM\UniqueConstraint(name: 'UNIQ_USER_PROVIDER', fields: ['provider', 'providerUserId'])]
 class OAuthAccount
 {
     #[ORM\Id]

@@ -1,0 +1,144 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\AttributeValueRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: AttributeValueRepository::class)]
+#[ORM\UniqueConstraint(name: 'UNIQ_ATTRIBUTE_VALUE', fields: ['candidate', 'attribute'])]
+class AttributeValue
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\ManyToOne(inversedBy: 'attributeValues')]
+    #[ORM\JoinColumn(nullable: false, onDelete:'CASCADE')]
+    private ?User $candidate = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Attribute $attribute = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $valueString = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $valueText = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    private ?string $valueNumeric = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTime $valueDate = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTime $valueDateEnd = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $valueBoolean = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getCandidate(): ?User
+    {
+        return $this->candidate;
+    }
+
+    public function setCandidate(?User $candidate): static
+    {
+        $this->candidate = $candidate;
+
+        return $this;
+    }
+
+    public function getAttribute(): ?Attribute
+    {
+        return $this->attribute;
+    }
+
+    public function setAttribute(?Attribute $attribute): static
+    {
+        $this->attribute = $attribute;
+
+        return $this;
+    }
+
+    public function getValueString(): ?string
+    {
+        return $this->valueString;
+    }
+
+    public function setValueString(?string $valueString): static
+    {
+        $this->valueString = $valueString;
+
+        return $this;
+    }
+
+    public function getValueText(): ?string
+    {
+        return $this->valueText;
+    }
+
+    public function setValueText(?string $valueText): static
+    {
+        $this->valueText = $valueText;
+
+        return $this;
+    }
+
+    public function getValueNumeric(): ?string
+    {
+        return $this->valueNumeric;
+    }
+
+    public function setValueNumeric(?string $valueNumeric): static
+    {
+        $this->valueNumeric = $valueNumeric;
+
+        return $this;
+    }
+
+    public function getValueDate(): ?\DateTime
+    {
+        return $this->valueDate;
+    }
+
+    public function setValueDate(?\DateTime $valueDate): static
+    {
+        $this->valueDate = $valueDate;
+
+        return $this;
+    }
+
+    public function getValueDateEnd(): ?\DateTime
+    {
+        return $this->valueDateEnd;
+    }
+
+    public function setValueDateEnd(?\DateTime $valueDateEnd): static
+    {
+        $this->valueDateEnd = $valueDateEnd;
+
+        return $this;
+    }
+
+    public function isValueBoolean(): ?bool
+    {
+        return $this->valueBoolean;
+    }
+
+    public function setValueBoolean(?bool $valueBoolean): static
+    {
+        $this->valueBoolean = $valueBoolean;
+
+        return $this;
+    }
+}
