@@ -6,10 +6,10 @@ RUN composer install --no-dev --no-scripts --no-interaction --optimize-autoloade
 
 # --- runtime ---
 FROM dunglas/frankenphp:1-php8.3-alpine AS app
+RUN install-php-extensions pdo_pgsql
 WORKDIR /app
 COPY --from=vendor /app/vendor ./vendor
 COPY . .
-ENV APP_ENV=prod
 RUN php bin/console importmap:install
 RUN php bin/console asset-map:compile
 RUN php bin/console cache:warmup

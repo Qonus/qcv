@@ -9,6 +9,8 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
+/docker/
+
 ###> symfony/asset-mapper ###
 /public/assets/
 /assets/vendor/

@@ -1,0 +1,8 @@
+docker/db/data
+docker/db/data/*
+
+.git
+.gitignore
+var/
+vendor/
+assets/vendor/
