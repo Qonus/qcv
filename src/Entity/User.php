@@ -91,8 +91,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        if (empty($roles)) {
+            $roles[] = 'ROLE_CANDIDATE';
+        }
 
         return array_unique($roles);
     }
@@ -148,6 +149,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsBlocked(bool $isBlocked): static
     {
         $this->isBlocked = $isBlocked;
+
+        return $this;
+    }
+
+    public function getStatus(): string
+    {
+        if ($this->isBlocked) {
+            return 'blocked';
+        }
+
+        return $this->isVerified ? 'verified' : 'unverified';
+    }
+
+    public function setStatus(string $status): static
+    {
+        match ($status) {
+            'blocked' => [
+                $this->isBlocked = true,
+            ],
+            'verified' => [
+                $this->isBlocked = false,
+                $this->isVerified = true,
+            ],
+            'unverified' => [
+                $this->isBlocked = false,
+                $this->isVerified = false,
+            ],
+        };
 
         return $this;
     }
