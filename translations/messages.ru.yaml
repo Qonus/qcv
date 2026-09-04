@@ -1,0 +1,36 @@
+auth:
+  fields:
+    email: "Электронная почта"
+    password: "Пароль"
+    remember_me: "Запомнить меня"
+    agree_terms: "Я согласен с условиями использования"
+
+  login:
+    page_title: "Вход!"
+    card_title: "Пожалуйста, войдите!"
+    logged_in_as: "Вы вошли как %username%,"
+    logout: "Выйти"
+    submit: "Войти"
+    no_account: "Ещё нет аккаунта?"
+    sign_up: "Зарегистрироваться"
+
+  register:
+    page_title: "Регистрация"
+    card_title: "Создать аккаунт"
+    submit: "Зарегистрироваться"
+    already_have_account: "Уже есть аккаунт?"
+    sign_in: "Войти"
+
+  social:
+    divider: "или"
+    google: "Продолжить через Google"
+    github: "Продолжить через GitHub"
+navbar:
+  positions: "Вакансии"
+  profile: "Профиль"
+  appearance: "Оформление"
+  dark: "Тёмная"
+  light: "Светлая"
+  language: "Язык"
+  logout: "Выйти"
+  login: "Войти"

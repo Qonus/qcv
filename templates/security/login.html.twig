@@ -1,7 +1,7 @@
 {% extends 'security/_auth_layout.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
-{% block card_title %}Please Log in!{% endblock %}
+{% block title %}{{ 'auth.login.page_title'|trans }}{% endblock %}
+{% block card_title %}{{ 'auth.login.card_title'|trans }}{% endblock %}
 
 {% block auth_content %}
     <form method="post">
@@ -11,34 +11,34 @@
 
         {% if app.user %}
             <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
+                {{ 'auth.login.logged_in_as'|trans({'%username%': app.user.userIdentifier}) }}
+                <a href="{{ logout_path() }}">{{ 'auth.login.logout'|trans }}</a>
             </div>
         {% endif %}
         
         <div class="mb-3">
-        <label class="form-label" for="username">Email</label>
-        <input type="email" name="_username" id="username" class="form-control form-control-lg" required autofocus />
+            <label class="form-label" for="username">{{ 'auth.fields.email'|trans }}</label>
+            <input type="email" name="_username" id="username" class="form-control form-control-lg" required autofocus />
         </div>
         <div class="mb-5">
-        <label class="form-label" for="password">Password</label>
-        <input type="password" name="_password" id="password" class="form-control form-control-lg" autocomplete="current-password" required>
+            <label class="form-label" for="password">{{ 'auth.fields.password'|trans }}</label>
+            <input type="password" name="_password" id="password" class="form-control form-control-lg" autocomplete="current-password" required>
         </div>
         <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
 
         {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
-
-            <div class="checkbox mb-3">
-                <input type="checkbox" name="_remember_me" id="_remember_me">
-                <label for="_remember_me">Remember me</label>
-            </div>
+        <div class="checkbox mb-3">
+            <input type="checkbox" name="_remember_me" id="_remember_me">
+            <label for="_remember_me">{{ 'auth.login.remember_me'|trans }}</label>
+        </div>
         #}
+
         <button class="btn btn-lg btn-primary mb-3 w-100" type="submit">
-            Sign in
+            {{ 'auth.login.submit'|trans }}
         </button>
         <div class="mb-4 text-center">
-            <span class="text-muted small">Don't Have an Account?</span>
-            <a href="{{ path('app_register') }}" class="small text-decoration-none fw-semibold">Sign up</a>
+            <span class="text-muted small">{{ 'auth.login.no_account'|trans }}</span>
+            <a href="{{ path('app_register') }}" class="small text-decoration-none fw-semibold">{{ 'auth.login.sign_up'|trans }}</a>
         </div>
+    </form>
 {% endblock %}

@@ -4,16 +4,14 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute; // 1. ADD THIS IMPORT
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,7 +26,7 @@ class UserCrudController extends AbstractCrudController
     {
         return User::class;
     }
-
+    // TODO: make users be able to have only on role for simplicity, it should be done right?
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -48,9 +46,9 @@ class UserCrudController extends AbstractCrudController
                     'Unverified' => 'unverified',
                 ])
                 ->renderAsBadges([
-                    'blocked' => 'danger',     // Red badge
-                    'verified' => 'success',   // Green badge
-                    'unverified' => 'warning', // Yellow badge
+                    'blocked' => 'danger',
+                    'verified' => 'success',
+                    'unverified' => 'warning',
                 ]),
         ];
     }
@@ -64,20 +62,17 @@ class UserCrudController extends AbstractCrudController
         $unblockBatch = Action::new('batchUnblock', 'Unblock', 'fa fa-unlock')
             ->linkToCrudAction('batchUnblock')
             ->addCssClass('btn btn-success');
-
-        $cleanBatch = Action::new('batchClean', 'Clean Unverified', 'fa fa-trash')
+        
+        $cleanBatch = Action::new('batchCleanUnverified', 'Clean Unverified', 'fa fa-clean')
             ->linkToCrudAction('batchCleanUnverified')
             ->addCssClass('btn btn-danger');
 
-        return $actions
-            ->remove(Crud::PAGE_INDEX, Action::EDIT)
-            ->remove(Crud::PAGE_INDEX, Action::DELETE)
+        return $actions            
             ->addBatchAction($blockBatch)
             ->addBatchAction($unblockBatch)
             ->addBatchAction($cleanBatch);
     }
 
-    // 2. ADD #[AdminRoute] ATTRIBUTE TO ALL CUSTOM ACTIONS
     #[AdminRoute(path: '/batch-block', name: 'batchBlock')]
     public function batchBlock(BatchActionDto $batchActionDto): Response
     {
@@ -112,7 +107,7 @@ class UserCrudController extends AbstractCrudController
         return $this->getRedirectResponse();
     }
 
-    #[AdminRoute(path: '/batch-clean-unverified', name: 'batchCleanUnverified')]
+    #[AdminRoute(path: '/batch-clean', name: 'batchCleanUnverified')]
     public function batchCleanUnverified(BatchActionDto $batchActionDto): Response
     {
         $className = $batchActionDto->getEntityFqcn();

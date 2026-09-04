@@ -1,11 +1,6 @@
 {% extends '/base.html.twig' %}
 
 {% block body %}
-{% if app.user %}
-    <div class="mb-3">
-        You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
-    </div>
-{% endif %}
 <div class="jumbotron text-center">
   <h1>My First Bootstrap Page</h1>
   <p>Resize this responsive page to see the effect!</p> 

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\Theme;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,7 +29,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    private array $roles = [];
+    private array $roles = ["ROLE_CANDIDATE"];
 
     /**
      * @var string The hashed password
@@ -52,6 +53,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: AttributeValue::class, mappedBy: 'candidate', orphanRemoval: true)]
     private Collection $attributeValues;
+
+    #[ORM\Column(enumType: Theme::class)]
+    private ?Theme $theme = Theme::DARK;
+
+    #[ORM\Column(length: 5, nullable: false)]
+    private ?string $locale = "en";
 
     public function __construct()
     {
@@ -193,7 +200,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->oauthAccounts->contains($oauthAccount)) {
             $this->oauthAccounts->add($oauthAccount);
-            $oauthAccount->setUserId($this);
+            $oauthAccount->setUser($this);
         }
 
         return $this;
@@ -203,8 +210,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->oauthAccounts->removeElement($oauthAccount)) {
             // set the owning side to null (unless already changed)
-            if ($oauthAccount->getUserId() === $this) {
-                $oauthAccount->setUserId(null);
+            if ($oauthAccount->getUser() === $this) {
+                $oauthAccount->setUser(null);
             }
         }
 
@@ -237,6 +244,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $attributeValue->setCandidate(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTheme(): ?Theme
+    {
+        return $this->theme;
+    }
+
+    public function setTheme(Theme $theme): static
+    {
+        $this->theme = $theme;
+
+        return $this;
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(?string $locale): static
+    {
+        $this->locale = $locale;
 
         return $this;
     }

@@ -1,0 +1,36 @@
+auth:
+  fields:
+    email: "Email"
+    password: "Password"
+    remember_me: "Remember me"
+    agree_terms: "I agree to the terms and conditions"
+
+  login:
+    page_title: "Log in!"
+    card_title: "Please Log in!"
+    logged_in_as: "You are logged in as %username%,"
+    logout: "Logout"
+    submit: "Sign in"
+    no_account: "Don't Have an Account?"
+    sign_up: "Sign up"
+
+  register:
+    page_title: "Register"
+    card_title: "Create an Account"
+    submit: "Register"
+    already_have_account: "Already have an account?"
+    sign_in: "Sign in"
+
+  social:
+    divider: "or"
+    google: "Continue with Google"
+    github: "Continue with GitHub"
+navbar:
+  positions: "Positions"
+  profile: "Profile"
+  appearance: "Appearance"
+  dark: "Dark"
+  light: "Light"
+  language: "Locale"
+  logout: "Logout"
+  login: "Sign in"

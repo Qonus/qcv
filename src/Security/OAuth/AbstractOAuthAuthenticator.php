@@ -57,7 +57,7 @@ abstract class AbstractOAuthAuthenticator extends OAuth2Authenticator
                     // Create User
                     $user = new User();
                     $user->setEmail($email);
-                    $user->setRoles(['ROLE_CANDIDATE']);
+                    // $user->setRoles(['ROLE_CANDIDATE']);
                     $this->entityManager->persist($user);
                     $this->entityManager->flush();
                 }

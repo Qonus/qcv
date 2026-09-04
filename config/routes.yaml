@@ -9,3 +9,13 @@
 
 controllers:
     resource: routing.controllers
+    type: attribute
+    prefix: /{_locale}
+    requirements:
+        _locale: en|ru
+    defaults:
+        _locale: en
+
+_settings:
+    resource: ../src/Controller/SettingsController.php
+    type: attribute
