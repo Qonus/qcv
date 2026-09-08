@@ -30,6 +30,10 @@ class AttributeCategory
         $this->attributes = new ArrayCollection();
     }
 
+    public function __tostring(): string {
+        return $this->name;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -36,15 +36,15 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                 {# TODO: Add profile page #}
-                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href={{ path('app_profile', {email: app.user.email}) }}>{{ 'navbar.profile'|trans }}</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header">Appearance</h6></li>
                 <li><a class="dropdown-item {% if theme == 'dark' %}active{% endif %}"
-                    href={{ path('app_switch_theme', {theme: 'dark'}) }}>{{ 'dark'|trans }}</a></li>
+                    href={{ path('app_switch_theme', {theme: 'dark'}) }}>{{ 'navbar.dark'|trans }}</a></li>
                 <li><a class="dropdown-item {% if theme == 'light' %}active{% endif %}"
-                    href={{ path('app_switch_theme', {theme: 'light'}) }}>{{ 'light'|trans }}</a></li>
+                    href={{ path('app_switch_theme', {theme: 'light'}) }}>{{ 'navbar.light'|trans }}</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><h6 class="dropdown-header">{{ 'language'|trans }}</h6></li>
+                <li><h6 class="dropdown-header">{{ 'navbar.language'|trans }}</h6></li>
                 <li><a class="dropdown-item {% if locale == 'en' %}active{% endif %}"
                     href={{ path(route, params|merge({'_locale': 'en'})) }}>English</a></li>
                 <li><a class="dropdown-item {% if locale == 'ru' %}active{% endif %}"
@@ -55,7 +55,7 @@
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
                         <button type="submit" class="dropdown-item" title="Logout" data-bs-toggle="tooltip">
                             <i class="bi bi-box-arrow-right"></i>
-                            <span class="">{{ 'logout'|trans }}</span>
+                            <span class="">{{ 'navbar.logout'|trans }}</span>
                         </button>
                     </form>
                 </li>
@@ -64,8 +64,8 @@
             
         </ul>
         {% else %}
-        <a class="btn btn-outline-primary" href="/login">
-            {{"login"|trans}}
+        <a class="btn btn-outline-primary" href={{ path('app_login') }}>
+            {{"navbar.login"|trans}}
         </a>
         {% endif %}
     </div>

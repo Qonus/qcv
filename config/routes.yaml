@@ -19,3 +19,6 @@ controllers:
 _settings:
     resource: ../src/Controller/SettingsController.php
     type: attribute
+_oauth:
+    resource: ../src/Controller/OAuth/OAuthController.php
+    type: attribute

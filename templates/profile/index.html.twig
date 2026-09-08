@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% if app.user %}{{app.user.email}}{% endif %}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+<h1>Hello {% if app.user %}{{app.user.email}}{% endif %}</h1>
+
+</div>
+
+{% endblock %}

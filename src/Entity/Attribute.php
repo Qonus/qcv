@@ -4,10 +4,11 @@ namespace App\Entity;
 
 use App\Enum\AttributeDataType;
 use App\Repository\AttributeCategoryRepository;
+use App\Repository\AttributeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: AttributeCategoryRepository::class)]
+#[ORM\Entity(repositoryClass: AttributeRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_ATTRIBUTE_NAME', fields: ['name'])]
 class Attribute
 {
@@ -19,7 +20,7 @@ class Attribute
     #[ORM\Column(length: 50)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'description')]
+    #[ORM\ManyToOne(targetEntity: AttributeCategory::class, inversedBy: 'category')]
     #[ORM\JoinColumn(nullable: false)]
     private ?AttributeCategory $category = null;
 
