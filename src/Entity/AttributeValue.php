@@ -84,7 +84,7 @@ class AttributeValue
     {
         return match ($this->attribute?->getDataType()) {
             AttributeDataType::BOOLEAN => $this->isValueBoolean(),
-            AttributeDataType::STRING => $this->getValueNumeric(),
+            AttributeDataType::STRING => $this->getValueString(),
             AttributeDataType::TEXT    => $this->getValueText(),
             AttributeDataType::DATE    => $this->getValueDate(),
             AttributeDataType::PERIOD  => [

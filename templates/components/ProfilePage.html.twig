@@ -36,6 +36,14 @@
                     value={{this.location}}>
                 <label for="location">{{ "profile.location"|trans }}</label>
             </div>
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" 
+                        class="btn btn-primary px-4" 
+                        data-action="live#action" 
+                        data-live-action-param="save">
+                    {{ 'profile.save'|trans }}
+                </button>
+            </div>
             {# {% for fieldName in ['First Name', 'Last Name', 'Location'] %}
                 {% set attr = builtinAttributes|filter(a => a.name == fieldName)|first %}
                 {% set val = attr ? valuesByAttributeId[attr.id] ?? null : null %}

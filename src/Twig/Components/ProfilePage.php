@@ -3,10 +3,11 @@
 namespace App\Twig\Components;
 
 use App\Entity\User;
+use App\Enum\BuiltinAttribute;
 use App\Repository\AttributeRepository;
 use App\Repository\AttributeValueRepository;
+use App\Service\CandidateService;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
@@ -33,6 +34,7 @@ class ProfilePage
 
     public function __construct(
         private AttributeRepository $repo,
+        private CandidateService $candidateService,
         private AttributeValueRepository $attributeValueRepository,
         private Security $security)
     {
@@ -45,8 +47,14 @@ class ProfilePage
     }
 
     // TODO: automatically call this function every 5-10 seconds during editing
+    #[LiveAction]
     public function save(): void {
-        // TODO: save the values
+        $this->candidateService->saveBuiltinValues($this->getUser(), [
+            BuiltinAttribute::FIRST_NAME->value => $this->firstName,
+            BuiltinAttribute::LAST_NAME->value => $this->lastName,
+            BuiltinAttribute::LOCATION->value => $this->location,
+            BuiltinAttribute::IMAGE_URL->value => $this->image,
+        ]);
 
         // TODO: handle the case where saving fails due to the old version
     }

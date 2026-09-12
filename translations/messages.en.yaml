@@ -39,3 +39,4 @@ profile:
   firstName: "First Name"
   lastName: "Last Name"
   location: "Location"
+  save: "Save"

@@ -7,6 +7,7 @@ use App\Entity\AttributeOption;
 use App\Entity\AttributeValue;
 use App\Entity\User;
 use App\Enum\AttributeDataType;
+use App\Enum\BuiltinAttribute;
 use App\Repository\AttributeValueRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
@@ -24,11 +25,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/profile')]
 class ProfileController extends AbstractController
 {
-    private const BUILTIN_FIRST_NAME = 'First Name';
-    private const BUILTIN_LAST_NAME = 'Last Name';
-    private const BUILTIN_LOCATION = 'Location';
-    private const BUILTIN_PHOTO = 'Personal Photo';
-
     public function __construct(
         private readonly EntityManagerInterface $em,
         #[Autowire('%env(CLOUDINARY_CLOUD_NAME)%')] private readonly string $cloudinaryCloudName,
@@ -48,10 +44,10 @@ class ProfileController extends AbstractController
         }
 
         return $this->render('profile/index.html.twig', [
-            'firstName' => ($valuesByName[self::BUILTIN_FIRST_NAME] ?? null)?->getValue() ?? '',
-            'lastName'  => ($valuesByName[self::BUILTIN_LAST_NAME]  ?? null)?->getValue() ?? '',
-            'location'  => ($valuesByName[self::BUILTIN_LOCATION]   ?? null)?->getValue() ?? '',
-            'image'     => ($valuesByName[self::BUILTIN_PHOTO]      ?? null)?->getValue() ?? '',
+            'firstName' => ($valuesByName[BuiltinAttribute::FIRST_NAME->value] ?? null)?->getValue() ?? '',
+            'lastName'  => ($valuesByName[BuiltinAttribute::LAST_NAME->value]  ?? null)?->getValue() ?? '',
+            'location'  => ($valuesByName[BuiltinAttribute::LOCATION->value]   ?? null)?->getValue() ?? '',
+            'image'     => ($valuesByName[BuiltinAttribute::IMAGE_URL->value]  ?? null)?->getValue() ?? '',
         ]);
     }
 

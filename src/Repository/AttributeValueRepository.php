@@ -18,6 +18,19 @@ class AttributeValueRepository extends ServiceEntityRepository
         parent::__construct($registry, AttributeValue::class);
     }
 
+    public function findOneByUserAndName(User $user, string $attributeName, bool $isBuiltin = true): ?AttributeValue {
+        return $this->createQueryBuilder('av')
+            ->innerJoin('av.attribute', 'a')
+            ->andWhere('av.candidate = :user')
+            ->setParameter('user', $user)
+            ->andWhere('a.name = :name')
+            ->setParameter('name', $attributeName)
+            ->andWhere('a.isBuiltin = :isBuiltin')
+            ->setParameter('isBuiltin', $isBuiltin)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     // /**
     //  * @return array<string, object{
     //  *     id: int,

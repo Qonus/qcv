@@ -26,7 +26,8 @@ class UserCrudController extends AbstractCrudController
     {
         return User::class;
     }
-    // TODO: make users be able to have only on role for simplicity, it should be done right?
+    // TODO: make users be able to have only one role for simplicity, it should be done right?
+    // I decided to leave it for later as its not crucial.
     public function configureFields(string $pageName): iterable
     {
         return [
