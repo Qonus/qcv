@@ -2,35 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Attribute;
+use App\Entity\AttributeOption;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use TypeaheadRepositoryInterface;
 
 /**
- * @extends ServiceEntityRepository<Attribute>
+ * @extends ServiceEntityRepository<AttributeOption>
  */
-class AttributeRepository extends ServiceEntityRepository
+class AttributeOptionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Attribute::class);
-    }
-
-    // TODO: Get only attributes that aren't already in user's attribute value list.
-    public function search(string $query): array {
-        return $this->createQueryBuilder('a')
-        ->andWhere("a.isBuiltin = false")
-        ->orderBy('a.name', 'ASC')
-        ->setMaxResults(20)
-        ->andWhere("LOWER(a.name) LIKE LOWER(:q)")
-        ->setParameter("q", '%'.$query.'%')
-        ->getQuery()
-        ->getResult();
+        parent::__construct($registry, AttributeOption::class);
     }
 
     //    /**
-    //     * @return Attribute[] Returns an array of Attribute objects
+    //     * @return AttributeOption[] Returns an array of AttributeOption objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -44,7 +31,7 @@ class AttributeRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Attribute
+    //    public function findOneBySomeField($value): ?AttributeOption
     //    {
     //        return $this->createQueryBuilder('a')
     //            ->andWhere('a.exampleField = :val')

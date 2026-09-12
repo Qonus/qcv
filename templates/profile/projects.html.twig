@@ -1,0 +1,32 @@
+{% extends 'profile/index.html.twig' %}
+{% block title %}Projects{% endblock %}
+{% block contents %}
+<div class="tab-pane">
+    <div class="d-flex justify-content-end mb-3">
+        {# <a href={{ path('app_project_new') }} class="btn btn-primary btn-sm">+ Add Project</a> #}
+    </div>
+    <table class="table table-hover align-middle">
+        <thead><tr><th>Name</th><th>Period</th><th>Tags</th><th class="text-end"></th></tr></thead>
+        <tbody>
+        {# {% for project in projects %}
+            <tr>
+                <td>{{ project.name }}</td>
+                <td>{{ project.periodStart|date('Y-m') }} – {{ project.periodEnd ? project.periodEnd|date('Y-m') : 'Present' }}</td>
+                <td>{% for tag in project.tags %}<span class="badge text-bg-light border me-1">{{ tag.name }}</span>{% endfor %}</td>
+                <td class="text-end">
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-link" data-bs-toggle="dropdown">⋮</button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ path('app_project_edit', {id: project.id}) }}">Edit</a></li>
+                            <li><button class="dropdown-item text-danger" data-project-delete="{{ project.id }}">Delete</button></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4" class="text-muted text-center py-4">No projects yet.</td></tr>
+        {% endfor %} #}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

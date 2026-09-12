@@ -9,16 +9,16 @@
 
 controllers:
     resource: routing.controllers
-    type: attribute
-    prefix: /{_locale}
-    requirements:
-        _locale: en|ru
-    defaults:
-        _locale: en
+#     type: attribute
+#     prefix: /{_locale}
+#     requirements:
+#         _locale: en|ru
+#     defaults:
+#         _locale: en
 
-_settings:
-    resource: ../src/Controller/SettingsController.php
-    type: attribute
-_oauth:
-    resource: ../src/Controller/OAuth/OAuthController.php
-    type: attribute
+# _settings:
+#     resource: ../src/Controller/SettingsController.php
+#     type: attribute
+# _oauth:
+#     resource: ../src/Controller/OAuth/OAuthController.php
+#     type: attribute

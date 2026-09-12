@@ -39,9 +39,7 @@ class RegistrationController extends AbstractController
             $plainPassword = $form->get('plainPassword')->getData();
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
             // $user->setRoles(['ROLE_CANDIDATE']);
-
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $entityManager->getRepository(User::class)->createUser($user);
 
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())

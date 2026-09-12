@@ -63,7 +63,7 @@ class UserCrudController extends AbstractCrudController
             ->linkToCrudAction('batchUnblock')
             ->addCssClass('btn btn-success');
         
-        $cleanBatch = Action::new('batchCleanUnverified', 'Clean Unverified', 'fa fa-clean')
+        $cleanBatch = Action::new('batchCleanUnverified', 'Clean Unverified', 'fa fa-broom')
             ->linkToCrudAction('batchCleanUnverified')
             ->addCssClass('btn btn-danger');
 

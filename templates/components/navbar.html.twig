@@ -1,6 +1,6 @@
 
-{% set route = app.request.attributes.get('_route') %}
-{% set params = app.request.attributes.get('_route_params') %}
+{# {% set route = app.request.attributes.get('_route') %}
+{% set params = app.request.attributes.get('_route_params') %} #}
 <nav class="navbar navbar-expand-md sticky-top bg-body" style="min-height: 70px;">
   <div class="container-fluid bg-body">
     <a class="navbar-brand" href="/">Quick CV</a>
@@ -10,7 +10,7 @@
     <div class="collapse navbar-collapse" id="navbarContent">
         <ul class="navbar-nav me-auto mb-lg-0">
             <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#">Positions</a>
+            <a class="nav-link" aria-current="page" href="#">{{"navbar.positions"|trans}}</a>
             </li>
             <li class="nav-item">
             <a class="nav-link" href="#">Link</a>
@@ -35,8 +35,7 @@
                     {{ app.user.email }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                {# TODO: Add profile page #}
-                <li><a class="dropdown-item" href={{ path('app_profile', {email: app.user.email}) }}>{{ 'navbar.profile'|trans }}</a></li>
+                <li><a class="dropdown-item" href={{ path('app_profile') }}>{{ 'navbar.profile'|trans }}</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header">Appearance</h6></li>
                 <li><a class="dropdown-item {% if theme == 'dark' %}active{% endif %}"
@@ -46,9 +45,9 @@
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header">{{ 'navbar.language'|trans }}</h6></li>
                 <li><a class="dropdown-item {% if locale == 'en' %}active{% endif %}"
-                    href={{ path(route, params|merge({'_locale': 'en'})) }}>English</a></li>
+                    href={{ path('app_switch_locale', {locale: 'en'}) }}>English</a></li>
                 <li><a class="dropdown-item {% if locale == 'ru' %}active{% endif %}"
-                    href={{ path(route, params|merge({'_locale': 'ru'})) }}>Русский</a></li>
+                    href={{ path('app_switch_locale', {locale: 'ru'}) }}>Русский</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li class="">
                     <form action={{path('app_logout')}} method="POST" class="d-flex m-0">

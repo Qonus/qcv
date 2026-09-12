@@ -45,7 +45,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, OAuthAccount>
      */
-    #[ORM\OneToMany(targetEntity: OAuthAccount::class, mappedBy: 'userId', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: OAuthAccount::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $oauthAccounts;
 
     /**
@@ -60,10 +60,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 5, nullable: false)]
     private ?string $locale = "en";
 
+    /**
+     * @var Collection<int, Project>
+     */
+    #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'candidate', orphanRemoval: true)]
+    private Collection $projects;
+
     public function __construct()
     {
         $this->oauthAccounts = new ArrayCollection();
         $this->attributeValues = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
     public function getId(): ?int
     {
@@ -268,6 +275,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLocale(?string $locale): static
     {
         $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): static
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects->add($project);
+            $project->setCandidate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): static
+    {
+        if ($this->projects->removeElement($project)) {
+            // set the owning side to null (unless already changed)
+            if ($project->getCandidate() === $this) {
+                $project->setCandidate(null);
+            }
+        }
 
         return $this;
     }

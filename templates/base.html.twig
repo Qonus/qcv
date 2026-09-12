@@ -1,4 +1,4 @@
-{% set theme = app.user ? app.user.theme.value : 'light' %}
+{% set theme = app.user ? app.user.theme.value : app.request.cookies.get("theme") %}
 {% set locale = app.request.locale %}
 <!DOCTYPE html>
 <html lang={{ locale }} data-bs-theme={{ theme }}>

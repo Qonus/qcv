@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Enum\AttributeDataType;
 use App\Repository\AttributeCategoryRepository;
 use App\Repository\AttributeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,7 +22,7 @@ class Attribute
     #[ORM\Column(length: 50)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(targetEntity: AttributeCategory::class, inversedBy: 'category')]
+    #[ORM\ManyToOne(targetEntity: AttributeCategory::class, inversedBy: 'attributes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?AttributeCategory $category = null;
 
@@ -31,7 +33,18 @@ class Attribute
     private ?AttributeDataType $dataType = null;
 
     #[ORM\Column]
-    private ?bool $isBuiltin = null;
+    private ?bool $isBuiltin = false;
+
+    /**
+     * @var Collection<int, AttributeOption>
+     */
+    #[ORM\OneToMany(targetEntity: AttributeOption::class, mappedBy: 'attribute', orphanRemoval: true)]
+    private Collection $options;
+
+    public function __construct()
+    {
+        $this->options = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -94,6 +107,35 @@ class Attribute
     public function setIsBuiltin(bool $isBuiltin): static
     {
         $this->isBuiltin = $isBuiltin;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AttributeOption>
+     */
+    public function getOptions(): Collection
+    {
+        return $this->options;
+    }
+
+    public function addOption(AttributeOption $option): static
+    {
+        if (!$this->options->contains($option)) {
+            $this->options->add($option);
+            $option->setAttribute($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOption(AttributeOption $option): static
+    {
+        if ($this->options->removeElement($option)) {
+            if ($option->getAttribute() === $this) {
+                $option->setAttribute(null);
+            }
+        }
 
         return $this;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\AttributeDataType;
 use App\Repository\AttributeValueRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -41,6 +42,15 @@ class AttributeValue
     #[ORM\Column(nullable: true)]
     private ?bool $valueBoolean = null;
 
+    #[ORM\ManyToOne]
+    private ?AttributeOption $valueOption = null;
+
+    #[ORM\Column]
+    private ?int $version = 0;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $valueImageUrl = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -68,6 +78,23 @@ class AttributeValue
         $this->attribute = $attribute;
 
         return $this;
+    }
+
+    public function getValue(): mixed
+    {
+        return match ($this->attribute?->getDataType()) {
+            AttributeDataType::BOOLEAN => $this->isValueBoolean(),
+            AttributeDataType::STRING => $this->getValueNumeric(),
+            AttributeDataType::TEXT    => $this->getValueText(),
+            AttributeDataType::DATE    => $this->getValueDate(),
+            AttributeDataType::PERIOD  => [
+                'start' => $this->getValueDate(),
+                'end' => $this->getValueDateEnd()],
+            AttributeDataType::IMAGE => $this->getValueImageUrl(),
+            AttributeDataType::NUMERIC => $this->getValueNumeric(),
+            AttributeDataType::SELECT => $this->getValueOption(),
+            default => 'NaN',
+        };
     }
 
     public function getValueString(): ?string
@@ -138,6 +165,42 @@ class AttributeValue
     public function setValueBoolean(?bool $valueBoolean): static
     {
         $this->valueBoolean = $valueBoolean;
+
+        return $this;
+    }
+
+    public function getVersion(): ?int
+    {
+        return $this->version;
+    }
+
+    public function setVersion(int $version): static
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    public function getValueOption(): ?AttributeOption
+    {
+        return $this->valueOption;
+    }
+
+    public function setValueOption(?AttributeOption $valueOption): static
+    {
+        $this->valueOption = $valueOption;
+
+        return $this;
+    }
+
+    public function getValueImageUrl(): ?string
+    {
+        return $this->valueImageUrl;
+    }
+
+    public function setValueImageUrl(?string $valueImageUrl): static
+    {
+        $this->valueImageUrl = $valueImageUrl;
 
         return $this;
     }

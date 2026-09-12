@@ -21,7 +21,7 @@ class OAuthAccount
     private ?string $providerUserId = null;
 
     #[ORM\ManyToOne(inversedBy: 'oauthAccounts')]
-    #[ORM\JoinColumn(name: "user_id", nullable: false, onDelete:"CASCADE")]
+    #[ORM\JoinColumn(nullable: false, onDelete:"CASCADE")]
     private ?User $user = null;
 
     public function getId(): ?int

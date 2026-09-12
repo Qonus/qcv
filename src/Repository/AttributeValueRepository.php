@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\AttributeValue;
+use App\Entity\User;
+use App\Enum\AttributeDataType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +16,57 @@ class AttributeValueRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, AttributeValue::class);
+    }
+
+    // /**
+    //  * @return array<string, object{
+    //  *     id: int,
+    //  *     name: string,
+    //  *     type: AttributeDataType,
+    //  *     value: mixed,
+    //  *     category: object,
+    //  *     description: ?string,
+    //  *     version: int,
+    //  *     options: mixed
+    //  * }>
+    //  */
+    public function findByUser(User $user, bool $isBuiltin): array {
+        /** @var AttributeValue[] $results */
+        return $this->createQueryBuilder('av')
+            // Avoid n+1 queries by pre-fetching attributes, categories and options
+            ->innerJoin('av.attribute', 'a')
+            ->leftJoin('a.category', 'ac')
+            ->leftJoin('av.valueOption', 'vo')
+            ->leftJoin('a.options', 'opts')
+            ->addSelect('a', 'ac', 'vo', 'opts')
+
+            ->andWhere('a.isBuiltin = :isBuiltin')
+            ->setParameter('isBuiltin', $isBuiltin)
+            ->andWhere('av.candidate = :user')
+            ->setParameter('user', $user)
+            ->orderBy('a.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+        
+        // $output = [];
+
+        // foreach ($results as $av) {
+        //     $attribute = $av->getAttribute();
+        //     $name = $attribute->getName();
+
+        //     $output[$name] = (object) [
+        //         'id' => $av->getId(),
+        //         'name' => $name,
+        //         'type' => $av->getAttribute()->getDataType(),
+        //         'value' => $av->getValue(),
+        //         'version' => $av->getVersion(),
+        //         'category' => $attribute->getCategory(),
+        //         'description' => $attribute->getDescription(),
+        //         'options'     => $attribute->getOptions(),
+        //     ];
+        // }
+
+        // return $output;
     }
 
     //    /**

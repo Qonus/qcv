@@ -1,13 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{% if app.user %}{{app.user.email}}{% endif %}{% endblock %}
-
+{% block title %}My Profile{% endblock %}
+{% set current_route = app.request.attributes.get('_route') %}
 {% block body %}
+<div class="container py-4">
+    <div id="save-conflict-alert" class="alert alert-warning d-none" role="alert">
+        Someone (or another tab) changed this value first. Refresh to see the latest.
+    </div>
 
-<div class="container">
+    <ul class="nav nav-tabs mb-3" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link {{ current_route == 'app_profile' ? 'active' : '' }}" 
+           href="{{ path('app_profile') }}">Me</a></li>
+    <li class="nav-item">
+        <a class="nav-link {{ current_route == 'app_candidate_attributes' ? 'active' : '' }}" 
+           href="{{ path('app_candidate_attributes') }}">Info</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ current_route == 'app_candidate_projects' ? 'active' : '' }}" 
+           href="{{ path('app_candidate_projects') }}">Projects</a></li>
+    <li class="nav-item">
+        <a class="nav-link {{ current_route == 'app_candidate_cvs' ? 'active' : '' }}" 
+           href="{{ path('app_candidate_cvs') }}">CVs</a></li>
+    </ul>
 
-<h1>Hello {% if app.user %}{{app.user.email}}{% endif %}</h1>
-
+    <div class="tab-content">
+        {% block contents %}
+        {{component("ProfilePage", {
+            firstName: firstName,
+            lastName: lastName,
+            location: location,
+            image: image
+            })}}
+        {% endblock %}
+    </div>
 </div>
 
 {% endblock %}

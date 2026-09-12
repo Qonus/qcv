@@ -9,7 +9,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted("ROLE_RECRUITER")]
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
@@ -32,13 +34,13 @@ class DashboardController extends AbstractDashboardController
         //
         return $this->render('admin/dashboard.html.twig');
     }
-    // TODO: Set up accessibility of admin pages.
+    
     // TODO: Add translation
     // TODO: Get the theme from user preferences
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Final Project');
+            ->setTitle('Quick CV');
     }
 
     public function configureMenuItems(): iterable
@@ -50,7 +52,7 @@ class DashboardController extends AbstractDashboardController
     }
 
 
-    // TODO: Configure the User Menu inside this function
+    // TODO: Add change theme and locale buttons
     public function configureUserMenu(UserInterface $user): UserMenu
     {
         // Usually it's better to call the parent method because that gives you a
@@ -63,20 +65,14 @@ class DashboardController extends AbstractDashboardController
             // ->setAvatarUrl('https://...')
             // ->setAvatarUrl($user->getProfileImageUrl())
             // use this method if you don't want to display the user image
-            ->displayUserAvatar(false)
+            ->displayUserAvatar(false);
             // you can also pass an email address to use gravatar's service
             // ->setGravatarEmail($user->getMainEmailAddress())
 
-            // you can hide the "Sign out" link from the user menu (e.g. when using
-            // authentication methods like HTTP Basic or OAuth that don't support logout)
-            ->disableLogoutLink()
-
-            // you can use any type of menu item, except submenus
-            ->addMenuItems([
-                MenuItem::linkToRoute('My Profile', 'fa fa-id-card', '...', ['...' => '...']),
-                MenuItem::linkToRoute('Settings', 'fa fa-user-cog', '...', ['...' => '...']),
-                MenuItem::section(),
-                MenuItem::linkToLogout('Logout', 'fa fa-sign-out'),
-            ]);
+            // ->addMenuItems([
+            //     MenuItem::section(),
+            //     MenuItem::linkToRoute('My Profile', 'fa fa-id-card', '...', ['...' => '...']),
+            //     MenuItem::linkToRoute('Settings', 'fa fa-user-cog', '...', ['...' => '...']),
+            // ]);
     }
 }

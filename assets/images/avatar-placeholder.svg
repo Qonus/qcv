@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <style>
+    .bg { fill: #e9ecef; }
+    .icon { fill: #6c757d; }
+
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #343a40; }
+      .icon { fill: #adb5bd; }
+    }
+  </style>
+  <rect width="100" height="100" class="bg" />
+
+  <g class="icon" transform="translate(18, 18) scale(4)">
+    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+  </g>
+</svg>

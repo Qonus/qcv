@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -46,11 +47,19 @@ class AttributeCrudController extends AbstractCrudController
                 'One of many (dropdown)' => AttributeDataType::SELECT,
             ])
             ->setFormTypeOption('disabled', $pageName === Crud::PAGE_EDIT);
- 
+
+        // yield CollectionField::new('options', 'Selectable Options')
+        //     // ->setEntryType(AttributeOption::class)
+        //     ->allowAdd()
+        //     ->allowDelete()
+        //     // ->byReference(false) // Required so Doctrine triggers addOption()/removeOption()
+        //     ->hideOnIndex()
+        //     ->setHelp('Add options if this attribute uses the "One of many (dropdown)" type.');
+        
         yield TextareaField::new('description')
             ->hideOnIndex();
 
-        yield BooleanField::new('isBuiltin', 'Built-in');
-            // ->hideOnForm();
+        yield BooleanField::new('isBuiltin', 'Built-in')
+            ->hideOnForm();
     }
 }

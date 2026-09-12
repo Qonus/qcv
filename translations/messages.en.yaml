@@ -34,3 +34,8 @@ navbar:
   language: "Locale"
   logout: "Logout"
   login: "Sign in"
+
+profile:
+  firstName: "First Name"
+  lastName: "Last Name"
+  location: "Location"
