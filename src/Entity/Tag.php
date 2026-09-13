@@ -18,6 +18,10 @@ class Tag
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    public function __tostring(): string {
+        return $this->name;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

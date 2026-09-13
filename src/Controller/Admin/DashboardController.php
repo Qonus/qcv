@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
@@ -49,6 +50,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(UserCrudController::class, 'Users', 'fas fa-users');
         yield MenuItem::linkTo(AttributeCrudController::class, 'Attributes', 'fas fa-list');
         yield MenuItem::linkTo(AttributeCategoryCrudController::class, 'Attribute Categories', 'fas fa-folder');
+        yield MenuItem::linkTo(PositionCrudController::class, 'Positions', 'fas fa-target');
     }
 
 

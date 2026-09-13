@@ -38,6 +38,7 @@ class CandidateAttributes
     #[LiveAction]
     public function selectOption(#[LiveArg] int $id) {
         // TODO: Add the attribute with $id to the user's attribute values.
+        
     }
 
     public function getResults(): array

@@ -17,7 +17,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted("ROLE_RECRUITER")]
 class AttributeCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

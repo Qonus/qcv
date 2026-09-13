@@ -26,6 +26,7 @@ class CandidateService
      */
     public function saveBuiltinValues(User $user, array $builtinValues): void
     {
+        // TODO: Add Optimistic Locking check
         foreach ($builtinValues as $attributeName => $value) {
             $this->updateOrCreateBuiltin($user, $attributeName, (string) $value);
         }

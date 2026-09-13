@@ -14,7 +14,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted("ROLE_ADMIN")]
 class UserCrudController extends AbstractCrudController
 {
     public function __construct(
@@ -28,6 +30,7 @@ class UserCrudController extends AbstractCrudController
     }
     // TODO: make users be able to have only one role for simplicity, it should be done right?
     // I decided to leave it for later as its not crucial.
+    // TODO: Remove Create User functionality
     public function configureFields(string $pageName): iterable
     {
         return [

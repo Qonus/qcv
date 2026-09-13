@@ -47,6 +47,7 @@ class ProfilePage
     }
 
     // TODO: automatically call this function every 5-10 seconds during editing
+    // TODO: Upload the profile picture into cloudinary and update the image url.
     #[LiveAction]
     public function save(): void {
         $this->candidateService->saveBuiltinValues($this->getUser(), [
@@ -55,7 +56,5 @@ class ProfilePage
             BuiltinAttribute::LOCATION->value => $this->location,
             BuiltinAttribute::IMAGE_URL->value => $this->image,
         ]);
-
-        // TODO: handle the case where saving fails due to the old version
     }
 }

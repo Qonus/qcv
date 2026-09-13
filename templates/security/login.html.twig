@@ -17,8 +17,8 @@
         {% endif %}
         
         <div class="mb-3">
-            <label class="form-label" value={{lastUser}} for="username">{{ 'auth.fields.email'|trans }}</label>
-            <input type="email" name="_username" id="username" class="form-control form-control-lg" required autofocus />
+            <label class="form-label" for="username">{{ 'auth.fields.email'|trans }}</label>
+            <input type="email" value="{{lastUser}}" name="_username" id="username" class="form-control form-control-lg" required autofocus />
         </div>
         <div class="mb-5">
             <label class="form-label" for="password">{{ 'auth.fields.password'|trans }}</label>

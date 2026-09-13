@@ -1,16 +1,10 @@
 <div {{attributes}} class="tab-pane show active">
     <div class="row g-4">
         <div class="col-md-3 text-center">
-            {# {% set photoAttr = builtinAttributes|filter(a => a.name == 'Personal Photo')|first %} #}
-            {# {% set photoValue = photoAttr ? valuesByAttributeId[photoAttr.id] ?? null : null %} #}
             <img src={{asset('images/avatar-placeholder.svg')}}
                 class="rounded-circle mb-2 border" width="140" height="140" style="object-fit: cover;" id="profile-photo-preview">
-
             <br>
-            <button type="button" class="btn btn-sm btn-outline-secondary"
-                    id="change-photo-btn">
-                    {# data-attribute-id="{{ photoAttr.id }}" #}
-                    {# data-version="{{ photoValue ? photoValue.version : '' }}"> #}
+            <button type="button" class="btn btn-sm btn-outline-secondary">
                 Change Photo
             </button>
         </div>
@@ -44,18 +38,6 @@
                     {{ 'profile.save'|trans }}
                 </button>
             </div>
-            {# {% for fieldName in ['First Name', 'Last Name', 'Location'] %}
-                {% set attr = builtinAttributes|filter(a => a.name == fieldName)|first %}
-                {% set val = attr ? valuesByAttributeId[attr.id] ?? null : null %}
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control autosave-field {{ val is null ? 'is-invalid' : '' }}"
-                        id="attr-{{ attr.id }}"
-                        data-attribute-id="{{ attr.id }}"
-                        data-version="{{ val ? val.version : '' }}"
-                        value="{{ val ? val.valueString : '' }}">
-                    <label for="attr-{{ attr.id }}">{{ fieldName }}</label>
-                </div>
-            {% endfor %} #}
         </div>
     </div>
 </div>
