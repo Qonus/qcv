@@ -12,6 +12,7 @@
         "doctrine/orm": "^3.6",
         "easycorp/easyadmin-bundle": "^5.5",
         "knpuniversity/oauth2-client-bundle": "^2.20",
+        "league/commonmark": "^2.10",
         "league/oauth2-github": "^3.1",
         "league/oauth2-google": "^5.0",
         "symfony/asset": "7.4.*",
@@ -32,7 +33,8 @@
         "symfony/validator": "7.4.*",
         "symfony/yaml": "7.4.*",
         "symfonycasts/verify-email-bundle": "^1.18",
-        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/extra-bundle": "^3.24",
+        "twig/markdown-extra": "^3.28",
         "twig/twig": "^2.12|^3.0"
     },
     "config": {

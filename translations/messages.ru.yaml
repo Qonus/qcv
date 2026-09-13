@@ -34,3 +34,22 @@ navbar:
   language: "Язык"
   logout: "Выйти"
   login: "Войти"
+
+profile:
+  firstName: "Имя"
+  lastName: "Фамилия"
+  location: "Локация"
+  save: "Сохранить"
+
+position:
+  header: "Позиции"
+  title: "Название"
+  description: "Описание"
+  company: "Компания"
+  level: "Уровень"
+  cvs: "Резюме"
+  attributes: "Атрибуты"
+  tags: "Теги"
+  discussions: "Обсуждения"
+  edit: "Редактировать"
+  create: "Создать"

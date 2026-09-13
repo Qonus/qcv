@@ -40,3 +40,16 @@ profile:
   lastName: "Last Name"
   location: "Location"
   save: "Save"
+
+position:
+  header: "Positions"
+  title: "Title"
+  description: "Description"
+  company: "Company"
+  level: "Level"
+  cvs: "CVs"
+  attributes: "Attributes"
+  tags: "Tags"
+  discussions: "Discussions"
+  edit: "Edit"
+  create: "Create"

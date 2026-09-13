@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+<div class="mb-3">
+    <label class="form-label" for="company">{{ 'position.company'|trans }}</label>
+    <input type="text" name="company" id="company" class="form-control form-control-lg" />
+</div>
+<div class="mb-3">
+    <label class="form-label" for="title">{{ 'position.title'|trans }}</label>
+    <input type="text" name="title" id="title" class="form-control form-control-lg" required autofocus />
+</div>
+
+<div class="mb-3">
+    <label for="markdown-editor" class="form-label fw-bold d-flex justify-content-between align-items-center">
+        <span>{{ 'position.description'|trans }}</span>
+        <small class="text-body-secondary fw-normal">Markdown</small>
+    </label>
+    
+    <div class="markdown-editor-wrapper">
+        <textarea id="markdown-editor" name="description" class="form-control"></textarea>
+    </div>
+</div>
+
+<div class="mb-3">
+    <label class="form-label" for="level">{{ 'position.level'|trans }}</label>
+    <select name="level" value="" class="form-control form-control-lg" id="level">
+        <option value="">---</option>
+        <option value="junior">Junior</option>
+        <option value="middle">Middle</option>
+        <option value="senior">Senior</option>
+        <option value="c-level">C Level</option>
+    </select>
+</div>
+
+<div class="d-flex justify-content-end w-100">
+    <button class="btn btn-lg btn-primary mb-3" type="submit">
+        {{ 'profile.save'|trans }}
+    </button>
+</div>
+
+{# TODO: Attribute and Tag fields #}
+
+{# TODO: Attribute filter rule field #}
+</div>
+{% endblock %}

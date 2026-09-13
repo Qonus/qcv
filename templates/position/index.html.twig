@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container position-relative">
+<div class="d-flex justify-content-between mb-4 sticky-top bg-body p-2" style="top:70px">
+    <h2>{{"position.header"|trans}}</h2>
+    <a class="btn fs-5 btn-primary"
+    href="{{path('app_position_create')}}">
+    {{'position.create'|trans}}
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table style="min-width: 600px; width: 100%;" class="table table-hover align-middle">
+        <tr class="table-sticky-header">
+            <th><input type="checkbox"></th>
+            <th>{{"position.company"|trans}}</th>
+            <th>{{"position.title"|trans}}</th>
+            <th>{{"position.level"|trans}}</th>
+            <th>{{"position.attributes"|trans}}</th>
+            <th>{{"position.tags"|trans}}</th>
+        </tr>
+        {% for i in range(1, 20) %}
+        <tr class="position-relative">
+            <td><input type="checkbox"></td>
+            <td>Qonys</td>
+            <td><a href="{{ path('app_position_show', {id: i}) }}" class="stretched-link text-decoration-none text-reset">
+                Data Scientist
+            </a></td>
+            <td>Junior</td>
+            <td><div class="table-list-container">
+                {% set attributes = ["First Name", "Last Name", "Location", "Age", "IELTS", "First Name", "Last Name", "Location", "Age", "IELTS"] %}
+                {% set limit = 5 %}
+                {% for attribute in attributes|slice(0,limit) %}
+                <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
+                 class="badge border">{{attribute}}</span>
+                {% endfor %}
+                {% if attributes|length > limit %}
+                <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
+                    class="badge border">+{{ attributes|length - limit }} more</span>
+                {% endif %}
+            </div></td>
+            <td><div class="table-list-container">
+                {% set tags = ["data-science", "entry-level", "python", "data-science", "entry-level", "python", "data-science", "entry-level", "python"] %}
+                {% set limit = 5 %}
+                {% for tag in tags|slice(0,limit) %}
+                <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
+                    class="badge rounded-pill border">#{{tag}}</span>
+                {% endfor %}
+                {% if tags|length > limit %}
+                <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
+                    class="badge rounded-pill border">+{{ tags|length - limit }} more</span>
+                {% endif %}
+            </div></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</div>
+{% endblock %}

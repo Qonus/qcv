@@ -18,3 +18,129 @@ form {
 input {
     /* padding: 20px; */
 }
+table tr td:has(.table-list-container) {
+    max-width: 300px;
+    width: 300px;
+}
+table tr .table-list-container {
+    max-width: 300px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    gap: 0.25rem;
+}
+.table-responsive {
+    overflow: visible !important;
+}
+.table-sticky-header th {
+    position: sticky;
+    top: 130px;
+    z-index: 10;
+}
+.sticky-top {
+    z-index: 100;
+}
+
+/* EASY MDE STYLES */
+blockquote {
+    background-color: var(--bs-secondary-bg);
+    padding: 10px;
+}
+
+.EasyMDEContainer {
+    border-radius: var(--bs-border-radius);
+    overflow: hidden;
+}
+
+/* Toolbar */
+.EasyMDEContainer .editor-toolbar,
+.editor-toolbar.fullscreen {
+    border-color: var(--bs-border-color) !important;
+    background-color: var(--bs-tertiary-bg) !important;
+    opacity: 1;
+    padding: 6px 10px;
+}
+
+.editor-toolbar.fullscreen {
+    z-index: 1050 !important;
+}
+
+.EasyMDEContainer .editor-toolbar button {
+    color: var(--bs-body-color) !important;
+    border-radius: var(--bs-border-radius-sm);
+    width: 32px;
+    height: 32px;
+}
+
+.EasyMDEContainer .editor-toolbar button:hover,
+.EasyMDEContainer .editor-toolbar button.active {
+    background-color: var(--bs-secondary-bg) !important;
+    border-color: var(--bs-border-color) !important;
+}
+
+/* Editor Input Area */
+.EasyMDEContainer .CodeMirror,
+.CodeMirror-fullscreen {
+    border-color: var(--bs-border-color) !important;
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    font-family: var(--bs-font-monospace);
+    font-size: 0.95rem;
+}
+
+.EasyMDEContainer .CodeMirror {
+    border-bottom-left-radius: var(--bs-border-radius);
+    border-bottom-right-radius: var(--bs-border-radius);
+}
+
+/* Height Limit */
+.EasyMDEContainer .CodeMirror-scroll {
+    max-height: 350px;
+    overflow-y: auto !important;
+}
+.EasyMDEContainer .CodeMirror-fullscreen .CodeMirror-scroll {
+    max-height: none;
+}
+
+/* Cursor & Selection Highlight */
+.EasyMDEContainer .CodeMirror-cursor {
+    border-left: 1px solid var(--bs-body-color) !important;
+}
+.EasyMDEContainer .CodeMirror .CodeMirror-selected {
+    background-color: var(--bs-secondary-bg) !important;
+}
+.EasyMDEContainer .CodeMirror-focused .CodeMirror-selected {
+    background-color: var(--bs-info-bg-subtle) !important;
+}
+
+/* Status Bar */
+.EasyMDEContainer .editor-statusbar {
+    color: var(--bs-secondary-color);
+    background-color: var(--bs-body-bg);
+    padding: 6px 10px;
+}
+
+/* Live Preview & Side-by-Side Mode */
+.EasyMDEContainer .editor-preview,
+.EasyMDEContainer .editor-preview-side {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-body-color) !important;
+    border-color: var(--bs-border-color) !important;
+    z-index: 1050 !important;
+}
+
+.EasyMDEContainer .editor-preview pre,
+.EasyMDEContainer .editor-preview-side pre {
+    background-color: var(--bs-info-bg-subtle) !important;
+    color: var(--bs-body-color) !important;
+    padding: 8px;
+    border-radius: var(--bs-border-radius);
+}
+
+/* Global Fullscreen Layering */
+.EasyMDEContainer.CodeMirror-fullscreen,
+.CodeMirror-fullscreen {
+    z-index: 1050 !important;
+    background-color: var(--bs-body-bg) !important;
+}
