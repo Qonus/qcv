@@ -2,11 +2,47 @@
 
 {% block body %}
 <div class="jumbotron text-center">
-  <h1>My First Bootstrap Page</h1>
-  <p>Resize this responsive page to see the effect!</p> 
+  <h1>Quick CV</h1>
+  <p>Create CVs and Positions</p>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm text-center py-3">
+            <div class="card-body">
+                <span class="fs-2 fw-bold text-primary d-block">{{ recruiterCount }}</span>
+                <span class="text-muted small text-uppercase fw-semibold">Recruiters</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm text-center py-3">
+            <div class="card-body">
+                <span class="fs-2 fw-bold text-success d-block">{{ candidateCount }}</span>
+                <span class="text-muted small text-uppercase fw-semibold">Candidates</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm text-center py-3">
+            <div class="card-body">
+                <span class="fs-2 fw-bold text-info d-block">{{ cvCount }}</span>
+                <span class="text-muted small text-uppercase fw-semibold">CVs Uploaded</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm text-center py-3">
+            <div class="card-body">
+                <span class="fs-2 fw-bold text-warning d-block">{{ positionCount }}</span>
+                <span class="text-muted small text-uppercase fw-semibold">Open Positions</span>
+            </div>
+        </div>
+    </div>
 </div>
-
-
+</div>
 <div class="container">
   <div class="row">
     <div class="col-sm-4">

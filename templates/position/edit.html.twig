@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+<form method="POST">
+<input type="hidden" name="_token" value="{{ csrf_token('position_form') }}">
+<div class="mb-3">
+    <label class="form-label" for="company">{{ 'position.company'|trans }}</label>
+    <input type="text" value="{{position.company??''}}" name="company" id="company" class="form-control form-control-lg" />
+</div>
+<div class="mb-5">
+    <label class="form-label" for="title">{{ 'position.title'|trans }}</label>
+    <input type="text" value="{{position.name??''}}" name="title" id="title" class="form-control form-control-lg" required autofocus />
+</div>
+
+<div class="mb-3">
+    <label class="form-label" for="level">{{ 'position.level'|trans }}</label>
+    {% set selectedLevel = position.level.value??'' %}
+    <select name="level" class="form-control form-control-lg" id="level">
+        <option value="">---</option>
+        <option value="junior">Junior</option>
+        <option value="middle">Middle</option>
+        <option value="senior">Senior</option>
+        <option value="c-level">C Level</option>
+    </select>
+</div>
+
+<div class="mb-5">
+{{component('TagPicker', {entityClass: 'App\\Entity\\Position', entityId: position.id})}}
+</div>
+
+<div class="mb-5">
+    <label for="markdown-editor" class="form-label fw-bold d-flex justify-content-between align-items-center">
+        <span>{{ 'position.description'|trans }}</span>
+        <small class="text-body-secondary fw-normal">Markdown</small>
+    </label>
+    
+    <div class="markdown-editor-wrapper">
+        <textarea id="markdown-editor" name="description" class="form-control">{{position.description??''}}</textarea>
+    </div>
+</div>
+
+<div class="d-flex justify-content-end w-100">
+    <button class="btn btn-lg btn-primary mb-3" type="submit">
+        {{ position==null?'position.create'|trans:'position.edit'|trans }}
+    </button>
+</div>
+
+{# TODO: Add Attribute and Tag fields using Tom select or other library #}
+
+
+{# TODO: Attribute filter rule field #}
+
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selectEl = document.getElementById('level');
+    selectEl.value = "{{ position.level.value??'' }}";
+});
+</script>
+</div>
+{% endblock %}

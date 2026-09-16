@@ -17,10 +17,14 @@ class TagRepository extends ServiceEntityRepository
         parent::__construct($registry, Tag::class);
     }
 
-    public function search(string $query): array {
+    public function search(string $query, array $exclude = []): array {
         return $this->createQueryBuilder('t')
         ->andWhere("t.name LIKE :q")
-        ->setParameter("q", $query)
+        ->setParameter("q", '%' . $query . '%')
+        ->andWhere('t.name NOT IN (:exclude)')
+        ->setParameter('exclude', $exclude)
+        ->orderBy('t.name', 'ASC')
+        ->setMaxResults(8)
         ->getQuery()
         ->getResult();
     }

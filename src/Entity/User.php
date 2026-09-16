@@ -66,11 +66,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'candidate', orphanRemoval: true)]
     private Collection $projects;
 
+    /**
+     * @var Collection<int, CV>
+     */
+    #[ORM\OneToMany(targetEntity: CV::class, mappedBy: 'candidate', orphanRemoval: true)]
+    private Collection $cvs;
+
     public function __construct()
     {
         $this->oauthAccounts = new ArrayCollection();
         $this->attributeValues = new ArrayCollection();
         $this->projects = new ArrayCollection();
+        $this->cvs = new ArrayCollection();
     }
     public function getId(): ?int
     {
@@ -118,6 +125,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getRole(): string
+    {
+        if (empty($this->roles)) {
+            return 'ROLE_CANDIDATE';
+        }
+
+        return $this->roles[0];
+    }
+
+    public function setRole(string $role): static
+    {
+        $this->roles = [$role];
 
         return $this;
     }
@@ -303,6 +326,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($project->getCandidate() === $this) {
                 $project->setCandidate(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CV>
+     */
+    public function getCvs(): Collection
+    {
+        return $this->cvs;
+    }
+
+    public function addCv(CV $cv): static
+    {
+        if (!$this->cvs->contains($cv)) {
+            $this->cvs->add($cv);
+            $cv->setCandidate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCv(CV $cv): static
+    {
+        if ($this->cvs->removeElement($cv)) {
+            // set the owning side to null (unless already changed)
+            if ($cv->getCandidate() === $this) {
+                $cv->setCandidate(null);
             }
         }
 

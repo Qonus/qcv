@@ -35,13 +35,12 @@ class UserCrudController extends AbstractCrudController
     {
         return [
             EmailField::new('email'),
-            ChoiceField::new('roles')
+            ChoiceField::new('role')
                 ->setChoices([
                     'Candidate' => 'ROLE_CANDIDATE',
                     'Recruiter' => 'ROLE_RECRUITER',
                     'Admin' => 'ROLE_ADMIN',
                 ])
-                ->allowMultipleChoices()
                 ->renderExpanded(),
             ChoiceField::new('status', 'Status')
                 ->setChoices([

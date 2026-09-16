@@ -44,12 +44,32 @@ class AttributeValue
 
     #[ORM\ManyToOne]
     private ?AttributeOption $valueOption = null;
-
-    #[ORM\Column]
-    private ?int $version = 0;
-
+    
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $valueImageUrl = null;
+    
+    #[ORM\Version]
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $version = 0;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default'=>'CURRENT_TIMESTAMP'])]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['default'=>'CURRENT_TIMESTAMP'])]
+    private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -169,18 +189,6 @@ class AttributeValue
         return $this;
     }
 
-    public function getVersion(): ?int
-    {
-        return $this->version;
-    }
-
-    public function setVersion(int $version): static
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
     public function getValueOption(): ?AttributeOption
     {
         return $this->valueOption;
@@ -204,4 +212,12 @@ class AttributeValue
 
         return $this;
     }
+
+    public function getVersion(): ?int
+    {
+        return $this->version;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
+    public function getUpdatedAt(): ?\DateTimeInterface { return $this->updatedAt; }
 }

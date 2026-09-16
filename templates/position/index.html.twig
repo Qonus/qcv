@@ -20,16 +20,16 @@
             <th>{{"position.attributes"|trans}}</th>
             <th>{{"position.tags"|trans}}</th>
         </tr>
-        {% for i in range(1, 20) %}
+        {% for position in positions %}
         <tr class="position-relative">
             <td><input type="checkbox"></td>
-            <td>Qonys</td>
-            <td><a href="{{ path('app_position_show', {id: i}) }}" class="stretched-link text-decoration-none text-reset">
-                Data Scientist
+            <td>{{position.company??''}}</td>
+            <td><a href="{{ path('app_position_show', {id: position.id}) }}" class="stretched-link text-decoration-none text-reset">
+                {{position.name??''}}
             </a></td>
-            <td>Junior</td>
+            <td>{{(position.level.value??'---')|capitalize}}</td>
             <td><div class="table-list-container">
-                {% set attributes = ["First Name", "Last Name", "Location", "Age", "IELTS", "First Name", "Last Name", "Location", "Age", "IELTS"] %}
+                {% set attributes = position.attributes %}
                 {% set limit = 5 %}
                 {% for attribute in attributes|slice(0,limit) %}
                 <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
@@ -37,19 +37,19 @@
                 {% endfor %}
                 {% if attributes|length > limit %}
                 <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
-                    class="badge border">+{{ attributes|length - limit }} more</span>
+                    class="badge border">+{{ attributes|length - limit }}</span>
                 {% endif %}
             </div></td>
             <td><div class="table-list-container">
-                {% set tags = ["data-science", "entry-level", "python", "data-science", "entry-level", "python", "data-science", "entry-level", "python"] %}
-                {% set limit = 5 %}
+                {% set tags = position.tags %}
+                {% set limit = 7 %}
                 {% for tag in tags|slice(0,limit) %}
                 <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
-                    class="badge rounded-pill border">#{{tag}}</span>
+                    class="badge rounded-pill border">{{tag}}</span>
                 {% endfor %}
                 {% if tags|length > limit %}
                 <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
-                    class="badge rounded-pill border">+{{ tags|length - limit }} more</span>
+                    class="badge rounded-pill border">+{{ tags|length - limit }}</span>
                 {% endif %}
             </div></td>
         </tr>

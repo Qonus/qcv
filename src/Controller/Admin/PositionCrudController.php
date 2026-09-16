@@ -47,7 +47,7 @@ class PositionCrudController extends AbstractCrudController
 
         yield AssociationField::new('attributes', 'Position Attributes')
             ->autocomplete();
-        yield AssociationField::new('projectTags', 'Project Tags')
+        yield AssociationField::new('tags', 'Project Tags')
             ->autocomplete()
             ->setFormTypeOptions([
                 'attr' => [
@@ -78,12 +78,12 @@ class PositionCrudController extends AbstractCrudController
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
             
-            if (!isset($data['projectTags']) || !isset($data['projectTags']['autocomplete']) || !is_array($data['projectTags']['autocomplete'])) return;
+            if (!isset($data['tags']) || !isset($data['tags']['autocomplete']) || !is_array($data['tags']['autocomplete'])) return;
 
             $processedTags = [];
             $tagRepository = $this->entityManager->getRepository(Tag::class);
 
-            foreach ($data['projectTags']['autocomplete'] as $tagName) {
+            foreach ($data['tags']['autocomplete'] as $tagName) {
                 $tag = $tagRepository->findOneBy(['name' => $tagName]);
                 
                 if (!$tag) {
@@ -95,7 +95,7 @@ class PositionCrudController extends AbstractCrudController
                 }
                 $processedTags[] = $tag->getId();
             }
-            $data['projectTags']['autocomplete'] = $processedTags;
+            $data['tags']['autocomplete'] = $processedTags;
             $event->setData($data);
         });
     }

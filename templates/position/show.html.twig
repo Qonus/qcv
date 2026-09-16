@@ -2,93 +2,23 @@
 
 {% block body %}
 <div class="container">
-{% set position = {
-    id: 2,
-    company: "Qonys inc",
-    name: "Data Scientist",
-    description: "# Job Description: Junior Data Scientist
-
-**Company:** Qonys  
-**Position Title:** Data Scientist  
-**Level:** Junior  
-**Location:** Remote / Hybrid  
-**Department:** Analytics & AI Solutions  
-**Employment Type:** Full-time  
-
----
-
-## 📋 Role Overview
-
-At **Qonys**, we build data-driven products that empower decision-making across complex industries. We are looking for a motivated and detail-oriented **Junior Data Scientist** to join our growing analytics team. 
-
-In this role, you will collaborate closely with senior data engineers, machine learning specialists, and product managers to process data, build predictive models, and deliver key analytical insights.
-
----
-
-## 🎯 Key Responsibilities
-
-- **Data Processing & Analysis:** Extract, clean, and analyze datasets to identify trends, patterns, and operational insights.
-- **Model Development:** Support the design, training, and deployment of predictive and statistical models using Python and modern data science stacks.
-- **Feature Engineering:** Build meaningful features from structured and unstructured data sources to improve model accuracy.
-- **Dashboarding & Visualization:** Construct interactive reports and dashboards to convey analytical insights to non-technical stakeholders.
-- **Cross-functional Collaboration:** Work alongside software developers to integrate machine learning solutions into live product workflows.
-- **Code Optimization & Testing:** Write clean, modular, and reusable code while maintaining standard version control practices (Git).
-
----
-
-## 🛠 Required Qualifications & Skills
-
-### Technical Skills
-- **Language Proficiency:** Strong command of **Python** (Pandas, NumPy, Scikit-learn, Matplotlib/Seaborn).
-- **Database & Querying:** Solid understanding of **SQL** for data extraction, joining, and aggregation.
-- **Mathematics & Statistics:** Strong foundational knowledge in probability, linear algebra, and hypothesis testing.
-- **Language Requirements:** Fluency in English with a target score equivalent to **IELTS 6.5+** or higher.
-
-### Soft Skills & Candidate Attributes
-- **Problem Solving:** Analytical mindset with a structured approach to troubleshooting data issues.
-- **Communication:** Ability to clearly explain technical concepts to non-technical audiences.
-- **Adaptability:** Eagerness to learn new libraries, frameworks, and domain-specific knowledge rapidly.
-
----
-
-## 🌟 Preferred / Bonus Qualifications
-
-- Experience with Big Data frameworks (e.g., PySpark, SQL-based data warehouses).
-- Basic understanding of cloud infrastructure (AWS, GCP, or Azure).
-- Familiarity with version control systems (Git/GitHub) and containerization (Docker).
-- Exposure to NLP or deep learning frameworks (PyTorch or TensorFlow).
-
----
-
-## 💼 What We Offer
-
-- **Competitive Compensation:** Market-aligned salary with annual performance reviews.
-- **Professional Growth:** Dedicated learning budget for courses, certifications, and conferences.
-- **Flexible Work Environment:** Hybrid working arrangement with flexible core hours.
-- **Comprehensive Benefits:** Health coverage, paid time off (PTO), and wellness stipends.
-
----
-
-## 📌 Job Attributes & Tags Summary
-
-| Category | Details |
-| :--- | :--- |
-| **Core Attributes** | First Name, Last Name, Location, Age, IELTS |
-| **Skill Tags** | `#data-science` `#entry-level` `#python` `#sql` `#machine-learning` |
-
----
-
-## 📬 How to Apply
-
-Interested candidates can apply directly through our internal careers page or submit their CV and GitHub portfolio to **careers@qonys.com** with the subject line `[Application] Junior Data Scientist - Your Name`.",
-    attributes: ["First Name", "Last Name", "Location", "Age", "IELTS"],
-    projectTags: ["data-science", "entry-level", "python"],
-} %}
-{# <a href="{{ path('app_positions') }}" style="top:70px"
+{# 
+Scrapped Back link
+<a href="{{ path('app_positions') }}" style="top:70px"
    class="mb-3 sticky-top btn btn-lg bg-body btn-outline-secondary text-body rounded-pill">
     <i class="bi bi-arrow-left fs-5 leading-none"></i>
     <span>Positions</span>
 </a> #}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        {% set alert_type = label == 'error' ? 'danger' : label %}
+        <div class="alert alert-{{ alert_type }} alert-dismissible fade show" role="alert">
+            {{ message|trans }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endfor %}
+
 <div class="d-flex width-100 justify-content-between">
     <h1>{{position.name}}</h1>
     <a class="btn btn-lg btn-outline-secondary" href="{{path('app_position_edit', {id: position.id})}}">{{'position.edit'|trans}}</a>
@@ -106,7 +36,7 @@ class="fs-6 badge border">{{attribute}}</span>
 </div>
 <div class="mb-5">
 <h5>{{"position.tags"|trans}}:</h5>
-{% for tag in position.projectTags %}
+{% for tag in position.tags %}
 <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
 class="fs-6 badge rounded-pill border">{{tag}}</span>
 {% endfor %}

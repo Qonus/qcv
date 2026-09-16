@@ -1,0 +1,35 @@
+<div {{ attributes }} class="form-control form-control-lg p-2">
+    {# TODO: After Enter Focus on the input field again #}
+
+    <div class="d-flex flex-wrap align-items-center gap-1 mb-2">
+        {% for tag in this.tags %}
+            <span class="badge rounded-pill text-bg-primary d-inline-flex align-items-center py-2 px-3">
+                {{ tag.name }}
+                <button type="button" class="btn-close btn-close-white ms-2" style="font-size: .55rem;"
+                        {{ live_action('removeTag', {id: tag.id}) }} aria-label="Remove {{ tag.name }}"></button>
+            </span>
+        {% endfor %}
+
+        <input type="text" class="form-control form-control-lg flex-grow-1 border-0 shadow-none"
+               style="min-width: 140px; width: auto;"
+               placeholder="Add technology…"
+               data-model="debounce(200)|query"
+               data-action="keydown.enter->live#action:prevent"
+               data-live-action-param="addOnEnter">
+    </div>
+
+    {% if query %}
+        <div class="list-group">
+            {% for tag in this.suggestions %}
+                <button type="button" class="list-group-item list-group-item-action py-1"
+                        {{ live_action('addTag', {id: tag.id}) }}>{{ tag.name }}</button>
+            {% endfor %}
+            {% if not this.exactMatchExists %}
+                <button type="button" class="list-group-item list-group-item-action py-1 text-primary"
+                        {{ live_action('addTag', {name: query}) }}>
+                    + Create "{{ query }}"
+                </button>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
