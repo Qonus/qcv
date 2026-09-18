@@ -53,3 +53,14 @@ position:
   discussions: "Discussions"
   edit: "Edit"
   create: "Create"
+
+project:
+  name: "Project Name"
+  period:
+    header: "Period"
+    from: "From"
+    to: "To"
+  description: "Description"
+  tags: "Tags"
+  edit: "Edit"
+  create: "Create"

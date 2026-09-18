@@ -59,7 +59,9 @@ class ProfileController extends AbstractController
 
     #[Route('/projects', name: 'app_candidate_projects')]
     public function projects(#[CurrentUser] User $user): Response {
+        $projects = $user->getProjects();
         return $this->render('profile/projects.html.twig', [
+            'projects' => $projects
         ]);
     }
 

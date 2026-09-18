@@ -31,3 +31,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.clickable-row').forEach(row => {
+        row.style.cursor = 'pointer';
+
+        row.addEventListener('click', function(e) {
+            const selection = window.getSelection();
+            if (selection.toString().length > 0) {
+                return;
+            }
+
+            if (e.target.closest('a, button, input, select')) {
+                return;
+            }
+
+            window.location.href = this.dataset.href;
+        });
+    });
+});

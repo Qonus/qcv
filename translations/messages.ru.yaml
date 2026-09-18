@@ -53,3 +53,13 @@ position:
   discussions: "Обсуждения"
   edit: "Редактировать"
   create: "Создать"
+
+project:
+  name: "Название Проекта"
+  period:
+    header: "Select Period"
+    from: "Начало"
+    to: "Конец"
+  description: "Description"
+  edit: "Edit"
+  create: "Create"

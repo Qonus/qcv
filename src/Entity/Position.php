@@ -10,7 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PositionRepository::class)]
-class Position implements TaggableEntity
+class Position implements TaggableEntity, AttributeAssignable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -110,11 +110,11 @@ class Position implements TaggableEntity
     }
 
     /**
-     * @return Collection<int, Attribute>
+     * @return Attribute[]
      */
-    public function getAttributes(): Collection
+    public function getAttributes(): array
     {
-        return $this->attributes;
+        return $this->attributes->toArray();
     }
 
     public function addAttribute(Attribute $attribute): static

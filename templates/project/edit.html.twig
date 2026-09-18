@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+{% component "Form:ProjectForm" with { entity: project } %}
+{% block content %}
+<form method="POST">
+<input type="hidden" name="_token" value="{{ csrf_token('project_form') }}">
+<div class="mb-5">
+    <label class="form-label" for="title">{{ 'project.name'|trans }}</label>
+    <input type="text" value="{{entity.name??''}}" data-model="debounce(500ms)|entity.name" name="name" id="name" class="form-control form-control-lg" required autofocus />
+</div>
+
+<div class="mb-3" style="max-width: 300px">
+    <label class="form-label fw-bold">{{'project.period.header'|trans}}</label>
+    <div class="input-group mb-3">
+        <span class="input-group-text">{{'project.period.from'|trans}}</span>
+        <input type="date" value="{{entity.startDate|date('Y-m-d')}}" data-model="debounce(500ms)|entity.startDate" class="form-control" name="startDate" id="startDate" aria-label="Start date">
+        
+    </div>
+    <div class="input-group">
+        <span class="input-group-text">{{'project.period.to'|trans}}</span>
+        <input type="date" value="{{entity.endDate|date('Y-m-d')}}" data-model="debounce(500ms)|entity.endDate" class="form-control" name="endDate" id="endDate" aria-label="End date">
+    </div>
+</div>
+
+<div class="mb-5">
+    <label for="markdown-editor" class="form-label fw-bold d-flex justify-content-between align-items-center">
+        <span>{{ 'project.description'|trans }}</span>
+        <small class="text-body-secondary fw-normal">Markdown</small>
+    </label>
+    
+    <div class="markdown-editor-wrapper">
+        <textarea id="markdown-editor" data-model="debounce(500ms)|entity.description" name="description" class="form-control">{{entity.description??''}}</textarea>
+    </div>
+</div>
+
+<div class="mb-5">
+{{component('TagPicker', {entityClass: 'App\\Entity\\Project', entityId: entity.id})}}
+</div>
+
+<div class="d-flex justify-content-end w-100">
+    <button class="btn btn-lg btn-primary mb-3" type="submit">
+        {{ entity==null?'project.create'|trans:'project.edit'|trans }}
+    </button>
+</div>
+
+</form>
+{% endblock %}
+{% endcomponent %}
+</div>
+{% endblock %}
