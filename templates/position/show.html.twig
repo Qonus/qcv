@@ -21,7 +21,12 @@ Scrapped Back link
 
 <div class="d-flex width-100 justify-content-between">
     <h1>{{position.name}}</h1>
-    <a class="btn btn-lg btn-outline-secondary" href="{{path('app_position_edit', {id: position.id})}}">{{'position.edit'|trans}}</a>
+    {% if is_granted('ROLE_RECRUITER') %}
+    <div>
+        <a class="btn btn-lg btn-outline-secondary" href="{{path('app_position_edit', {id: position.id})}}">{{'actions.edit'|trans}}</a>
+        <a class="btn btn-lg btn-outline-danger" href="{{path('app_position_delete', {id: position.id})}}">{{'actions.delete'|trans}}</a>
+    </div>
+    {% endif %}
 </div>
 {{"position.company"|trans}}:<h3>{{position.company}}</h3>
 <div style="max-height:600px; overflow-x:auto" class="card p-4 m-2">

@@ -51,45 +51,62 @@ class Discussions
     }
 
     #[LiveAction]
-    public function createPost(): ?Post {
+    public function createPost() {
         $user = $this->getUser();
-        if ($user == null) return null;
-        $post = new Post();
-        $post->setAuthor($user);
-        $post->setPosition($this->position);
-        $post->setContent($this->content);
-        $this->em->persist($post);
-        $this->em->flush();
-        $this->editingPostId = $post->getId();
-        return $post;
+        if ($user == null) return;
+        $this->resetEditingPost();
+        $this->editingPostId = -1;
     }
     #[LiveAction]
     public function editPost(#[LiveArg]int $id) {
-        /** @var Post */
-        $post = $this->postRepository->find($this->editingPostId);
-        if (!$this->isMyPost($post)) return;
+        $post = $this->getMyPostFromId($id);
+        if (!$post) return;
         $this->editingPostId = $id;
         $this->content = $post->getContent();
     }
     #[LiveAction]
     public function deletePost(#[LiveArg]int $id) {
-        /** @var Post */
-        $post = $this->postRepository->find($this->editingPostId);
-        if (!$this->isMyPost($post)) return;
+        $post = $this->getMyPostFromId($id);
+        if (!$post) return;
         $this->em->remove($post);
         $this->em->flush();
     }
     #[LiveAction]
     public function savePost() {
         if ($this->content == '') return;
-        /** @var Post */
-        $post = $this->postRepository->find($this->editingPostId);
-        if (!$this->isMyPost($post)) return;
+        $post = $this->getMyPostFromId($this->editingPostId);
+        if (!$post && $this->editingPostId == -1) {
+            $this->createAndFlushPost($this->content);
+            $this->resetEditingPost();
+            return;
+        } else if (!$post) {
+            return;
+        }
         $post->setContent($this->content);
         $this->em->flush();
+        $this->resetEditingPost();
+    }
+    private function createAndFlushPost(string $content) {
+        $post = new Post();
+        $post->setAuthor($this->getUser());
+        $post->setPosition($this->position);
+        $post->setContent($this->content);
+        $this->em->persist($post);
+        $this->em->flush();
+    }
+    // TODO: for some reason the content of the new post is set to the previous edited one. I suspect this function failed to reset it.
+    private function resetEditingPost(): void {
+        $this->content = '';
         $this->editingPostId = null;
     }
-    private function isMyPost(Post $post) {
-        return $post->getAuthor() == $this->getUser();
+    private function getMyPostFromId(?int $id): ?Post {
+        if (!$id) return null;
+        /** @var Post */
+        $post = $this->postRepository->find($id);
+        if (!$this->isMyPost($post)) return null;
+        return $post;
+    }
+    private function isMyPost(?Post $post) {
+        return $post && $post->getAuthor() == $this->getUser();
     }
 }

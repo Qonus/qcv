@@ -2,10 +2,11 @@
     {% if app.user %}
     <div class="d-flex justify-content-end mb-3 w-100">
         <button class="btn btn-primary" data-action="live#action"
-            data-live-action-param="createPost">+Create Post</button>
+            data-live-action-param="createPost">{{'discussion.create'|trans}}</button>
     </div>
     {% endif %}
-    {% for post in this.posts %}
+    {% set postArray = (this.editingPostId == -1 ? [{author:app.user, id:-1}]: [])|merge(this.posts) %}
+    {% for post in postArray %}
     <div class="card mb-3">
     <div class="card-body">
         <div class="d-flex justify-content-between w-100 mb-3">
@@ -14,16 +15,16 @@
                 <img src="{{ post.author.image?:asset('images/avatar-placeholder.svg') }}" class="rounded-circle border" width="40" height="40" style="object-fit: cover;">
                 {{ post.author.email??'' }}
             </a>
-            {% if app.user and app.user.id == post.author.id %}
+            {% if post.id != this.editingPostId and app.user and app.user.id == post.author.id %}
             <div class="dropdown">
                 <button class="btn btn-sm btn-link" data-bs-toggle="dropdown">⋮</button>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><button class="dropdown-item" data-action="live#action"
                     data-live-action-param="editPost"
-                    data-live-id-param="{{ post.id }}">Edit</button></li>
+                    data-live-id-param="{{ post.id }}">{{'actions.edit'|trans}}</button></li>
                     <li><button class="dropdown-item text-danger" data-action="live#action"
                     data-live-action-param="deletePost"
-                    data-live-id-param="{{ post.id }}">Delete</button></li>
+                    data-live-id-param="{{ post.id }}">{{'actions.delete'|trans}}</button></li>
                 </ul>
             </div>
             {% endif %}
@@ -38,13 +39,13 @@
         <div class="mb-3">
             <div class="markdown-editor-wrapper">
                 <textarea id="markdown-editor" name="description"
-                class="form-control" data-model="debounce(500)|content" autofocus></textarea>
+                class="form-control" data-model="debounce(300)|content" autofocus></textarea>
                 {% include 'components/autosave_conflict.html.twig' %}
             </div>
         </div>
         <div class="d-flex justify-content-end">
             <button class="btn btn-primary" data-action="live#action"
-            data-live-action-param="savePost">Save</button>
+            data-live-action-param="savePost">{{'actions.save'|trans}}</button>
         </div>
         </div>
         {% endif %}

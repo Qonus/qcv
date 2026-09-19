@@ -4,10 +4,12 @@
 <div class="container position-relative">
 <div class="d-flex justify-content-between mb-4 sticky-top bg-body p-2" style="top:70px">
     <h2>{{"position.header"|trans}}</h2>
+    {% if is_granted('ROLE_RECRUITER') %}
     <a class="btn fs-5 btn-primary"
     href="{{path('app_position_create')}}">
     {{'position.create'|trans}}
     </a>
+    {% endif %}
 </div>
 
 <div class="table-responsive">
@@ -19,6 +21,7 @@
             <th>{{"position.level"|trans}}</th>
             <th>{{"position.attributes"|trans}}</th>
             <th>{{"position.tags"|trans}}</th>
+            <th></th>
         </tr>
         {% for position in positions %}
         <tr class="clickable-row" data-href="{{ path('app_position_show', {id: position.id}) }}">
@@ -50,6 +53,21 @@
                     class="badge rounded-pill border">+{{ tags|length - limit }}</span>
                 {% endif %}
             </div></td>
+            <td class="text-end">
+                {% if is_granted('ROLE_RECRUITER') %}
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-link" data-bs-toggle="dropdown">⋮</button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item"
+                        href="{{ path('app_position_edit', {id: position.id}) }}">{{'actions.edit'|trans}}</a></li>
+                        <li><a class="dropdown-item"
+                        href="{{ path('app_position_duplicate', {id: position.id}) }}">{{'actions.duplicate'|trans}}</a></li>
+                        <li><a class="dropdown-item text-danger"
+                        href="{{ path('app_position_delete', {id: position.id}) }}">{{'actions.delete'|trans}}</a></li>
+                    </ul>
+                </div>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>

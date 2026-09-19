@@ -39,7 +39,6 @@ profile:
   firstName: "First Name"
   lastName: "Last Name"
   location: "Location"
-  save: "Save"
 
 position:
   header: "Positions"
@@ -51,8 +50,7 @@ position:
   attributes: "Attributes"
   tags: "Tags"
   discussions: "Discussions"
-  edit: "Edit"
-  create: "Create"
+  create: "+ Create"
 
 project:
   name: "Project Name"
@@ -62,8 +60,6 @@ project:
     to: "To"
   description: "Description"
   tags: "Tags"
-  edit: "Edit"
-  create: "Create"
 
 conflict:
   message: 'Someone else set this to <strong class="conflict-theirs-value"></strong> first.'
@@ -77,3 +73,13 @@ candidate:
   location: "Location"
   info: "Info"
   projects: "Projects"
+
+discussion:
+  create: "+ Create Post"
+
+actions:
+  edit: "Edit"
+  create: "Create"
+  save: "Save"
+  duplicate: "Duplicate"
+  delete: "Delete"

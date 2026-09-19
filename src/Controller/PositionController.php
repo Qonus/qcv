@@ -14,13 +14,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class PositionController extends AbstractController {
     private const EDITABLE_FIELDS = ['name', 'description', 'company', 'level', 'maxProjects'];
 
     public function __construct(
         private PositionRepository $positionRepository,
-        private AutosaveService $autosaveService) {
+        private AutosaveService $autosaveService,
+        private EntityManagerInterface $em) {
     }
 
     #[Route(path: "/position", name: "app_positions")]
@@ -42,19 +44,21 @@ class PositionController extends AbstractController {
         ]);
     }
 
+    #[IsGranted('ROLE_RECRUITER')]
     #[Route(path: "/position/create", name: "app_position_create")]
-    public function create(EntityManagerInterface $em) {
+    public function create() {
         $position = new Position();
         $position->setName('Untitled Position');
         // $position->setIsPublic(false); // stays hidden from candidates until the recruiter actually configures it
 
-        $em->persist($position);
-        $em->flush();
+        $this->em->persist($position);
+        $this->em->flush();
         return $this->redirectToRoute('app_position_edit', ['id' => $position->getId()]);
     }
 
+    #[IsGranted('ROLE_RECRUITER')]
     #[Route(path: "/position/edit/{id}", name: "app_position_edit")]
-    public function edit(int $id, Request $request, EntityManagerInterface $em) {
+    public function edit(int $id, Request $request) {
         /** @var Position */
         $position = $this->positionRepository->find($id);
         if (!$position) {
@@ -74,7 +78,7 @@ class PositionController extends AbstractController {
             $position->setDescription($request->request->get('description'));
             // TODO: Add tags, attributes and attribute filters
 
-            $em->flush();
+            $this->em->flush();
 
             $this->addFlash('success', 'Position updated successfully.');
             return $this->redirectToRoute('app_position_show', ['id' => $position->getId()]);
@@ -85,14 +89,16 @@ class PositionController extends AbstractController {
         ]);
     }
 
+    #[IsGranted('ROLE_RECRUITER')]
     #[Route('/position/save/{id}', name: 'app_position_save', methods: ['PATCH'])]
-    public function save(Position $position, Request $request, EntityManagerInterface $em): JsonResponse
+    public function save(Position $position, Request $request): JsonResponse
     {
         return $this->autosaveService->patchEntityFromRequest($position, self::EDITABLE_FIELDS, $request);
     }
 
-    #[Route('/position/duplicate/{id}', name: 'app_position_duplicate', methods: ['POST'])]
-    public function duplicate(Position $position, EntityManagerInterface $em, #[CurrentUser] User $user): Response
+    #[IsGranted('ROLE_RECRUITER')]
+    #[Route('/position/duplicate/{id}', name: 'app_position_duplicate')]
+    public function duplicate(Position $position, #[CurrentUser] User $user): Response
     {
         $copy = new Position();
         $copy->setName($position->getName() . ' (copy)');
@@ -102,7 +108,7 @@ class PositionController extends AbstractController {
         $copy->setMaxProjects($position->getMaxProjects());
         // $copy->setIsPublic(false);
         // $copy->setCreatedBy($user);
-        $em->persist($copy);
+        $this->em->persist($copy);
  
         foreach ($position->getAttributes() as $attribute) {
             $copy->addAttribute($attribute);
@@ -111,8 +117,16 @@ class PositionController extends AbstractController {
             $copy->addTag($tag);
         }
  
-        $em->flush();
- 
+        $this->em->flush();
         return $this->redirectToRoute('app_position_edit', ['id' => $copy->getId()]);
+    }
+
+    #[IsGranted('ROLE_RECRUITER')]
+    #[Route('/position/delete/{id}', name: 'app_position_delete')]
+    public function delete(Position $position, #[CurrentUser] User $user): Response
+    {
+        $this->em->remove($position);
+        $this->em->flush();
+        return $this->redirectToRoute('app_positions');
     }
 }
