@@ -20,7 +20,7 @@ final class Version20260904050044 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE "user" ADD locale VARCHAR(5) DEFAULT "en" NOT NULL');
+        $this->addSql('ALTER TABLE "user" ADD locale VARCHAR(5) DEFAULT \'en\' NOT NULL');
     }
 
     public function down(Schema $schema): void
