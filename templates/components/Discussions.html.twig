@@ -1,0 +1,54 @@
+<div {{attributes}} class="mb-5" data-poll="delay(5000)|$render">
+    {% if app.user %}
+    <div class="d-flex justify-content-end mb-3 w-100">
+        <button class="btn btn-primary" data-action="live#action"
+            data-live-action-param="createPost">+Create Post</button>
+    </div>
+    {% endif %}
+    {% for post in this.posts %}
+    <div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex justify-content-between w-100 mb-3">
+            {% set url = is_granted('ROLE_RECRUITER')? path('app_profile'): '' %}
+            <a href="{{url}}" class="d-block text-decoration-none" role="button" aria-expanded="false">
+                <img src={{asset('images/avatar-placeholder.svg')}} class="rounded-circle border" width="40" height="40" style="object-fit: cover;">
+                {{ post.author.email??'' }}
+            </a>
+            {% if app.user and app.user.id == post.author.id %}
+            <div class="dropdown">
+                <button class="btn btn-sm btn-link" data-bs-toggle="dropdown">⋮</button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><button class="dropdown-item" data-action="live#action"
+                    data-live-action-param="editPost"
+                    data-live-id-param="{{ post.id }}">Edit</button></li>
+                    <li><button class="dropdown-item text-danger" data-action="live#action"
+                    data-live-action-param="deletePost"
+                    data-live-id-param="{{ post.id }}">Delete</button></li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        
+        {% if post.id != this.editingPostId %}
+        <div>
+            {{post.content|markdown_to_html}}
+        </div>
+        {% else %}
+        <div>
+        <div class="mb-3">
+            <div class="markdown-editor-wrapper">
+                <textarea id="markdown-editor" name="description"
+                class="form-control" data-model="debounce(500)|content" autofocus></textarea>
+                {% include 'components/autosave_conflict.html.twig' %}
+            </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary" data-action="live#action"
+            data-live-action-param="savePost">Save</button>
+        </div>
+        </div>
+        {% endif %}
+    </div>
+    </div>
+    {% endfor %}
+</div>
