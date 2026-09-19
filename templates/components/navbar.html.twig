@@ -12,6 +12,11 @@
             <li class="nav-item">
             <a class="nav-link" aria-current="page" href="{{path("app_positions")}}">{{"navbar.positions"|trans}}</a>
             </li>
+            {% if is_granted('ROLE_RECRUITER') %}
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page"
+            href="{{path("app_admin")}}">{{"navbar.backOffice"|trans}}</a> </li>
+            {% endif %}
             <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Dropdown
@@ -35,7 +40,7 @@
                 <ul style="z-index:99999000" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href={{ path('app_profile') }}>{{ 'navbar.profile'|trans }}</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><h6 class="dropdown-header">Appearance</h6></li>
+                <li><h6 class="dropdown-header">{{'navbar.appearance'|trans}}</h6></li>
                 <li><a class="dropdown-item {% if theme == 'dark' %}active{% endif %}"
                     href={{ path('app_switch_theme', {theme: 'dark'}) }}>{{ 'navbar.dark'|trans }}</a></li>
                 <li><a class="dropdown-item {% if theme == 'light' %}active{% endif %}"

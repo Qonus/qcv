@@ -27,6 +27,7 @@ auth:
     github: "Continue with GitHub"
 navbar:
   positions: "Positions"
+  backOffice: "Back Office"
   profile: "Profile"
   appearance: "Appearance"
   dark: "Dark"

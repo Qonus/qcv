@@ -38,7 +38,7 @@ class Attribute
     /**
      * @var Collection<int, AttributeOption>
      */
-    #[ORM\OneToMany(targetEntity: AttributeOption::class, mappedBy: 'attribute', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: AttributeOption::class, mappedBy: 'attribute', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $options;
 
     public function __construct()

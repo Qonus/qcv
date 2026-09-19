@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AttributeOptionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Form\FormTypeInterface;
 
 #[ORM\Entity(repositoryClass: AttributeOptionRepository::class)]
 class AttributeOption
@@ -19,6 +20,10 @@ class AttributeOption
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Attribute $attribute = null;
+
+    public function __tostring() {
+        return $this->value;
+    }
 
     public function getId(): ?int
     {

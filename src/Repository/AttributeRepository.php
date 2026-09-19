@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Attribute;
+use App\Entity\AttributeValue;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use TypeaheadRepositoryInterface;
 
@@ -12,21 +15,38 @@ use TypeaheadRepositoryInterface;
  */
 class AttributeRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private EntityManagerInterface $em)
     {
         parent::__construct($registry, Attribute::class);
     }
 
-    // TODO: Get only attributes that aren't already in user's attribute value list.
-    public function search(string $query): array {
+    // public function search(string $query): array {
+    //     return $this->createQueryBuilder('a')
+    //     ->andWhere("a.isBuiltin = false")
+    //     ->orderBy('a.name', 'ASC')
+    //     ->setMaxResults(20)
+    //     ->andWhere("LOWER(a.name) LIKE LOWER(:q)")
+    //     ->setParameter("q", '%'.$query.'%')
+    //     ->getQuery()
+    //     ->getResult();
+    // }
+
+    public function searchNewForUser(User $user, string $query): array {
+        $subQuery = $this->em->createQueryBuilder()
+            ->select('1')
+            ->from(AttributeValue::class, 'av')
+            ->where('av.attribute = a')
+            ->andWhere('av.candidate = :user');
+
         return $this->createQueryBuilder('a')
-        ->andWhere("a.isBuiltin = false")
-        ->orderBy('a.name', 'ASC')
-        ->setMaxResults(20)
-        ->andWhere("LOWER(a.name) LIKE LOWER(:q)")
-        ->setParameter("q", '%'.$query.'%')
-        ->getQuery()
-        ->getResult();
+            ->andWhere("LOWER(a.name) LIKE LOWER(:q)")
+            ->andWhere("NOT EXISTS ({$subQuery->getDQL()})")
+            ->setParameter('q', '%'.$query.'%')
+            ->setParameter('user', $user)
+            ->orderBy('a.name', 'ASC')
+            ->setMaxResults(20)
+            ->getQuery()
+            ->getResult();
     }
 
     //    /**

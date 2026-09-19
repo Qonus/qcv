@@ -2,9 +2,11 @@
 
 namespace App\Twig\Components;
 
+use App\Entity\AttributeValue;
 use App\Entity\User;
 use App\Repository\AttributeRepository;
 use App\Repository\AttributeValueRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -23,27 +25,31 @@ class CandidateAttributes
     public string $query = '';
 
     public function __construct(
-        private AttributeRepository $repo,
+        private AttributeRepository $attributeRepository,
         private AttributeValueRepository $attributeValueRepository,
+        private EntityManagerInterface $em,
         private Security $security)
     {
     }
 
-    public function getUser(): ?User
-    {
+    public function getUser(): ?User {
         /** @var User|null $user */
         return $this->security->getUser();
     }
 
     #[LiveAction]
-    public function selectOption(#[LiveArg] int $id) {
-        // TODO: Add the attribute with $id to the user's attribute values.
-        
+    public function selectOption(#[LiveArg] int $attributeId) {
+        // TODO: UNTESTED
+        $newAttributeValue = new AttributeValue();
+        $newAttributeValue->setAttribute($this->attributeRepository->find($attributeId));
+        $newAttributeValue->setCandidate($this->getUser());
+        $newAttributeValue->setValue(null);
+        $this->em->persist($newAttributeValue);
+        $this->em->flush();
     }
 
-    public function getResults(): array
-    {
-        return $this->repo->search($this->query);
+    public function getResults(): array {
+        return $this->attributeRepository->searchNewForUser($this->getUser(), $this->query);
     }
 
     public function getAttributeValues(): array {

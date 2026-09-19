@@ -4,7 +4,9 @@ namespace App\Controller\Admin;
 
 use App\Entity\Attribute;
 use App\Entity\AttributeCategory;
+use App\Entity\AttributeOption;
 use App\Enum\AttributeDataType;
+use App\Form\AttributeOptionFormType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -47,13 +49,16 @@ class AttributeCrudController extends AbstractCrudController
             ])
             ->setFormTypeOption('disabled', $pageName === Crud::PAGE_EDIT);
 
-        // yield CollectionField::new('options', 'Selectable Options')
-        //     // ->setEntryType(AttributeOption::class)
-        //     ->allowAdd()
-        //     ->allowDelete()
-        //     // ->byReference(false) // Required so Doctrine triggers addOption()/removeOption()
-        //     ->hideOnIndex()
-        //     ->setHelp('Add options if this attribute uses the "One of many (dropdown)" type.');
+        yield CollectionField::new('options', 'Selectable Options')
+            ->setEntryType(AttributeOptionFormType::class)
+            ->allowAdd()
+            ->allowDelete()
+            // ->byReference(false) // Required so Doctrine triggers addOption()/removeOption()
+            ->hideOnIndex()
+            ->setHelp('Add options if this attribute uses the "One of many (dropdown)" type.');
+            // ->renderFormWhen(
+            //     fn ($attribute) => $attribute->getDataType() === AttributeDataType::SELECT
+            // );
         
         yield TextareaField::new('description')
             ->hideOnIndex();
