@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <h2>{{'candidate.me'|trans}}</h2>
+    <div class="card mb-3 p-2">
+        {% for field in [
+            {name:'candidate.email'|trans, value: candidate.email},
+            {name:'candidate.name'|trans, value: firstName ~ ' ' ~ lastName},
+            {name:'candidate.location'|trans, value: location},
+            ] %}
+        <div class="d-flex gap-3 align-items-center">
+            <strong>{{field.name}}</strong>
+            <span class="fs-5">{{field.value}}</span>
+        </div>
+    {% endfor %}
+    </div>
+
+    <h2>{{'candidate.info'|trans}}</h2>
+    {% for attributeValue in attributeValues %}
+    <div class="card mb-3">
+    <div class="card-body d-flex align-items-center gap-4">
+        <strong class="fs-5">{{attributeValue.attribute.name}}</strong>
+        <span>{{attributeValue.value}}</span>
+    </div>
+    </div>
+    {% endfor %}
+    <h2>{{'candidate.projects'|trans}}</h2>
+{# <h2>{{'candidate.cvs'|trans}}</h2> #}
+</div>
+{% endblock %}

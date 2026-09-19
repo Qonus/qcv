@@ -27,6 +27,7 @@ class ProfileController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
+        private AttributeValueRepository $attributeValueRepository,
         #[Autowire('%env(CLOUDINARY_CLOUD_NAME)%')] private readonly string $cloudinaryCloudName,
         #[Autowire('%env(CLOUDINARY_UPLOAD_PRESET)%')] private readonly string $cloudinaryUploadPreset,
     ) {}
@@ -34,12 +35,8 @@ class ProfileController extends AbstractController
     #[Route('', name: 'app_profile', methods: ['GET'])]
     public function index(#[CurrentUser] User $user): Response
     {
-        /**
-         * @var AttributeValueRepository
-         */
-        $valueRepo = $this->em->getRepository(AttributeValue::class);
         $valuesByName = [];
-        foreach ($valueRepo->findByUser($user, true) as $value) {
+        foreach ($this->attributeValueRepository->findByUser($user, true) as $value) {
             $valuesByName[$value->getAttribute()->getName()] = $value;
         }
 

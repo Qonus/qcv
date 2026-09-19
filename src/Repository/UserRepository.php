@@ -6,6 +6,7 @@ use App\Entity\Attribute;
 use App\Entity\AttributeValue;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -51,7 +52,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    // TODO: UNTESTED, FIX ASAP
     public function countByRole(string $role): int
     {
         return (int) $this->createQueryBuilder('u')
@@ -60,6 +60,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('role', '%"'.$role.'"%')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function findByEmail(string $email, string $role = ''): ?User {
+        $qb = $this->createQueryBuilder('u')
+            ->andWhere("u.email = :email")
+            ->setParameter("email", $email);
+        if ($role != '') {
+            $qb = $qb->andWhere("CONCAT(u.roles, '') LIKE :role")
+            ->setParameter('role', '%"'.$role.'"%');
+        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     //    /**

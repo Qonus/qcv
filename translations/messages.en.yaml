@@ -69,3 +69,11 @@ conflict:
   message: 'Someone else set this to <strong class="conflict-theirs-value"></strong> first.'
   mine: 'Keep mine'
   theirs: 'Use theirs'
+
+candidate:
+  me: "Me"
+  email: "Email"
+  name: "Name"
+  location: "Location"
+  info: "Info"
+  projects: "Projects"
