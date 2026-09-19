@@ -38,6 +38,29 @@ class Project implements TaggableEntity
     #[ORM\ManyToMany(targetEntity: Tag::class)]
     private Collection $tags;
 
+    #[ORM\Version]
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $version = 0;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default'=>'CURRENT_TIMESTAMP'])]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['default'=>'CURRENT_TIMESTAMP'])]
+    private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -83,7 +106,7 @@ class Project implements TaggableEntity
 
         return $this;
     }
-
+    
     public function getEndDate(): ?\DateTime
     {
         return $this->endDate;
@@ -93,6 +116,16 @@ class Project implements TaggableEntity
     {
         $this->endDate = $endDate;
 
+        return $this;
+    }
+
+
+    public function setStartDateFromString(string $startDate): static {
+        $this->setStartDate(new \DateTime($startDate));
+        return $this;
+    }
+    public function setEndDateFromString(string $endDate): static {
+        $this->setEndDate(new \DateTime($endDate));
         return $this;
     }
 
@@ -131,4 +164,12 @@ class Project implements TaggableEntity
 
         return $this;
     }
+
+    public function getVersion(): ?int
+    {
+        return $this->version;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
+    public function getUpdatedAt(): ?\DateTimeInterface { return $this->updatedAt; }
 }

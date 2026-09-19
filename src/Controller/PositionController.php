@@ -6,17 +6,21 @@ use App\Entity\Position;
 use App\Entity\User;
 use App\Enum\Level;
 use App\Repository\PositionRepository;
+use App\Service\AutosaveService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class PositionController extends AbstractController {
+    private const EDITABLE_FIELDS = ['name', 'description', 'company', 'level', 'maxProjects'];
 
     public function __construct(
-        private PositionRepository $positionRepository) {
+        private PositionRepository $positionRepository,
+        private AutosaveService $autosaveService) {
     }
 
     #[Route(path: "/position", name: "app_positions")]
@@ -79,6 +83,12 @@ class PositionController extends AbstractController {
         return $this->render("position/edit.html.twig", [
             "position" => $position
         ]);
+    }
+
+    #[Route('/position/save/{id}', name: 'app_position_save', methods: ['PATCH'])]
+    public function save(Position $position, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        return $this->autosaveService->patchEntityFromRequest($position, self::EDITABLE_FIELDS, $request);
     }
 
     #[Route('/position/duplicate/{id}', name: 'app_position_duplicate', methods: ['POST'])]

@@ -2,25 +2,28 @@
 
 {% block body %}
 <div class="container">
-{% component "Form:ProjectForm" with { entity: project } %}
-{% block content %}
 <form method="POST">
 <input type="hidden" name="_token" value="{{ csrf_token('project_form') }}">
 <div class="mb-5">
     <label class="form-label" for="title">{{ 'project.name'|trans }}</label>
-    <input type="text" value="{{entity.name??''}}" data-model="debounce(500ms)|entity.name" name="name" id="name" class="form-control form-control-lg" required autofocus />
+    <input type="text" value="{{project.name??''}}" name="name" id="name" class="form-control form-control-lg" required autofocus />
+    {% include 'components/autosave_conflict.html.twig' %}
 </div>
 
 <div class="mb-3" style="max-width: 300px">
     <label class="form-label fw-bold">{{'project.period.header'|trans}}</label>
     <div class="input-group mb-3">
         <span class="input-group-text">{{'project.period.from'|trans}}</span>
-        <input type="date" value="{{entity.startDate|date('Y-m-d')}}" data-model="debounce(500ms)|entity.startDate" class="form-control" name="startDate" id="startDate" aria-label="Start date">
-        
+        <input type="date" value="{{project.startDate|date('Y-m-d')}}"
+        class="form-control" name="startDate" id="startDate" aria-label="Start date"
+        >
+        {% include 'components/autosave_conflict.html.twig' %}
     </div>
     <div class="input-group">
         <span class="input-group-text">{{'project.period.to'|trans}}</span>
-        <input type="date" value="{{entity.endDate|date('Y-m-d')}}" data-model="debounce(500ms)|entity.endDate" class="form-control" name="endDate" id="endDate" aria-label="End date">
+        <input type="date" value="{{project.endDate|date('Y-m-d')}}" class="form-control" name="endDate" id="endDate" aria-label="End date"
+        >
+        {% include 'components/autosave_conflict.html.twig' %}
     </div>
 </div>
 
@@ -31,22 +34,22 @@
     </label>
     
     <div class="markdown-editor-wrapper">
-        <textarea id="markdown-editor" data-model="debounce(500ms)|entity.description" name="description" class="form-control">{{entity.description??''}}</textarea>
+        <textarea id="markdown-editor" name="description"
+        class="form-control">{{project.description??''}}</textarea>
+        {% include 'components/autosave_conflict.html.twig' %}
     </div>
 </div>
 
 <div class="mb-5">
-{{component('TagPicker', {entityClass: 'App\\Entity\\Project', entityId: entity.id})}}
+{{component('TagPicker', {entityClass: 'App\\Entity\\Project', entityId: project.id})}}
 </div>
 
 <div class="d-flex justify-content-end w-100">
     <button class="btn btn-lg btn-primary mb-3" type="submit">
-        {{ entity==null?'project.create'|trans:'project.edit'|trans }}
+        {{ project==null?'project.create'|trans:'project.edit'|trans }}
     </button>
 </div>
 
 </form>
-{% endblock %}
-{% endcomponent %}
 </div>
 {% endblock %}

@@ -64,3 +64,8 @@ project:
   tags: "Tags"
   edit: "Edit"
   create: "Create"
+
+conflict:
+  message: 'Someone else set this to <strong class="conflict-theirs-value"></strong> first.'
+  mine: 'Keep mine'
+  theirs: 'Use theirs'
