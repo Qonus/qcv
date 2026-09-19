@@ -34,7 +34,7 @@ class CandidateService
         $this->em->flush();
     }
 
-    private function updateOrCreateBuiltin(User $user, string $attributeName, string $newValue): void
+    private function updateOrCreateBuiltin(User $user, string $attributeName, mixed $newValue): void
     {
         $attributeValue = $this->valueRepo->findOneByUserAndName($user, $attributeName);
 
@@ -50,6 +50,6 @@ class CandidateService
             $this->em->persist($attributeValue);
         }
 
-        $attributeValue->setValueString($newValue);
+        $attributeValue->setValue($newValue);
     }
 }

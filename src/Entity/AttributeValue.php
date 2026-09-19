@@ -117,6 +117,23 @@ class AttributeValue
         };
     }
 
+    public function setValue(mixed $value): void
+    {
+        match ($this->attribute?->getDataType()) {
+            AttributeDataType::BOOLEAN => $this->setValueBoolean($value),
+            AttributeDataType::STRING => $this->setValueString($value),
+            AttributeDataType::TEXT    => $this->setValueText($value),
+            AttributeDataType::DATE    => $this->setValueDate($value),
+            AttributeDataType::PERIOD  => function ($value) {
+                $this->setValueDate($value['start']);
+                $this->setValueDateEnd($value['end']);},
+            AttributeDataType::IMAGE => $this->setValueImageUrl($value),
+            AttributeDataType::NUMERIC => $this->setValueNumeric($value),
+            AttributeDataType::SELECT => $this->setValueOption($value),
+            default => 'NaN',
+        };
+    }
+
     public function getValueString(): ?string
     {
         return $this->valueString;

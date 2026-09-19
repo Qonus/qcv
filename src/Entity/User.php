@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\BuiltinAttribute;
 use App\Enum\Theme;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -397,5 +398,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function getImage(): ?string {
+        foreach ($this->attributeValues as $attributeValue) {
+            if ($attributeValue->getAttribute()->getName() == BuiltinAttribute::IMAGE_URL->value) {
+                return $attributeValue->getValue();
+            }
+        }
+        return null;
     }
 }

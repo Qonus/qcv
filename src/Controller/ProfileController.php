@@ -21,15 +21,13 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_CANDIDATE')]
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 #[Route('/profile')]
 class ProfileController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
         private AttributeValueRepository $attributeValueRepository,
-        #[Autowire('%env(CLOUDINARY_CLOUD_NAME)%')] private readonly string $cloudinaryCloudName,
-        #[Autowire('%env(CLOUDINARY_UPLOAD_PRESET)%')] private readonly string $cloudinaryUploadPreset,
     ) {}
 
     #[Route('', name: 'app_profile', methods: ['GET'])]

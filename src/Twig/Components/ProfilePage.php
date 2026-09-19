@@ -7,7 +7,11 @@ use App\Enum\BuiltinAttribute;
 use App\Repository\AttributeRepository;
 use App\Repository\AttributeValueRepository;
 use App\Service\CandidateService;
+use App\Service\UploadService;
+use Cloudinary\Cloudinary;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
@@ -36,6 +40,7 @@ class ProfilePage
         private AttributeRepository $repo,
         private CandidateService $candidateService,
         private AttributeValueRepository $attributeValueRepository,
+        private UploadService $uploadService,
         private Security $security)
     {
     }
@@ -46,8 +51,17 @@ class ProfilePage
         return $this->security->getUser();
     }
 
+    #[LiveAction]
+    public function uploadImage(Request $request): void {
+        /** @var UploadedFile|null $image */
+        $image = $request->files->get('image');
+        if (!$image) return;
+        $imageUrl = $this->uploadService->uploadImage($image);
+        $this->image = $imageUrl;
+        $this->save();
+    }
+
     // TODO: automatically call this function every 5-10 seconds during editing
-    // TODO: Upload the profile picture into cloudinary and update the image url.
     #[LiveAction]
     public function save(): void {
         $this->candidateService->saveBuiltinValues($this->getUser(), [

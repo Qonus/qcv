@@ -1,12 +1,23 @@
 <div {{attributes}} class="tab-pane show active">
     <div class="row g-4">
         <div class="col-md-3 text-center">
-            <img src={{asset('images/avatar-placeholder.svg')}}
+            <img src="{{ this.image ?: asset('images/avatar-placeholder.svg')}}"
                 class="rounded-circle mb-2 border" width="140" height="140" style="object-fit: cover;" id="profile-photo-preview">
             <br>
-            <button type="button" class="btn btn-sm btn-outline-secondary">
-                Change Photo
-            </button>
+
+            <div>
+                <input type="file" name="image" id="image-input" accept="image/*" style="display: none;"
+                data-action="change->live#action"
+                data-live-action-param="files(image)|uploadImage"
+                >
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('image-input').click();"
+                >
+                    Change Photo
+                </button>
+            </div>
+            <div data-loading="show" class="spinner-border spinner-border-sm text-primary mt-2" role="status">
+                <span class="visually-hidden">Uploading to Cloudinary...</span>
+            </div>
         </div>
         <div class="col-md-9">
             <div class="form-floating mb-3">

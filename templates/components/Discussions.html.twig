@@ -11,7 +11,7 @@
         <div class="d-flex justify-content-between w-100 mb-3">
             {% set url = is_granted('ROLE_RECRUITER')? path('app_candidate_show', {email: post.author.email??''}): '' %}
             <a href="{{url}}" class="d-block text-decoration-none" role="button" aria-expanded="false">
-                <img src={{asset('images/avatar-placeholder.svg')}} class="rounded-circle border" width="40" height="40" style="object-fit: cover;">
+                <img src="{{ post.author.image?:asset('images/avatar-placeholder.svg') }}" class="rounded-circle border" width="40" height="40" style="object-fit: cover;">
                 {{ post.author.email??'' }}
             </a>
             {% if app.user and app.user.id == post.author.id %}
