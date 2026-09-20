@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const editorElement = document.getElementById('markdown-editor');
     
     if (editorElement) {
+        const originalClasses = Array.from(editorElement.classList);
+        const originalDataset = { ...editorElement.dataset };
         const easymde = new EasyMDE({
             element: editorElement,
             forceSync: true,
@@ -29,6 +31,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 "preview", "side-by-side", "fullscreen"
             ],
             status: ["lines", "words"]
+        });
+        const internalTextArea = easymde.codemirror.getInputField();
+        originalClasses.forEach(className => {
+            internalTextArea.classList.add(className); 
+        });
+        Object.keys(originalDataset).forEach(key => {
+            internalTextArea.dataset[key] = originalDataset[key];
         });
     }
 });

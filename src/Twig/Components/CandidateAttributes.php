@@ -2,23 +2,23 @@
 
 namespace App\Twig\Components;
 
+use App\Entity\Attribute;
 use App\Entity\AttributeValue;
 use App\Entity\User;
 use App\Repository\AttributeRepository;
 use App\Repository\AttributeValueRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent]
 class CandidateAttributes
 {
+    // WARNING: FINISH THIS IS UNTESTED
     use DefaultActionTrait;
 
     #[LiveProp(writable: true)]
@@ -38,10 +38,9 @@ class CandidateAttributes
     }
 
     #[LiveAction]
-    public function selectOption(#[LiveArg] int $attributeId) {
-        // TODO: UNTESTED
+    public function addAttribute(#[LiveArg] int $id) {
         $newAttributeValue = new AttributeValue();
-        $newAttributeValue->setAttribute($this->attributeRepository->find($attributeId));
+        $newAttributeValue->setAttribute($this->getAttribute($id));
         $newAttributeValue->setCandidate($this->getUser());
         $newAttributeValue->setValue(null);
         $this->em->persist($newAttributeValue);
@@ -54,5 +53,16 @@ class CandidateAttributes
 
     public function getAttributeValues(): array {
         return $this->attributeValueRepository->findByUser($this->getUser(), false);
+    }
+
+    #[LiveAction]
+    public function deleteAttributeValue(#[LiveArg]int $id) {
+        $attributeValue = $this->attributeValueRepository->find($id);
+        if (!$attributeValue) return;
+        $this->em->remove($attributeValue);
+        $this->em->flush();
+    }
+    private function getAttribute(int $id): Attribute {
+        return $this->attributeRepository->find($id);
     }
 }

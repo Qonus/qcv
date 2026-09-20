@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Enum\AttributeDataType;
+use App\Repository\AttributeOptionRepository;
 use App\Repository\AttributeValueRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -52,12 +54,12 @@ class AttributeValue
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $version = 0;
 
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default'=>'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default'=>'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['default'=>'CURRENT_TIMESTAMP'])]
     private ?\DateTimeInterface $updatedAt = null;
-
+    
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
     {
@@ -124,9 +126,7 @@ class AttributeValue
             AttributeDataType::STRING => $this->setValueString($value),
             AttributeDataType::TEXT    => $this->setValueText($value),
             AttributeDataType::DATE    => $this->setValueDate($value),
-            AttributeDataType::PERIOD  => function ($value) {
-                $this->setValueDate($value['start']);
-                $this->setValueDateEnd($value['end']);},
+            AttributeDataType::PERIOD  => $this->setValuePeriod($value),
             AttributeDataType::IMAGE => $this->setValueImageUrl($value),
             AttributeDataType::NUMERIC => $this->setValueNumeric($value),
             AttributeDataType::SELECT => $this->setValueOption($value),
@@ -192,6 +192,16 @@ class AttributeValue
         $this->valueDateEnd = $valueDateEnd;
 
         return $this;
+    }
+
+    public function setValuePeriod(mixed $value) {
+        $this->setValueDate($value['start']??null);
+        $this->setValueDateEnd($value['end']??null);
+    }
+
+    public function setValuePeriodFromString(mixed $value) {
+        $this->setValueDate(new DateTime($value['start']??null));
+        $this->setValueDateEnd(new DateTime($value['end']??null));
     }
 
     public function isValueBoolean(): ?bool

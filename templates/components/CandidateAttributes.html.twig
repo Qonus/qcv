@@ -8,47 +8,24 @@
 
     <div class="row g-3" id="info-attribute-list">
         {% for attributeValue in this.attributeValues %}
-            <div class="col-md-6" data-info-row={{attributeValue.id }}>
-                <div class="card">
+            <div class="">
+                <div class="card mb-4">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <label class="form-label fw-semibold">{{ attributeValue.attribute.name }}</label>
                             <div class="dropdown">
                                 <button class="btn btn-sm btn-link text-muted" data-bs-toggle="dropdown">⋮</button>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><button class="dropdown-item text-danger remove-attribute-btn"
-                                        data-attribute-id="{{ attributeValue.id }}">Remove</button></li>
+                                    <li><button class="dropdown-item text-danger"
+                                        data-action="live#action"
+                                        data-live-action-param="deleteAttributeValue"
+                                        data-live-id-param="{{ attributeValue.id }}">{{'actions.delete'|trans}}</button></li>
                                 </ul>
                             </div>
                         </div>
-
-                        {% if attributeValue.attribute.dataType.value == 'boolean' %}
-                            <div class="form-check form-switch">
-                                <input class="form-check-input autosave-field" type="checkbox" role="switch"
-                                        data-attribute-id="{{ attributeValue.id }}"
-                                        data-version="{{ attributeValue.version }}"
-                                        {{ attributeValue.valueBoolean ? 'checked' : '' }}>
-                            </div>
-                        {% elseif attributeValue.attribute.dataType.value == 'text' %}
-                            <textarea class="form-control autosave-field {{ attributeValue.valueText is null ? 'is-invalid' : '' }}"
-                                        data-attribute-id="{{ attributeValue.id }}"
-                                        data-version="{{ attributeValue.version }}" rows="3">{{ attributeValue.valueText }}</textarea>
-                        {% elseif attributeValue.attribute.dataType.value == 'numeric' %}
-                            <input type="number" step="any"
-                                    class="form-control autosave-field {{ attributeValue.valueNumeric is null ? 'is-invalid' : '' }}"
-                                    data-attribute-id="{{ attributeValue.id }}" data-version="{{ attributeValue.version }}"
-                                    value="{{ attributeValue.valueNumeric }}">
-                        {% elseif attributeValue.attribute.dataType.value == 'date' %}
-                            <input type="date"
-                                    class="form-control autosave-field {{ attributeValue.valueNumeric is null ? 'is-invalid' : '' }}"
-                                    data-attribute-id="{{ attributeValue.id }}" data-version="{{ attributeValue.version }}"
-                                    value="{{ attributeValue.valueNumeric }}">
-                        {% else %}
-                            <input type="text" class="form-control autosave-field {{ attributeValue.valueString is null ? 'is-invalid' : '' }}"
-                                    data-attribute-id="{{ attributeValue.id }}" data-version="{{ attributeValue.version }}"
-                                    value="{{ attributeValue.valueString }}">
-                        {% endif %}
-                        <small class="text-muted">Empty values show highlighted — recruiters see them in red.</small>
+                        {{component('AttributeValueEditor', {
+                            attributeValue: attributeValue,
+                            key: 'attribute-value-' ~ attributeValue.id})}}
                     </div>
                 </div>
             </div>
@@ -79,7 +56,7 @@
                         type="button"
                         class="list-group-item list-group-item-action"
                         data-action="live#action"
-                        data-live-action-param="selectOption"
+                        data-live-action-param="addAttribute"
                         data-live-id-param={{item.id}}>
                         {{item.name}} <span class="badge text-bg-light border">{{item.category}}</span>
                     </button>

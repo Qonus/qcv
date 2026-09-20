@@ -12,6 +12,7 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        // TODO: disallow logging in if the user is blocked
         $error = $authenticationUtils->getLastAuthenticationError();
         return $this->render('security/login.html.twig', [
             'error' => $error,

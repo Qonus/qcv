@@ -34,12 +34,14 @@
         <div>
             {{post.content|markdown_to_html}}
         </div>
-        {% else %}
-        <div>
+        {% endif %}
+        <div class="{{post.id != this.editingPostId ? 'd-none':''}}">
         <div class="mb-3">
             <div class="markdown-editor-wrapper">
                 <textarea id="markdown-editor" name="description"
-                class="form-control" data-model="debounce(300)|content" autofocus></textarea>
+                class="form-control"
+                 data-model="debounce(300)|content">
+                    {{this.content}}</textarea>
                 {% include 'components/autosave_conflict.html.twig' %}
             </div>
         </div>
@@ -48,7 +50,6 @@
             data-live-action-param="savePost">{{'actions.save'|trans}}</button>
         </div>
         </div>
-        {% endif %}
     </div>
     </div>
     {% endfor %}

@@ -19,7 +19,7 @@ class CandidateController extends AbstractController {
 
     #[Route(path: '/candidate/{email}', name: "app_candidate_show")]
     public function show(string $email): Response {
-        $candidate = $this->userRepository->findByEmail($email, 'ROLE_CANDIDATE');
+        $candidate = $this->userRepository->findByEmail($email, '');
         if (!$candidate) throw $this->createNotFoundException("Candidate doesn't exist");
         $attributeValues = $this->attributeValueRepository->findByUser($candidate, false);
         $valuesByName = [];
