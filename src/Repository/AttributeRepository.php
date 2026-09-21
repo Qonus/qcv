@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\AccessRule;
 use App\Entity\Attribute;
 use App\Entity\AttributeValue;
+use App\Entity\Position;
+use App\Entity\PositionAttribute;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,16 +23,16 @@ class AttributeRepository extends ServiceEntityRepository
         parent::__construct($registry, Attribute::class);
     }
 
-    // public function search(string $query): array {
-    //     return $this->createQueryBuilder('a')
-    //     ->andWhere("a.isBuiltin = false")
-    //     ->orderBy('a.name', 'ASC')
-    //     ->setMaxResults(20)
-    //     ->andWhere("LOWER(a.name) LIKE LOWER(:q)")
-    //     ->setParameter("q", '%'.$query.'%')
-    //     ->getQuery()
-    //     ->getResult();
-    // }
+
+    public function search(string $query): array {
+        return $this->createQueryBuilder('a')
+            ->andWhere("LOWER(a.name) LIKE LOWER(:q)")
+            ->setParameter('q', '%'.$query.'%')
+            ->orderBy('a.name', 'ASC')
+            ->setMaxResults(20)
+            ->getQuery()
+            ->getResult();
+    }
 
     public function searchNewForUser(User $user, string $query): array {
         $subQuery = $this->em->createQueryBuilder()
@@ -43,6 +46,24 @@ class AttributeRepository extends ServiceEntityRepository
             ->andWhere("NOT EXISTS ({$subQuery->getDQL()})")
             ->setParameter('q', '%'.$query.'%')
             ->setParameter('user', $user)
+            ->orderBy('a.name', 'ASC')
+            ->setMaxResults(20)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function searchNewForPosition(Position $position, string $query): array {
+        $subQuery = $this->em->createQueryBuilder()
+            ->select('1')
+            ->from(PositionAttribute::class, 'pa')
+            ->where('pa.attribute = a')
+            ->andWhere('pa.position = :position');
+
+        return $this->createQueryBuilder('a')
+            ->andWhere("LOWER(a.name) LIKE LOWER(:q)")
+            ->andWhere("NOT EXISTS ({$subQuery->getDQL()})")
+            ->setParameter('q', '%'.$query.'%')
+            ->setParameter('position', $position)
             ->orderBy('a.name', 'ASC')
             ->setMaxResults(20)
             ->getQuery()

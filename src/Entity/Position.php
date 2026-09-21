@@ -10,7 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PositionRepository::class)]
-class Position implements TaggableEntity, AttributeAssignable
+class Position implements TaggableEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,12 +22,6 @@ class Position implements TaggableEntity, AttributeAssignable
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = '';
-    
-    /**
-     * @var Collection<int, Attribute>
-    */
-    #[ORM\ManyToMany(targetEntity: Attribute::class)]
-    private Collection $attributes;
     
     /**
      * @var Collection<int, Tag>
@@ -66,6 +60,18 @@ class Position implements TaggableEntity, AttributeAssignable
     #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'position', orphanRemoval: true)]
     private Collection $posts;
 
+    /**
+     * @var Collection<int, PositionAttribute>
+     */
+    #[ORM\OneToMany(targetEntity: PositionAttribute::class, mappedBy: 'position', orphanRemoval: true)]
+    private Collection $positionAttributes;
+
+    /**
+     * @var Collection<int, AccessRule>
+     */
+    #[ORM\OneToMany(targetEntity: AccessRule::class, mappedBy: 'position', orphanRemoval: true)]
+    private Collection $accessRules;
+
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
     {
@@ -82,9 +88,10 @@ class Position implements TaggableEntity, AttributeAssignable
     public function __construct()
     {
         $this->tags = new ArrayCollection();
-        $this->attributes = new ArrayCollection();
         $this->cvs = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->positionAttributes = new ArrayCollection();
+        $this->accessRules = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,30 +119,6 @@ class Position implements TaggableEntity, AttributeAssignable
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return Attribute[]
-     */
-    public function getAttributes(): array
-    {
-        return $this->attributes->toArray();
-    }
-
-    public function addAttribute(Attribute $attribute): static
-    {
-        if (!$this->attributes->contains($attribute)) {
-            $this->attributes->add($attribute);
-        }
-
-        return $this;
-    }
-
-    public function removeAttribute(Attribute $attribute): static
-    {
-        $this->attributes->removeElement($attribute);
 
         return $this;
     }
@@ -262,6 +245,78 @@ class Position implements TaggableEntity, AttributeAssignable
             // set the owning side to null (unless already changed)
             if ($post->getPosition() === $this) {
                 $post->setPosition(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PositionAttribute>
+     */
+    public function getPositionAttributes(): Collection
+    {
+        return $this->positionAttributes;
+    }
+
+    /**
+     * 
+     * @return array<Attribute>
+     */
+    public function getAttributes(): array
+    {
+        return array_map(
+            fn(PositionAttribute $positionAttribute) => $positionAttribute->getAttribute(),
+            $this->positionAttributes->toArray()
+        );
+    }
+
+    public function addPositionAttribute(PositionAttribute $positionAttribute): static
+    {
+        if (!$this->positionAttributes->contains($positionAttribute)) {
+            $this->positionAttributes->add($positionAttribute);
+            $positionAttribute->setPosition($this);
+        }
+
+        return $this;
+    }
+
+    public function removePositionAttribute(PositionAttribute $positionAttribute): static
+    {
+        if ($this->positionAttributes->removeElement($positionAttribute)) {
+            // set the owning side to null (unless already changed)
+            if ($positionAttribute->getPosition() === $this) {
+                $positionAttribute->setPosition(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AccessRule>
+     */
+    public function getAccessRules(): Collection
+    {
+        return $this->accessRules;
+    }
+
+    public function addAccessRule(AccessRule $accessRule): static
+    {
+        if (!$this->accessRules->contains($accessRule)) {
+            $this->accessRules->add($accessRule);
+            $accessRule->setPosition($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccessRule(AccessRule $accessRule): static
+    {
+        if ($this->accessRules->removeElement($accessRule)) {
+            // set the owning side to null (unless already changed)
+            if ($accessRule->getPosition() === $this) {
+                $accessRule->setPosition(null);
             }
         }
 

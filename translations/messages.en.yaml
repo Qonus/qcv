@@ -84,3 +84,31 @@ actions:
   save: "Save"
   duplicate: "Duplicate"
   delete: "Delete"
+
+
+filter:
+  match_type:
+    and: "AND"
+    or: "OR"
+    and_not: "AND NOT"
+    or_not: "OR NOT"
+
+  select_attribute: "Select Attribute"
+
+  target_property:
+    value: "Value"
+    length: "Length"
+    duration: "Duration"
+    start_date: "Start Date"
+    end_date: "End Date"
+
+  operation:
+    equals: "Equals"
+    not_equals: "Not Equals"
+    greater_than: "Greater Than"
+    less_than: "Less Than"
+    greater_eq_than: "Greater Or Equal Than"
+    less_eq_than: "Less Or Equal Than"
+    contains: "Contains"
+    starts_with: "Starts With"
+    contains_exact: "Contains Exact"

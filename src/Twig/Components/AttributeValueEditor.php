@@ -20,7 +20,6 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 #[AsLiveComponent]
 class AttributeValueEditor
 {
-    // WARNING: UNFINISHED
     use DefaultActionTrait;
 
     #[LiveProp]

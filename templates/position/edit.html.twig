@@ -30,6 +30,15 @@
 </div>
 
 <div class="mb-5">
+{{component('AttributeAssigner', {position: position})}}
+</div>
+
+<div class="mb-5">
+{# TODO: FIX PLACEHOLDER #}
+{{component('AccessRuleBuilder', {position: position})}}
+</div>
+
+<div class="mb-5">
     <label for="markdown-editor" class="form-label fw-bold d-flex justify-content-between align-items-center">
         <span>{{ 'position.description'|trans }}</span>
         <small class="text-body-secondary fw-normal">Markdown</small>
