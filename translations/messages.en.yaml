@@ -1,3 +1,15 @@
+home: "Home"
+w:
+  email: "Email"
+  likes: "Likes"
+  position: "Position"
+
+
+errors:
+  header: "Error ocurred!"
+  404:
+    header: "Oops! An error ocurred while loading this page!"
+
 auth:
   fields:
     email: "Email"
@@ -25,6 +37,7 @@ auth:
     divider: "or"
     google: "Continue with Google"
     github: "Continue with GitHub"
+
 navbar:
   positions: "Positions"
   backOffice: "Back Office"
@@ -34,12 +47,18 @@ navbar:
   light: "Light"
   language: "Locale"
   logout: "Logout"
+  search: "Search"
   login: "Sign in"
 
 profile:
+  me: "Me"
+  info: "Info"
+  projects: "Projects"
+  cvs: "CVs"
   firstName: "First Name"
   lastName: "Last Name"
   location: "Location"
+  no_attributes: "No Attribute Values Found."
 
 position:
   header: "Positions"
@@ -53,6 +72,7 @@ position:
   my_cv: "My CV"
   cvs: "CVs"
   discussions: "Discussions"
+  no_positions: "No Positions Found."
 
 project:
   name: "Project Name"
@@ -87,6 +107,8 @@ actions:
   delete: "Delete"
   apply: "Apply"
   open: "Open"
+  back: "Back"
+  submit: "Submit"
 
 
 filter:
@@ -120,3 +142,4 @@ cv:
   public: "Public"
   private: "Private"
   no_cvs: "No CVs yet."
+  mandatory_fields: "Mandatory Fields"

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Project;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,18 @@ class ProjectRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Project::class);
+    }
+
+    public function findByUser(User $candidate, ?string $query) {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.candidate = :candidate')
+            ->setParameter('candidate', $candidate)
+            ->andWhere('LOWER(p.name) LIKE LOWER(:query)')
+            ->orWhere('LOWER(p.description) LIKE LOWER(:query)')
+            ->setParameter('query', '%'.$query.'%')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
 //    /**

@@ -2,7 +2,7 @@
 <div class="tab-pane">
     <div class="d-flex justify-content-end mb-3">
         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addAttributeModal">
-            + Add Attribute
+            {{'actions.create'|trans}}
         </button>
     </div>
 
@@ -29,6 +29,12 @@
                     </div>
                 </div>
             </div>
+        {% else %}
+        <div class="card">
+            <div class="card-body">
+                {{'profile.no_attributes'|trans}}
+            </div>
+        </div>
         {% endfor %}
     </div>
 </div>

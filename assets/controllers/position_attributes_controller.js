@@ -2,15 +2,11 @@ import { Controller } from '@hotwired/stimulus';
 import TomSelect from 'tom-select';
 
 export default class extends Controller {
-    static targets = ["input"];
 
     connect() {
         this.states = {};
 
         this.select = new TomSelect(this.element, {
-            valueField: 'id',
-            labelField: 'name',
-            searchField: 'name',
             plugins: ['remove_button'],
             // TODO: later optional/required toggle
             // render: {

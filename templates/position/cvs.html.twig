@@ -3,13 +3,18 @@
 {% block body %}
 <div class="container">
     <table class="table table-hover align-middle">
-        <thead><tr><th>Position</th><th>Status</th><th>Likes</th><th class="text-end"></th></tr></thead>
+        <thead><tr><th>{{'w.position'|trans}}</th><th>{{'w.email'|trans}}</th><th class="text-end">{{'w.likes'|trans}}</th><th class="text-end"></th></tr></thead>
         <tbody>
         {% for cv in cvs %}
+            {# TODO: Set liked  #}
+            {% set liked = true %}
             <tr class="clickable-row" data-href="{{ path('app_cv_show', {id: cv.id}) }}">
                 <td>{{ cv.position.name }}</td>
-                <td><span class="badge {{ cv.isPublic ? 'text-bg-success' : 'text-bg-secondary' }}">{{ cv.isPublic ? "cv.public"|trans : "cv.private"|trans }}</span></td>
-                <td>{{ cv.likes|length }}</td>
+                <td>{{ cv.candidate.email }}</td>
+                <td class="text-end"><a class="btn btn-outline-secondary p-1 border" href="{{path('app_cv_like', {id: cv.id})}}">
+                    {{ cv.likes|length }}
+                    <i class="bi {{ liked ? 'bi-heart-fill':'bi-heart'}} ms-2 text-danger">
+                </button></td>
                 <td class="text-end"><a href="{{ path('app_cv_show', {id: cv.id}) }}" class="btn btn-sm btn-outline-primary">{{'actions.open'|trans}}</a></td>
             </tr>
         {% else %}

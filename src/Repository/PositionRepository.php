@@ -15,6 +15,17 @@ class PositionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Position::class);
     }
+    
+    public function search(?string $query) {
+        return $this->createQueryBuilder('p')
+            ->andWhere('LOWER(p.name) LIKE LOWER(:query)')
+            ->orWhere('LOWER(p.company) LIKE LOWER(:query)')
+            ->orWhere('LOWER(p.level) LIKE LOWER(:query)')
+            ->setParameter('query', '%'.$query.'%')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
     //    /**
     //     * @return Position[] Returns an array of Position objects

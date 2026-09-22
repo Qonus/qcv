@@ -2,12 +2,12 @@
 
 {% block body %}
 <div class="container">
-<form method="POST">
-<input type="hidden" name="_token" value="{{ csrf_token('cv_form') }}">
-<div class="row g-3" id="info-attribute-list">
-    {{'cv.mandatory'|trans}}
+    {% include 'components/flashes.html.twig' %}
+    {# <input type="hidden" name="_token" value="{{ csrf_token('cv_form') }}"> #}
+    <form method="POST">
+    <h2 class="mb-4">{{'cv.mandatory_fields'|trans}}:</h2>
     {% for a in requiredAttributes %}
-    <div class="card mb-4">
+    <div class="card mb-2 {{a.attributeValue == null ? 'border-danger bg-danger-subtle': ''}}">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-start">
                 <label class="form-label fw-semibold">{{ a.attribute.name }}</label>
@@ -15,26 +15,16 @@
             {% if a.attributeValue != null %}
             {{component('AttributeValueEditor', {
                 attributeValue: a.attributeValue,
+                required: true,
                 key: 'attribute-value-' ~ a.attributeValue.id})}}
+            {% else %}
+            <a class="btn btn-primary" href="{{path('app_attribute_value_create', {id: a.attribute.id})}}">{{'actions.create'|trans}}</a>
             {% endif %}
         </div>
     </div>
     {% endfor %}
-    {# For now only required #}
-    {# {{'cv.optional'|trans}}:
-    {% for attribute in optionalAttributes %}
-    <div class="card mb-4">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start">
-                <label class="form-label fw-semibold">{{ attributeValue.attribute.name }}</label>
-            </div>
-            {{component('AttributeValueEditor', {
-                attributeValue: attributeValue,
-                key: 'attribute-value-' ~ attributeValue.id})}}
-        </div>
-    </div>
-    {% endfor %} #}
-</div>
-</form>
+
+    <button class="btn btn-primary" type="submit">{{'actions.submit'|trans}}</button>
+    </form>
 </div>
 {% endblock %}

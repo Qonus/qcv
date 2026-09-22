@@ -24,6 +24,7 @@ class CandidateController extends AbstractController {
         if (!$candidate) throw $this->createNotFoundException("Candidate doesn't exist");
         return $this->render('candidate/show.html.twig', [
             'candidate' => $candidate,
+            'projects' => $candidate->getProjects(),
             ...($this->candidateService->getCandidateAttributes($candidate)),
         ]);
     }

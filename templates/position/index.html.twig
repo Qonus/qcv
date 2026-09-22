@@ -54,29 +54,29 @@
                 {% endif %}
             </div></td>
             <td class="text-end">
-                {% if is_granted('ROLE_RECRUITER') %}
+                {% if is_granted('ROLE_RECRUITER') or is_granted("apply", position) %}
                 <div class="dropdown">
                     <button class="btn btn-sm btn-link" data-bs-toggle="dropdown">⋮</button>
                     <ul class="dropdown-menu dropdown-menu-end">
+                        {% if is_granted('ROLE_RECRUITER') %}
                         <li><a class="dropdown-item"
                         href="{{ path('app_position_edit', {id: position.id}) }}">{{'actions.edit'|trans}}</a></li>
                         <li><a class="dropdown-item"
                         href="{{ path('app_position_duplicate', {id: position.id}) }}">{{'actions.duplicate'|trans}}</a></li>
                         <li><a class="dropdown-item text-danger"
                         href="{{ path('app_position_delete', {id: position.id}) }}">{{'actions.delete'|trans}}</a></li>
-                    </ul>
-                </div>
-                {% elseif is_granted('ROLE_CANDIDATE') %}
-                <div class="dropdown">
-                    <button class="btn btn-sm btn-link" data-bs-toggle="dropdown">⋮</button>
-                    <ul class="dropdown-menu dropdown-menu-end">
+                        {% endif %}
+                        {% if is_granted("apply", position) %}
                         <li><a class="dropdown-item"
                         href="{{ path('app_position_apply', {id: position.id}) }}">{{'actions.apply'|trans}}</a></li>
+                        {% endif %}
                     </ul>
                 </div>
                 {% endif %}
             </td>
         </tr>
+        {% else %}
+        <tr><td colspan="10" class="text-muted text-center py-4">{{'position.no_positions'|trans}}</td></tr>
         {% endfor %}
     </table>
 </div>

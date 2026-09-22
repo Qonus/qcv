@@ -24,6 +24,9 @@ class CandidateAttributes
     #[LiveProp(writable: true)]
     public string $query = '';
 
+    #[LiveProp(url: true)]
+    public string $q = '';
+
     public function __construct(
         private AttributeRepository $attributeRepository,
         private AttributeValueRepository $attributeValueRepository,
@@ -52,7 +55,7 @@ class CandidateAttributes
     }
 
     public function getAttributeValues(): array {
-        return $this->attributeValueRepository->findByUser($this->getUser(), false);
+        return $this->attributeValueRepository->findByUser($this->getUser(), false, $this->q);
     }
 
     #[LiveAction]

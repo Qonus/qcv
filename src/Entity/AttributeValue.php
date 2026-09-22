@@ -42,7 +42,7 @@ class AttributeValue
     private ?\DateTime $valueDateEnd = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $valueBoolean = null;
+    private ?bool $valueBoolean = false;
 
     #[ORM\ManyToOne]
     private ?AttributeOption $valueOption = null;
@@ -120,7 +120,7 @@ class AttributeValue
     }
 
     public function getValueExists(): bool {
-        if ($this->getValue() == null) return false;
+        if ($this->getValue() === null) return false;
         if ($this->getAttribute()->getDataType() != AttributeDataType::PERIOD) {
             return true;
         }
@@ -131,13 +131,13 @@ class AttributeValue
     {
         match ($this->attribute?->getDataType()) {
             AttributeDataType::BOOLEAN => $this->setValueBoolean($value),
-            AttributeDataType::STRING => $this->setValueString($value),
+            AttributeDataType::STRING  => $this->setValueString($value),
             AttributeDataType::TEXT    => $this->setValueText($value),
             AttributeDataType::DATE    => $this->setValueDate($value),
             AttributeDataType::PERIOD  => $this->setValuePeriod($value),
-            AttributeDataType::IMAGE => $this->setValueImageUrl($value),
+            AttributeDataType::IMAGE   => $this->setValueImageUrl($value),
             AttributeDataType::NUMERIC => $this->setValueNumeric($value),
-            AttributeDataType::SELECT => $this->setValueOption($value),
+            AttributeDataType::SELECT  => $this->setValueOption($value),
             default => null,
         };
     }

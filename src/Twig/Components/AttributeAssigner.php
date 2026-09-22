@@ -12,19 +12,22 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent]
 class AttributeAssigner {
-    // TODO: FIX, PLACEHOLDER
     use DefaultActionTrait;
 
     #[LiveProp]
     public Position $position;
     
 
-    #[LiveProp(writable: true)]
-    public string $query = '';
+    // #[LiveProp(writable: true)]
+    // public string $query = '';
 
     public function __construct(private AttributeRepository $attributeRepository){}
 
     public function getAttributes() {
-        return $this->attributeRepository->searchNewForPosition($this->position, $this->query);
+        return $this->attributeRepository->findBy(['isBuiltin' => false]);
+    }
+
+    public function getSelectedAttributeIds(): array {
+        return array_map(fn($a)=>$a->getId(), $this->position->getAttributes());
     }
 }

@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\CV;
 use App\Entity\Position;
+use App\Entity\PositionAttribute;
 use App\Entity\User;
 use App\Enum\Level;
+use App\Repository\AttributeRepository;
 use App\Repository\CVRepository;
 use App\Repository\PositionRepository;
 use App\Service\AutosaveService;
@@ -23,14 +25,15 @@ class PositionController extends AbstractController {
 
     public function __construct(
         private PositionRepository $positionRepository,
+        private AttributeRepository $attributeRepository,
         private AutosaveService $autosaveService,
         private CVRepository $cvRepository,
         private EntityManagerInterface $em) {
     }
 
     #[Route(path: "/position", name: "app_positions")]
-    public function index() {
-        $positions = $this->positionRepository->findAll();
+    public function index(Request $request) {
+        $positions = $this->positionRepository->search($request->query->get('q'));
         return $this->render("position/index.html.twig", [
             "positions"=> $positions
         ]);
@@ -53,7 +56,7 @@ class PositionController extends AbstractController {
         if (!$position) {
             throw $this->createNotFoundException('The position does not exist');
         }
-        $cvs = $this->cvRepository->findBy(['position' => $position]);
+        $cvs = $this->cvRepository->findBy(['position' => $position, 'isPublic' => true]);
         return $this->render("position/cvs.html.twig", [
             'cvs' => $cvs
         ]);
@@ -95,7 +98,7 @@ class PositionController extends AbstractController {
         }
 
         if ($request->isMethod('POST')) {
-            dd($request->request);
+            // dd($request->request);
             // CSRF Validation
             if (!$this->isCsrfTokenValid('position_form', $request->request->get('_token'))) {
                 throw $this->createAccessDeniedException('Invalid CSRF token.');
@@ -106,7 +109,21 @@ class PositionController extends AbstractController {
 
             if ($request->request->get('level') != '') $position->setLevel(Level::from($request->request->get('level')));
             $position->setDescription($request->request->get('description'));
-            // TODO: Add tags, attributes and attribute filters
+            
+            $attributeIds = $request->request->all('attributes');
+            foreach ($position->getPositionAttributes() as $existingPa) {
+                $this->em->remove($existingPa);
+            }
+            $this->em->flush();
+            foreach ($attributeIds as $attributeId) {
+                $attribute = $this->attributeRepository->find($attributeId);
+                if (!$attribute) continue;
+                $positionAttribute = new PositionAttribute();
+                $positionAttribute->setAttribute($attribute);
+                $positionAttribute->setPosition($position);
+                $positionAttribute->setIsRequired(true);
+                $this->em->persist($positionAttribute);
+            }
 
             $this->em->flush();
 

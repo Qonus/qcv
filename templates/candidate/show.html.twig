@@ -57,6 +57,40 @@
     {% endif %}
     {% endfor %}
     <h2>{{'candidate.projects'|trans}}</h2>
+        <table class="table table-hover align-middle">
+        <thead><tr><th>Name</th><th>Period</th><th>Tags</th><th class="text-end"></th></tr></thead>
+        <tbody>
+        {% for project in projects %}
+            <tr class="clickable-row" data-href="{{ path('app_project_show', {id: project.id}) }}">
+                <td>{{ project.name }}</td>
+                <td>{{ project.startDate|date('Y-m') }} – {{ project.endDate ? project.endDate|date('Y-m') : 'Present' }}</td>
+                <td><div class="table-list-container">
+                    {% set tags = project.tags %}
+                    {% set limit = 7 %}
+                    {% for tag in tags|slice(0,limit) %}
+                    <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
+                        class="badge rounded-pill border">{{tag}}</span>
+                    {% endfor %}
+                    {% if tags|length > limit %}
+                    <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
+                        class="badge rounded-pill border">+{{ tags|length - limit }}</span>
+                    {% endif %}
+                </div></td>
+                <td class="text-end">
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-link" data-bs-toggle="dropdown">⋮</button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ path('app_project_edit', {id: project.id}) }}">Edit</a></li>
+                            <li><button class="dropdown-item text-danger" data-project-delete="{{ project.id }}">Delete</button></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4" class="text-muted text-center py-4">No projects yet.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {# <h2>{{'candidate.cvs'|trans}}</h2> #}
 </div>
 {% endblock %}

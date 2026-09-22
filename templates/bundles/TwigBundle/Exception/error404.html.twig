@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page Not Found{% endblock %}
+{% block body %}
+<div class="container-sm mt-5">
+    <h1>{{'errors.404.header'|trans}}</h1>
+    <p>{{exception.message}}</p>
+    <div class="w-100 d-flex justify-content-between">
+        <a class="btn btn-lg btn-outline-secondary fs-5" href="javascript:history.back()">{{'actions.back'|trans}}</a>
+        <a class="btn btn-lg btn-outline-primary fs-5" href="{{path('app_home')}}">{{'home'|trans}}</a>
+    </div>
+</div>
+{% endblock %}

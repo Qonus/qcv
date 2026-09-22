@@ -48,8 +48,7 @@ class AccessRuleForm {
     public function __construct(private AttributeRepository $attributeRepository){}
 
     public function getAttributes() {
-        // return $this->attributeRepository->search($this->query);
-        return $this->attributeRepository->findAll();
+        return $this->attributeRepository->findBy(['isBuiltin' => false]);
     }
 
     #[LiveAction]

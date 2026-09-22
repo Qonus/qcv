@@ -10,7 +10,7 @@
                 <td>{{ cv.position.name }}</td>
                 <td><span class="badge {{ cv.isPublic ? 'text-bg-success' : 'text-bg-secondary' }}">{{ cv.isPublic ? "cv.public"|trans : "cv.private"|trans }}</span></td>
                 <td>{{ cv.likes|length }}</td>
-                <td class="text-end"><a href="{{ path('app_cv_show', {id: cv.id}) }}" class="btn btn-sm btn-outline-primary">{{'actions.open'}}</a></td>
+                <td class="text-end"><a href="{{ path('app_cv_show', {id: cv.id}) }}" class="btn btn-sm btn-outline-primary">{{'actions.open'|trans}}</a></td>
             </tr>
         {% else %}
             <tr><td colspan="4" class="text-muted text-center py-4">{{'cv.no_cvs'|trans}}</td></tr>

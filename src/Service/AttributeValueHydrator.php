@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\AttributeValue;
 use App\Enum\AttributeDataType;
 use App\Repository\AttributeOptionRepository;
+use Exception;
 class AttributeValueHydrator
 {
     public function __construct(
@@ -29,6 +30,7 @@ class AttributeValueHydrator
 
     public function setValueFromString(AttributeValue $attributeValue, mixed $value): void
     {
+        // dd($value);
         $dataType = $attributeValue->getAttribute()?->getDataType();
         $attributeValue->setValue(match ($dataType) {
             AttributeDataType::BOOLEAN => $value === "1",

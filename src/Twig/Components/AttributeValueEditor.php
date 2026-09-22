@@ -25,6 +25,9 @@ class AttributeValueEditor
     #[LiveProp]
     public AttributeValue $attributeValue;
 
+    #[LiveProp]
+    public bool $required = true;
+
     #[LiveProp(writable: true)]
     public ?string $value = '';
 

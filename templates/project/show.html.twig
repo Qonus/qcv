@@ -6,7 +6,7 @@
 <a href="{{ path('app_candidate_projects') }}" style="top:70px"
    class="mb-3 sticky-top btn btn-lg bg-body btn-outline-secondary text-body rounded-pill">
     <i class="bi bi-arrow-left fs-5 leading-none"></i>
-    <span>back to projects</span>
+    <span>{{'actions.back'|trans}}</span>
 </a>
 {% for label, messages in app.flashes %}
     {% for message in messages %}
@@ -19,8 +19,8 @@
 {% endfor %}
 
 <div class="d-flex width-100 justify-content-between">
-    <h1>{{project.name}}</h1>
-    <a class="btn btn-lg btn-outline-secondary" href="{{path('app_project_edit', {id: project.id})}}">{{'project.edit'|trans}}</a>
+    <h2>{{project.name}}</h2>
+    <a class="btn btn-lg btn-outline-secondary" href="{{path('app_project_edit', {id: project.id})}}">{{'actions.edit'|trans}}</a>
 </div>
 {{"project.period.header"|trans}}:<h3>{{project.startDate|date('Y.m.d')}} - {{project.endDate|date('Y.m.d')}}</h3>
 <div style="max-height:600px; overflow-x:auto" class="card p-4 m-2">

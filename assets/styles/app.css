@@ -31,11 +31,11 @@ table tr .table-list-container {
     gap: 0.25rem;
 }
 .table-responsive {
-    overflow: visible !important;
+    overflow-x: auto !important;
 }
 .table-sticky-header th {
     position: sticky;
-    top: 130px;
+    top: 0px;
     z-index: 10;
 }
 .sticky-top {

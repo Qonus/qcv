@@ -43,7 +43,7 @@ class AttributeValueRepository extends ServiceEntityRepository
     //  *     options: mixed
     //  * }>
     //  */
-    public function findByUser(User $user, bool $isBuiltin): array {
+    public function findByUser(User $user, bool $isBuiltin, ?string $query = ''): array {
         /** @var AttributeValue[] $results */
         return $this->createQueryBuilder('av')
             // Avoid n+1 queries by pre-fetching attributes, categories and options
@@ -52,7 +52,10 @@ class AttributeValueRepository extends ServiceEntityRepository
             ->leftJoin('av.valueOption', 'vo')
             ->leftJoin('a.options', 'opts')
             ->addSelect('a', 'ac', 'vo', 'opts')
-
+            
+            ->andWhere('LOWER(a.name) LIKE LOWER(:query)')
+            // ->orWhere('LOWER(a.description) LIKE LOWER(:query)')
+            ->setParameter('query', '%'.$query.'%')
             ->andWhere('a.isBuiltin = :isBuiltin')
             ->setParameter('isBuiltin', $isBuiltin)
             ->andWhere('av.candidate = :user')

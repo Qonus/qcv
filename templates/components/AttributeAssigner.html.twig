@@ -1,3 +1,13 @@
 <div {{attributes}}>
-    
+<select data-controller="position-attributes" multiple
+        name="attributes[]"
+        class="form-select form-select-lg" 
+        autocomplete="off">
+    <option value="">{{ 'filter.select_attribute'|trans }}</option>
+    {% for attr in this.attributes %}
+        <option value="{{ attr.id }}" {{ attr.id in this.selectedAttributeIds ? 'selected' : '' }}>
+            {{ attr.name }}
+        </option>
+    {% endfor %}
+</select>
 </div>
