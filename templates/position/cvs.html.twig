@@ -1,16 +1,16 @@
-{% extends 'profile/index.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block title %}CVs{% endblock %}
-{% block contents %}
-<div class="tab-pane active">
+{% block body %}
+<div class="container">
     <table class="table table-hover align-middle">
         <thead><tr><th>Position</th><th>Status</th><th>Likes</th><th class="text-end"></th></tr></thead>
         <tbody>
-        {% for cv in app.user.cvs %}
+        {% for cv in cvs %}
             <tr class="clickable-row" data-href="{{ path('app_cv_show', {id: cv.id}) }}">
                 <td>{{ cv.position.name }}</td>
                 <td><span class="badge {{ cv.isPublic ? 'text-bg-success' : 'text-bg-secondary' }}">{{ cv.isPublic ? "cv.public"|trans : "cv.private"|trans }}</span></td>
                 <td>{{ cv.likes|length }}</td>
-                <td class="text-end"><a href="{{ path('app_cv_show', {id: cv.id}) }}" class="btn btn-sm btn-outline-primary">{{'actions.open'}}</a></td>
+                <td class="text-end"><a href="{{ path('app_cv_show', {id: cv.id}) }}" class="btn btn-sm btn-outline-primary">{{'actions.open'|trans}}</a></td>
             </tr>
         {% else %}
             <tr><td colspan="4" class="text-muted text-center py-4">{{'cv.no_cvs'|trans}}</td></tr>

@@ -2,6 +2,15 @@
 
 {% block body %}
 <div class="container">
+    <div class="w-100 d-flex justify-content-between">
+    <a class="link h2" href="{{path('app_position_show', {id: cv.position.id})}}">{{cv.position.name}}</a>
+    {% if is_granted('edit', cv) %}
+    <div class="d-flex gap-2">
+        <a class="btn btn-lg btn-outline-secondary" href="{{path('app_cv_edit', {id: cv.id})}}">{{'actions.edit'|trans}}</a>
+        <a class="btn btn-lg btn-outline-danger" href="{{path('app_cv_delete', {id: cv.id})}}">{{'actions.delete'|trans}}</a>
+    </div>
+    {% endif %}
+    </div>
     <h2>{{'candidate.me'|trans}}</h2>
     <div class="card mb-3 p-2">
         {% for field in [

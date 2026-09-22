@@ -47,11 +47,12 @@ position:
   description: "Description"
   company: "Company"
   level: "Level"
-  cvs: "CVs"
   attributes: "Attributes"
   tags: "Tags"
-  discussions: "Discussions"
   create: "+ Create"
+  my_cv: "My CV"
+  cvs: "CVs"
+  discussions: "Discussions"
 
 project:
   name: "Project Name"
@@ -84,6 +85,8 @@ actions:
   save: "Save"
   duplicate: "Duplicate"
   delete: "Delete"
+  apply: "Apply"
+  open: "Open"
 
 
 filter:
@@ -112,3 +115,8 @@ filter:
     contains: "Contains"
     starts_with: "Starts With"
     contains_exact: "Contains Exact"
+  
+cv:
+  public: "Public"
+  private: "Private"
+  no_cvs: "No CVs yet."

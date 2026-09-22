@@ -115,8 +115,16 @@ class AttributeValue
             AttributeDataType::IMAGE => $this->getValueImageUrl(),
             AttributeDataType::NUMERIC => $this->getValueNumeric(),
             AttributeDataType::SELECT => $this->getValueOption(),
-            default => 'NaN',
+            default => null,
         };
+    }
+
+    public function getValueExists(): bool {
+        if ($this->getValue() == null) return false;
+        if ($this->getAttribute()->getDataType() != AttributeDataType::PERIOD) {
+            return true;
+        }
+        return $this->getValue()['start'] != null && $this->getValue()['end'] != null;
     }
 
     public function setValue(mixed $value): void
@@ -130,7 +138,7 @@ class AttributeValue
             AttributeDataType::IMAGE => $this->setValueImageUrl($value),
             AttributeDataType::NUMERIC => $this->setValueNumeric($value),
             AttributeDataType::SELECT => $this->setValueOption($value),
-            default => 'NaN',
+            default => null,
         };
     }
 

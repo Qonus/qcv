@@ -47,6 +47,16 @@ class="fs-6 badge rounded-pill border">{{tag}}</span>
 {% endfor %}
 </div>
 
+<div class="d-flex gap-2 mb-5">
+    {% if cv != null %}
+    <a class="btn btn-lg btn-outline-secondary" href="{{path('app_cv_show', {id: cv.id})}}">{{'position.my_cv'|trans}}</a>
+    {% elseif is_granted("ROLE_RECRUITER") %}
+    <a class="btn btn-lg btn-outline-secondary" href="{{path('app_position_cvs', {id: position.id})}}">{{'position.cvs'|trans}}</a>
+    {% else %}
+    <a class="btn btn-lg btn-outline-secondary" href="{{path('app_position_apply', {id: position.id})}}">{{'actions.apply'|trans}}</a>
+    {% endif %}
+</div>
+
 <h3>{{"position.discussions"|trans}}:</h3>
 {{ component('Discussions', {position: position})}}
 

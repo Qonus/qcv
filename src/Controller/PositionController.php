@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\CV;
 use App\Entity\Position;
 use App\Entity\User;
 use App\Enum\Level;
+use App\Repository\CVRepository;
 use App\Repository\PositionRepository;
 use App\Service\AutosaveService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,6 +24,7 @@ class PositionController extends AbstractController {
     public function __construct(
         private PositionRepository $positionRepository,
         private AutosaveService $autosaveService,
+        private CVRepository $cvRepository,
         private EntityManagerInterface $em) {
     }
 
@@ -34,14 +37,40 @@ class PositionController extends AbstractController {
     }
 
     #[Route(path: "/position/show/{id}", name: "app_position_show")]
-    public function show(int $id) {
-        $position = $this->positionRepository->find($id);
+    public function show(Position $position, #[CurrentUser]User $user) {
         if (!$position) {
             throw $this->createNotFoundException('The position does not exist');
         }
+        $cv = $this->cvRepository->findOneBy(['position' => $position, 'candidate'=>$user]);
         return $this->render("position/show.html.twig", [
-            "position"=> $position
+            "position"=> $position,
+            'cv' => $cv
         ]);
+    }
+
+    #[Route(path: "/position/cvs/{id}", name: "app_position_cvs")]
+    public function cvs(Position $position) {
+        if (!$position) {
+            throw $this->createNotFoundException('The position does not exist');
+        }
+        $cvs = $this->cvRepository->findBy(['position' => $position]);
+        return $this->render("position/cvs.html.twig", [
+            'cvs' => $cvs
+        ]);
+    }
+
+    #[IsGranted('apply', 'position')]
+    #[Route(path: '/position/apply/{id}', name: 'app_position_apply')]
+    public function apply(Position $position, #[CurrentUser]User $candidate) {
+        $cv = $this->cvRepository->findOneBy(['position' => $position, 'candidate'=>$candidate]);
+        if ($cv == null) {
+            $cv = new CV();
+            $cv->setCandidate($candidate);
+            $cv->setPosition($position);
+            $this->em->persist($cv);
+            $this->em->flush();
+        }
+        return $this->redirectToRoute('app_cv_edit', ['id' => $cv->getId()]);
     }
 
     #[IsGranted('ROLE_RECRUITER')]
@@ -66,6 +95,7 @@ class PositionController extends AbstractController {
         }
 
         if ($request->isMethod('POST')) {
+            dd($request->request);
             // CSRF Validation
             if (!$this->isCsrfTokenValid('position_form', $request->request->get('_token'))) {
                 throw $this->createAccessDeniedException('Invalid CSRF token.');
@@ -110,8 +140,8 @@ class PositionController extends AbstractController {
         // $copy->setCreatedBy($user);
         $this->em->persist($copy);
  
-        foreach ($position->getAttributes() as $attribute) {
-            $copy->addAttribute($attribute);
+        foreach ($position->getPositionAttributes() as $attribute) {
+            $copy->addPositionAttribute($attribute);
         }
         foreach ($position->getTags() as $tag) {
             $copy->addTag($tag);

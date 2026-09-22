@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+<form method="POST">
+<input type="hidden" name="_token" value="{{ csrf_token('cv_form') }}">
+<div class="row g-3" id="info-attribute-list">
+    {{'cv.mandatory'|trans}}
+    {% for a in requiredAttributes %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+                <label class="form-label fw-semibold">{{ a.attribute.name }}</label>
+            </div>
+            {% if a.attributeValue != null %}
+            {{component('AttributeValueEditor', {
+                attributeValue: a.attributeValue,
+                key: 'attribute-value-' ~ a.attributeValue.id})}}
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    {# For now only required #}
+    {# {{'cv.optional'|trans}}:
+    {% for attribute in optionalAttributes %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+                <label class="form-label fw-semibold">{{ attributeValue.attribute.name }}</label>
+            </div>
+            {{component('AttributeValueEditor', {
+                attributeValue: attributeValue,
+                key: 'attribute-value-' ~ attributeValue.id})}}
+        </div>
+    </div>
+    {% endfor %} #}
+</div>
+</form>
+</div>
+{% endblock %}

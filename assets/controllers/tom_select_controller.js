@@ -13,7 +13,7 @@ export default class extends Controller {
     async connect() {
         this.component = await getComponent(this.element.closest('[data-controller~="live"]'));
         const config = {
-            plugins: [''],
+            plugins: ['dropdown_input'],
             valueField: 'id',
             labelField: 'name',
             searchField: 'name',

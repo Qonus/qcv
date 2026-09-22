@@ -15,7 +15,7 @@
 <div class="table-responsive">
     <table style="min-width: 600px; width: 100%;" class="table table-hover align-middle">
         <tr class="table-sticky-header">
-            <th><input type="checkbox"></th>
+            {# <th><input type="checkbox"></th> #}
             <th>{{"position.company"|trans}}</th>
             <th>{{"position.title"|trans}}</th>
             <th>{{"position.level"|trans}}</th>
@@ -25,7 +25,7 @@
         </tr>
         {% for position in positions %}
         <tr class="clickable-row" data-href="{{ path('app_position_show', {id: position.id}) }}">
-            <td><input type="checkbox"></td>
+            {# <td><input type="checkbox"></td> #}
             <td>{{position.company??''}}</td>
             <td>{{position.name??''}}</td>
             <td>{{(position.level.value??'---')|capitalize}}</td>
@@ -64,6 +64,14 @@
                         href="{{ path('app_position_duplicate', {id: position.id}) }}">{{'actions.duplicate'|trans}}</a></li>
                         <li><a class="dropdown-item text-danger"
                         href="{{ path('app_position_delete', {id: position.id}) }}">{{'actions.delete'|trans}}</a></li>
+                    </ul>
+                </div>
+                {% elseif is_granted('ROLE_CANDIDATE') %}
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-link" data-bs-toggle="dropdown">⋮</button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item"
+                        href="{{ path('app_position_apply', {id: position.id}) }}">{{'actions.apply'|trans}}</a></li>
                     </ul>
                 </div>
                 {% endif %}

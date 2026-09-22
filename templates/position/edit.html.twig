@@ -30,7 +30,17 @@
 </div>
 
 <div class="mb-5">
-{{component('AttributeAssigner', {position: position})}}
+<select data-controller="position-attributes" multiple style="max-width: 300px"
+        name="attributes"
+        class="form-select form-select-sm bg-white" 
+        autocomplete="off">
+    <option value="">{{ 'filter.select_attribute'|trans }}</option>
+    {% for attr in position.attributes %}
+        <option value="{{ attr.id }}">
+            {{ attr.name }}
+        </option>
+    {% endfor %}
+</select>
 </div>
 
 <div class="mb-5">

@@ -38,7 +38,9 @@
         <div class="{{post.id != this.editingPostId ? 'd-none':''}}">
         <div class="mb-3">
             <div class="markdown-editor-wrapper">
-                <textarea id="markdown-editor" name="description"
+                <textarea
+                data-controller="easy-mde"
+                name="description"
                 class="form-control"
                  data-model="debounce(300)|content">
                     {{this.content}}</textarea>
