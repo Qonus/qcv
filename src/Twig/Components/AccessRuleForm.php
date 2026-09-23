@@ -14,7 +14,6 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent]
 class AccessRuleForm {
-    // TODO: FIX, PLACEHOLDER
     use DefaultActionTrait;
 
     #[LiveProp]

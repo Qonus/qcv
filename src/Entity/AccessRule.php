@@ -8,6 +8,7 @@ use App\Enum\MatchType;
 use App\Enum\Operation;
 use App\Repository\AccessRuleRepository;
 use BcMath\Number;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,7 +31,7 @@ class AccessRule
     #[ORM\Column(enumType: Operation::class)]
     private ?Operation $operation = Operation::EQUALS;
 
-    #[ORM\Column(enumType: MatchType::class)]
+    #[ORM\Column(enumType: MatchType::class, nullable: true)]
     private ?MatchType $matchType = MatchType::AND;
 
     #[ORM\Column(enumType: AttributeDimension::class)]
@@ -86,7 +87,7 @@ class AccessRule
         return $this;
     }
 
-    public function getOperation(): ?string
+    public function getOperation(): ?Operation
     {
         return $this->operation;
     }
@@ -99,20 +100,20 @@ class AccessRule
         return $this;
     }
 
-    public function getMatchType(): ?string
+    public function getMatchType(): ?MatchType
     {
         return $this->matchType;
     }
 
     public function setMatchType(MatchType|string $matchType): static
     {
-        if (is_string($matchType)) $matchType = MatchType::from($matchType);
+        if (is_string($matchType)) $matchType = MatchType::tryFrom($matchType);
         $this->matchType = $matchType;
 
         return $this;
     }
 
-    public function getAttributeDimension(): ?string
+    public function getAttributeDimension(): ?AttributeDimension
     {
         return $this->attributeDimension;
     }
@@ -181,15 +182,15 @@ class AccessRule
         return $this;
     }
 
-    public function getValueDate(): ?\DateTime
+    public function getValueDate(): ?DateTime
     {
         return $this->valueDate;
     }
 
-    public function setValueDate(?\DateTime $valueDate): static
+    public function setValueDate(DateTime|string $valueDate): static
     {
+        if (is_string($valueDate)) $valueDate = new DateTime($valueDate);
         $this->valueDate = $valueDate;
-
         return $this;
     }
 

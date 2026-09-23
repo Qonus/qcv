@@ -94,7 +94,6 @@ class Discussions
         $this->em->persist($post);
         $this->em->flush();
     }
-    // TODO: for some reason the content of the new post is set to the previous edited one. I suspect this function failed to reset it.
     private function resetEditingPost(): void {
         $this->content = '';
         $this->editingPostId = null;

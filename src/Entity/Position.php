@@ -272,6 +272,39 @@ class Position implements TaggableEntity
         );
     }
 
+    public function setAttributes(array $attributes) {
+        $targetIds = [];
+        $attributeMap = [];
+        foreach ($attributes as $attr) {
+            $id = $attr->getId();
+            $targetIds[$id] = true;
+            $attributeMap[$id] = $attr;
+        }
+        foreach ($this->positionAttributes as $existingPa) {
+            $existingAttrId = $existingPa->getAttribute()?->getId();
+
+            if ($existingAttrId === null || !isset($targetIds[$existingAttrId])) {
+                $this->positionAttributes->removeElement($existingPa);
+                $existingPa->setPosition(null);
+            }
+        }
+        $currentAttrIds = [];
+        foreach ($this->positionAttributes as $existingPa) {
+            if ($existingPa->getAttribute()) {
+                $currentAttrIds[$existingPa->getAttribute()->getId()] = true;
+            }
+        }
+        foreach ($attributeMap as $attrId => $attribute) {
+            if (!isset($currentAttrIds[$attrId])) {
+                $pa = new PositionAttribute();
+                $pa->setAttribute($attribute);
+                $pa->setPosition($this);
+                $pa->setIsRequired(true);
+                $this->positionAttributes->add($pa);
+            }
+        }
+    }
+
     public function addPositionAttribute(PositionAttribute $positionAttribute): static
     {
         if (!$this->positionAttributes->contains($positionAttribute)) {

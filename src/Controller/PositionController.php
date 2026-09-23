@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AccessRule;
 use App\Entity\CV;
 use App\Entity\Position;
 use App\Entity\PositionAttribute;
@@ -10,6 +11,7 @@ use App\Enum\Level;
 use App\Repository\AttributeRepository;
 use App\Repository\CVRepository;
 use App\Repository\PositionRepository;
+use App\Service\AccessRuleService;
 use App\Service\AutosaveService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,6 +29,7 @@ class PositionController extends AbstractController {
         private PositionRepository $positionRepository,
         private AttributeRepository $attributeRepository,
         private AutosaveService $autosaveService,
+        private AccessRuleService $accessRuleService,
         private CVRepository $cvRepository,
         private EntityManagerInterface $em) {
     }
@@ -51,14 +54,16 @@ class PositionController extends AbstractController {
         ]);
     }
 
+    #[IsGranted("ROLE_RECRUITER")]
     #[Route(path: "/position/cvs/{id}", name: "app_position_cvs")]
-    public function cvs(Position $position) {
+    public function cvs(Position $position, #[CurrentUser]User $recruiter) {
         if (!$position) {
             throw $this->createNotFoundException('The position does not exist');
         }
         $cvs = $this->cvRepository->findBy(['position' => $position, 'isPublic' => true]);
         return $this->render("position/cvs.html.twig", [
-            'cvs' => $cvs
+            'cvs' => $cvs,
+            'liked_cvs' => array_map(fn($l) => $l->getCv(), $recruiter->getLikes()->toArray())
         ]);
     }
 
@@ -103,26 +108,30 @@ class PositionController extends AbstractController {
             if (!$this->isCsrfTokenValid('position_form', $request->request->get('_token'))) {
                 throw $this->createAccessDeniedException('Invalid CSRF token.');
             }
-
             $position->setCompany($request->request->get('company'));
             $position->setName($request->request->get('title'));
-
             if ($request->request->get('level') != '') $position->setLevel(Level::from($request->request->get('level')));
             $position->setDescription($request->request->get('description'));
             
             $attributeIds = $request->request->all('attributes');
-            foreach ($position->getPositionAttributes() as $existingPa) {
-                $this->em->remove($existingPa);
+            $attributes = $this->attributeRepository->findBy(['id' => $attributeIds]);
+            $position->setAttributes($attributes);
+
+            $accessRules = $request->request->all('filters');
+            foreach ($position->getAccessRules() as $existingRule) {
+                $position->getAccessRules()->removeElement($existingRule);
+                $this->em->remove($existingRule);
             }
-            $this->em->flush();
-            foreach ($attributeIds as $attributeId) {
-                $attribute = $this->attributeRepository->find($attributeId);
-                if (!$attribute) continue;
-                $positionAttribute = new PositionAttribute();
-                $positionAttribute->setAttribute($attribute);
-                $positionAttribute->setPosition($position);
-                $positionAttribute->setIsRequired(true);
-                $this->em->persist($positionAttribute);
+            foreach ($accessRules as $accessRule) {
+                $newAccessRule = $this->accessRuleService->createAccessRule(
+                    $position,
+                    $accessRule['matchType']??'',
+                    $this->attributeRepository->find($accessRule['attributeId']),
+                    $accessRule['attributeDimension'],
+                    $accessRule['operation'],
+                    $accessRule['filterValue']
+                );
+                $this->em->persist($newAccessRule);
             }
 
             $this->em->flush();
