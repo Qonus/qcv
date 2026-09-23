@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Position;
+use App\Entity\Project;
 use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use TypeaheadRepositoryInterface;
 
@@ -27,6 +30,18 @@ class TagRepository extends ServiceEntityRepository
         ->setMaxResults(8)
         ->getQuery()
         ->getResult();
+    }
+
+    public function popular(int $limit = 20) {
+        return $this->createQueryBuilder('t')
+            ->select('t', 'COUNT(DISTINCT position.id)+COUNT(DISTINCT project.id) AS HIDDEN usage')
+            ->leftJoin('t.positions', 'position')
+            ->leftJoin('t.projects', 'project')
+            ->groupBy('t.id')
+            ->orderBy('usage', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 
     //    /**

@@ -27,7 +27,7 @@ class Position implements TaggableEntity
     /**
      * @var Collection<int, Tag>
      */
-    #[ORM\ManyToMany(targetEntity: Tag::class, cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Tag::class, cascade: ['persist'], inversedBy: 'positions')]
     private Collection $tags;
     
     #[ORM\Column(nullable: true)]

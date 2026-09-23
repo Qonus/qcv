@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Position;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -25,6 +26,25 @@ class PositionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function latest(int $limit = 10) {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.updatedAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function popular(int $limit = 10) {
+        return $this->createQueryBuilder('p')
+            ->select('p', 'COUNT(c.id) AS HIDDEN cvCount')
+            ->leftJoin('p.cvs', 'c', Join::WITH, 'c.isPublic = true')
+            ->groupBy('p.id')
+            ->orderBy('cvCount', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 
     //    /**

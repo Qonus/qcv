@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Repository\CVRepository;
 use App\Repository\PositionRepository;
+use App\Repository\TagRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController {
     public function __construct(
         private PositionRepository $positionRepository,
+        private TagRepository $tagRepository,
         private UserRepository $userRepository,
         private CVRepository $cvRepository,
         ) {
@@ -18,17 +20,30 @@ class HomeController extends AbstractController {
 
     #[Route(path: '/', name: 'app_home')]
     public function index(): Response {
-        // TODO: Add Latest Positions (table showing the most recently created or updated positions)
-        // TODO: Add Most Popular Positions (top 5 positions ranked by the number of submitted CVs)
-        // TODO: Add Tag Cloud with technology tags (linked to CVs for Recruiters or positions for Candidates)
+        $latestPositions = $this->positionRepository->latest(5);
+        $popularPositions = $this->positionRepository->popular(5);
+        $popularTags = $this->tagRepository->popular(20);
+        // TODO: Use these results in the template
 
         // Statistics
         $positionCount = $this->positionRepository->count();
         $candidateCount = $this->userRepository->countByRole('ROLE_CANDIDATE');
         $recruiterCount = $this->userRepository->countByRole('ROLE_RECRUITER');
         $cvCount = $this->cvRepository->count();
+        dd([
+            'latestPositions' => $latestPositions,
+            'popularPositions' => $popularPositions,
+            'popularTags' => $popularTags,
+            'positionCount' => $positionCount,
+            'candidateCount' => $candidateCount,
+            'recruiterCount' => $recruiterCount,
+            'cvCount' => $cvCount,
+        ]);
 
         return $this->render('/index.html.twig', [
+            'latestPositions' => $latestPositions,
+            'popularPositions' => $popularPositions,
+            'popularTags' => $popularTags,
             'positionCount' => $positionCount,
             'candidateCount' => $candidateCount,
             'recruiterCount' => $recruiterCount,

@@ -35,7 +35,7 @@ class Project implements TaggableEntity
     /**
      * @var Collection<int, Tag>
      */
-    #[ORM\ManyToMany(targetEntity: Tag::class)]
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'projects')]
     private Collection $tags;
 
     #[ORM\Version]
