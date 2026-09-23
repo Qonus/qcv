@@ -39,6 +39,7 @@ class CVController extends AbstractController {
 
     #[IsGranted('ROLE_CANDIDATE')]
     #[Route(path:"/cv/edit/{id}", name: "app_cv_edit")]
+    // TODO: Submition wipes unsaved data
     public function edit(CV $cv, Request $request) {
         if (!$cv) throw new NotFoundHttpException('CV not found');
         // For now all attributes are mandatory

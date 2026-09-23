@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PositionController extends AbstractController {
     private const EDITABLE_FIELDS = ['name', 'description', 'company', 'level', 'maxProjects'];
@@ -95,7 +96,7 @@ class PositionController extends AbstractController {
 
     #[IsGranted('ROLE_RECRUITER')]
     #[Route(path: "/position/edit/{id}", name: "app_position_edit")]
-    public function edit(int $id, Request $request) {
+    public function edit(int $id, Request $request, TranslatorInterface $translator) {
         /** @var Position */
         $position = $this->positionRepository->find($id);
         if (!$position) {
@@ -123,9 +124,13 @@ class PositionController extends AbstractController {
                 $this->em->remove($existingRule);
             }
             foreach ($accessRules as $accessRule) {
+                if ($accessRule['attributeId'] == null || $accessRule['attributeDimension'] == null || $accessRule['operation'] == null || $accessRule['filterValue'] == null) {
+                    $this->addFlash('error', $translator->trans('errors.empty_fields'));
+                    return $this->redirectToRoute('app_position_edit', ['id' => $position->getId()]);
+                }
                 $newAccessRule = $this->accessRuleService->createAccessRule(
                     $position,
-                    $accessRule['matchType']??'',
+                    $accessRule['matchType']??'and',
                     $this->attributeRepository->find($accessRule['attributeId']),
                     $accessRule['attributeDimension'],
                     $accessRule['operation'],
@@ -140,6 +145,11 @@ class PositionController extends AbstractController {
             return $this->redirectToRoute('app_position_show', ['id' => $position->getId()]);
         }
 
+        return $this->render("position/edit.html.twig", [
+            "position" => $position
+        ]);
+    }
+    private function handlePositionEditError($position) {
         return $this->render("position/edit.html.twig", [
             "position" => $position
         ]);

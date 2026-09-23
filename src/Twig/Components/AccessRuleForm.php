@@ -21,6 +21,8 @@ class AccessRuleForm {
         
     #[LiveProp]
     public ?int $index;
+    #[LiveProp]
+    public bool $required = true;
 
     #[LiveProp(onUpdated: 'updated')]
     public ?Attribute $attribute = null;

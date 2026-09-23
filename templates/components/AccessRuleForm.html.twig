@@ -1,21 +1,20 @@
-{# TODO: DO NOT Allow saving if there are empty fields #}
-{# TODO: Seperate select options if the type is options and boolean #}
 <div {{ attributes }} class="card border-0 shadow-sm mb-3 bg-secondary-subtle">
     <div class="card-body p-3">
         <div class="d-flex align-items-center gap-2 flex-wrap">
-            {# Match Type (AND / OR) #}
-            {% if this.index != 0 %}
+            {# Match Type (AND / OR) Deleted TODO: add or later #}
+            {# {% if this.index != 0 %}
             <div style="min-width: 90px;">
-                <select name="filters[{{ index }}][matchType]" data-model="matchType" class="form-select form-select-sm fw-semibold" autocomplete="off">
+                <select name="filters[{{ index }}][matchType]" {{this.required?'required':''}}
+                data-model="matchType" class="form-select form-select-sm fw-semibold" autocomplete="off">
                     <option value="and" selected>{{ 'filter.match_type.and'|trans }}</option>
                     <option value="or">{{ 'filter.match_type.or'|trans }}</option>
                 </select>
             </div>
-            {% endif %}
+            {% endif %} #}
 
             {# Attribute Selector #}
             <div class="flex-grow-1" style="min-width: 180px;">
-                <select data-controller="tom-select"
+                <select data-controller="tom-select" {{this.required?'required':''}}
                         name="filters[{{ index }}][attributeId]"
                         id="attribute-{{ this.key|default('0') }}" 
                         class="form-select form-select-sm" 
@@ -32,7 +31,8 @@
             {# Attribute Dimension #}
             {% set dataType = this.attribute ? this.attribute.dataType.value : '' %}
             <div style="min-width: 140px;">
-                <select name="filters[{{ index }}][attributeDimension]" data-model="attributeDimension" class="form-select form-select-sm" autocomplete="off">
+                <select name="filters[{{ index }}][attributeDimension]" {{this.required?'required':''}}
+                data-model="attributeDimension" class="form-select form-select-sm" autocomplete="off">
                     {% if dataType != 'period' %}
                         <option value="value" selected>{{ 'filter.target_property.value'|trans }}</option>
                         {% if dataType in ['string', 'text'] %}
@@ -48,7 +48,8 @@
 
             {# Operation #}
             <div style="min-width: 140px;">
-                <select name="filters[{{ index }}][operation]" data-model="operation" class="form-select form-select-sm" autocomplete="off">
+                <select name="filters[{{ index }}][operation]" {{this.required?'required':''}}
+                data-model="operation" class="form-select form-select-sm" autocomplete="off">
                     <option value="equals" selected>{{ 'filter.operation.equals'|trans }}</option>
                     <option value="not_equals">{{ 'filter.operation.not_equals'|trans }}</option>
                     {% if dataType in ['numeric', 'date'] or this.attributeDimension in ['length', 'duration', 'start_date', 'end_date'] %}
@@ -59,18 +60,40 @@
             </div>
 
             {# Filter Value Input #}
+            {# {{dataType}} #}
             <div class="flex-grow-1" style="min-width: 160px;">
                 {% if dataType in ['numeric'] or this.attributeDimension in ['length'] %}
-                    <input name="filters[{{ index }}][filterValue]" data-model="filterValue" class="form-control form-control-sm" type="number" placeholder="Enter value..." autocomplete="off">
+                    <input type="number" name="filters[{{ index }}][filterValue]" {{this.required?'required':''}}
+                    data-model="filterValue" class="form-control form-control-sm" placeholder="Enter value..." autocomplete="off">
                 {% elseif this.attributeDimension in ['duration'] %}
                     <div class="input-group input-group-sm">
-                        <input name="filters[{{ index }}][filterValue]" data-model="filterValue" class="form-control" type="number" placeholder="Days..." autocomplete="off">
+                        <input type="number" name="filters[{{ index }}][filterValue]" {{this.required?'required':''}}
+                        data-model="filterValue" class="form-control" placeholder="Days..." autocomplete="off">
                         <span class="input-group-text text-muted">days</span>
                     </div>
                 {% elseif dataType in ['date'] or this.attributeDimension in ['start_date', 'end_date'] %}
-                    <input name="filters[{{ index }}][filterValue]" data-model="filterValue" class="form-control form-control-sm" type="date" autocomplete="off">
+                    <input type="date" name="filters[{{ index }}][filterValue]" {{this.required?'required':''}}
+                    data-model="filterValue" class="form-control form-control-sm" autocomplete="off">
+                {% elseif dataType in ['select'] %}
+                    <select class="form-control" {{this.required?'required':''}}
+                    name="filters[{{ index }}][filterValue]" autocomplete="off"
+                    data-model="filterValue">
+                        <option value="">---</option>
+                        {% for option in this.attribute.options %}
+                        <option value="{{option.id}}">{{option.value}}</option>
+                        {% endfor %}
+                    </select>
+                {% elseif dataType in ['boolean'] %}
+                    <select class="form-control" {{this.required?'required':''}}
+                    name="filters[{{ index }}][filterValue]" autocomplete="off"
+                    data-model="filterValue">
+                        <option value="">---</option>
+                        <option value="true">{{'true'}}</option>
+                        <option value="false">{{'false'}}</option>
+                    </select>
                 {% else %}
-                    <input name="filters[{{ index }}][filterValue]" data-model="filterValue" class="form-control form-control-sm" type="text" placeholder="Enter value..." autocomplete="off">
+                    <input type="text" name="filters[{{ index }}][filterValue]" {{this.required?'required':''}}
+                    data-model="filterValue" class="form-control form-control-sm" placeholder="Enter value..." autocomplete="off">
                 {% endif %}
             </div>
 
@@ -80,7 +103,7 @@
                         class="btn btn-outline-danger btn-sm rounded-circle d-flex align-items-center justify-content-center" 
                         style="width: 32px; height: 32px;"
                         data-action="live#emitUp"
-                        data-live-name-param="removeRule"
+                        data-live-event-param="removeRule"
                         data-live-index-param="{{ this.index }}"
                         title="Delete Rule">
                     X

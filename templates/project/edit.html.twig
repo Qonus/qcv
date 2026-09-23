@@ -2,6 +2,7 @@
 
 {% block body %}
 <div class="container">
+{% include 'components/flashes.html.twig' %}
 <form method="POST">
 <input type="hidden" name="_token" value="{{ csrf_token('project_form') }}">
 <div class="mb-5">
