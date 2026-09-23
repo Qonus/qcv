@@ -52,17 +52,6 @@ class CandidateService
         return true;
     }
 
-    public function accessRule(AccessRule $accessRule, User $candidate): bool {
-        // TODO: rename the func, finish it and use in in PositionVoter->canView()
-        return true;
-        // $accessRule->getAttribute();
-        // $filterValue = $accessRule->getFi
-        // return match ($accessRule->getOperation()) {
-        //     Operation::EQUALS => ,
-        //     default => false
-        // };
-    }
-
     /**
      * @param array<string, string> $builtinValues Key-value pairs ['First Name' => 'John', ...]
      */

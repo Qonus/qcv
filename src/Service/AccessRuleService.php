@@ -5,16 +5,24 @@ namespace App\Service;
 use App\Entity\AccessRule;
 use App\Entity\Attribute;
 use App\Entity\AttributeOption;
+use App\Entity\AttributeValue;
 use App\Entity\Position;
+use App\Entity\User;
 use App\Enum\AttributeDataType;
 use App\Enum\AttributeDimension;
 use App\Enum\FilterValueType;
 use App\Enum\MatchType;
 use App\Enum\Operation;
 use App\Repository\AttributeOptionRepository;
+use App\Repository\AttributeRepository;
+use App\Repository\AttributeValueRepository;
+use DateTime;
 
 class AccessRuleService {
-    public function __construct(private AttributeOptionRepository $attributeOptionRepository) {}
+    public function __construct(
+        private AttributeOptionRepository $attributeOptionRepository,
+        private AttributeValueRepository $attributeValueRepository,
+    ) {}
 
     public function createAccessRule(
         Position $position,
@@ -40,6 +48,23 @@ class AccessRuleService {
         return $newAccessRule;
     }
 
+    public function getStringAccessRule(AccessRule $accessRule): array {
+        return [
+            'id' => $accessRule->getId(),
+            'matchType' => $accessRule->getMatchType()->value,
+            'attributeId' => $accessRule->getAttribute()?->getId(),
+            'attributeDimension' => $accessRule->getAttributeDimension()->value,
+            'operation' => $accessRule->getOperation()->value,
+            'filterValue' => match($accessRule->getFilterValueType()) {
+                FilterValueType::BOOLEAN => $accessRule->getValue() ? 'true' : 'false',
+                FilterValueType::STRING => $accessRule->getValue(),
+                FilterValueType::DURATION => $accessRule->getValue(),
+                FilterValueType::NUMBER => $accessRule->getValue(),
+                FilterValueType::DATE => $accessRule->getValue()->format('Y-m-d'),
+            },
+        ];
+    }
+
     public function deriveFilterValueType(AccessRule $accessRule): ?FilterValueType {
         return match ($accessRule->getAttributeDimension()) {
             AttributeDimension::DURATION => FilterValueType::DURATION,
@@ -55,5 +80,44 @@ class AccessRuleService {
             },
             default => null,
         };
+    }
+
+    public function checkAccessRuleForUser(AccessRule $accessRule, ?User $candidate): bool {
+        if (!$candidate) return false;
+        /**
+         * @var AttributeValue
+         */
+        $attributeValue = $this->attributeValueRepository->findOneBy(['candidate' => $candidate, 'attribute' => $accessRule->getAttribute()]);
+        if (!$attributeValue) return false;
+        $userValue = $attributeValue->getValue();
+        $filterValue = $accessRule->getValue();
+        return match ($accessRule->getAttributeDimension()) {
+            AttributeDimension::VALUE,
+            AttributeDimension::LENGTH,
+            AttributeDimension::START_DATE,
+            AttributeDimension::END_DATE,
+            => $this->computeOperation($userValue, $accessRule->getOperation(), $filterValue),
+            AttributeDimension::DURATION => $this->computeOperation(
+                $this->getAbsoluteDaysBetween($userValue['start'], $userValue['end']),
+                $accessRule->getOperation(),
+                $filterValue),
+            default => false
+        };
+    }
+
+    public function computeOperation(mixed $a, Operation $operation, mixed $b): bool {
+        return match($operation) {
+            Operation::EQUALS => $a == $b,
+            Operation::NOT_EQUALS => $a != $b,
+            Operation::LESS_THAN => $a < $b,
+            Operation::GREATER_THAN => $a > $b,
+        };
+    }
+
+    private function getAbsoluteDaysBetween(string|DateTime $date1, string|DateTime $date2): int 
+    {
+        $d1 = $date1 instanceof DateTime ? $date1 : new DateTime($date1);
+        $d2 = $date2 instanceof DateTime ? $date2 : new DateTime($date2);
+        return $d1->diff($d2)->days;
     }
 }

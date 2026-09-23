@@ -24,8 +24,8 @@ class AccessRuleForm {
     #[LiveProp]
     public bool $required = true;
 
-    #[LiveProp(onUpdated: 'updated')]
-    public ?Attribute $attribute = null;
+    #[LiveProp(writable: true)]
+    public ?int $attributeId = null;
 
     #[LiveProp(writable: true)]
     public string $query = '';
@@ -40,7 +40,7 @@ class AccessRuleForm {
     public string $operation = '';
 
     #[LiveProp(writable: true)]
-    public string $filterValue = '';
+    public ?string $filterValue = '';
 
     #[LiveProp()]
     public string $filterValueType = '';
@@ -48,17 +48,22 @@ class AccessRuleForm {
 
     public function __construct(private AttributeRepository $attributeRepository){}
 
+    public function mount() {
+        // dd();
+    }
+
     public function getAttributes() {
         return $this->attributeRepository->findBy(['isBuiltin' => false]);
     }
 
-    #[LiveAction]
-    public function updated() {
-        
+    public function getAttribute(): ?Attribute {
+        if (!$this->attributeId) return null;
+        return $this->attributeRepository->find($this->attributeId);
     }
 
+    
     #[LiveAction]
     public function selectAttribute(#[LiveArg]int|string|null $id) {
-        $this->attribute = $this->attributeRepository->find($id);
+        $this->attributeId = $id;
     }
 }

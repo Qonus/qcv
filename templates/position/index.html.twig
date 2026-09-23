@@ -24,6 +24,7 @@
             <th></th>
         </tr>
         {% for position in positions %}
+        {% if is_granted('view', position) %}
         <tr class="clickable-row" data-href="{{ path('app_position_show', {id: position.id}) }}">
             {# <td><input type="checkbox"></td> #}
             <td>{{position.company??''}}</td>
@@ -75,6 +76,7 @@
                 {% endif %}
             </td>
         </tr>
+        {% endif %}
         {% else %}
         <tr><td colspan="10" class="text-muted text-center py-4">{{'position.no_positions'|trans}}</td></tr>
         {% endfor %}

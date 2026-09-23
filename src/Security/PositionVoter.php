@@ -5,6 +5,7 @@ namespace App\Security;
 use App\Entity\CV;
 use App\Entity\Position;
 use App\Entity\User;
+use App\Service\AccessRuleService;
 use App\Service\CandidateService;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -20,6 +21,7 @@ class PositionVoter extends Voter {
     public function __construct(
         private AccessDecisionManagerInterface $accessDecisionManager,
         private CandidateService $candidateService,
+        private AccessRuleService $accessRuleService,
     ) {
     }
 
@@ -56,7 +58,11 @@ class PositionVoter extends Voter {
         if ($this->accessDecisionManager->decide($token, ['ROLE_RECRUITER'])) {
             return true;
         }
-        // TODO: Loop through Access Rules of $position, and call accessRule function from Candidate Service on each one.
+        foreach($position->getAccessRules() as $accessRule) {
+            if (!$this->accessRuleService->checkAccessRuleForUser($accessRule, $token->getUser())) {
+                return false;
+            }
+        }
         return true;
     }
 

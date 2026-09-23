@@ -24,6 +24,11 @@
                         {{ component('AccessRuleForm', {
                             key: 'rule-' ~ (rule.id|default(index)),
                             index: index,
+                            matchType: rule.matchType,
+                            attributeId: rule.attributeId,
+                            attributeDimension: rule.attributeDimension,
+                            operation: rule.operation,
+                            filterValue: rule.filterValue,
                             position: this.position,
                         }) }}
                     {% endfor %}

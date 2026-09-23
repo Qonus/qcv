@@ -64,7 +64,7 @@ class Position implements TaggableEntity
     /**
      * @var Collection<int, PositionAttribute>
      */
-    #[ORM\OneToMany(targetEntity: PositionAttribute::class, mappedBy: 'position', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: PositionAttribute::class, mappedBy: 'position', cascade: ['persist'], orphanRemoval: true)]
     private Collection $positionAttributes;
 
     /**

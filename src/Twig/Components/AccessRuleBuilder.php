@@ -3,6 +3,7 @@
 namespace App\Twig\Components;
 
 use App\Entity\Position;
+use App\Service\AccessRuleService;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
@@ -21,12 +22,18 @@ class AccessRuleBuilder
     #[LiveProp(writable: true)]
     public array $rules = [];
 
-    public function mount(array $initialRules = []): void
+    public function __construct(private AccessRuleService $accessRuleService) {}
+
+    public function mount(Position $position): void
     {
-        if (empty($initialRules)) {
+        $this->position = $position;
+        if (empty($this->position->getAccessRules())) {
             $this->addRule();
         } else {
-            $this->rules = $initialRules;
+            $this->rules = array_map(
+                fn($r)=>$this->accessRuleService->getStringAccessRule($r),
+                $this->position->getAccessRules()->toArray()
+            );
         }
     }
 
@@ -39,7 +46,7 @@ class AccessRuleBuilder
             'attributeId' => null,
             'attributeDimension' => 'value',
             'operation' => 'equals',
-            'filterValue' => null,
+            'filterValue' => '',
         ];
     }
 
@@ -49,11 +56,5 @@ class AccessRuleBuilder
         if (isset($this->rules[$index])) {
             array_splice($this->rules, $index, 1);
         }
-    }
-
-    #[LiveAction]
-    public function saveRules(): void
-    {
-        // Add your logic to persist rules array
     }
 }
