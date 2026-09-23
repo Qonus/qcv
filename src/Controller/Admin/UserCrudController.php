@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -21,7 +22,8 @@ class UserCrudController extends AbstractCrudController
 {
     public function __construct(
         private AdminUrlGenerator $adminUrlGenerator,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private UserRepository $userRepository
     ) {}
 
     public static function getEntityFqcn(): string
@@ -80,50 +82,23 @@ class UserCrudController extends AbstractCrudController
     #[AdminRoute(path: '/batch-block', name: 'batchBlock')]
     public function batchBlock(BatchActionDto $batchActionDto): Response
     {
-        $className = $batchActionDto->getEntityFqcn();
-        
-        foreach ($batchActionDto->getEntityIds() as $id) {
-            $user = $this->entityManager->find($className, $id);
-            if ($user) {
-                $user->setIsBlocked(true);
-            }
-        }
-        
+        $this->userRepository->updateBlockByIds($batchActionDto->getEntityIds(), true);
         $this->entityManager->flush();
-
         return $this->getRedirectResponse();
     }
 
     #[AdminRoute(path: '/batch-unblock', name: 'batchUnblock')]
     public function batchUnblock(BatchActionDto $batchActionDto): Response
     {
-        $className = $batchActionDto->getEntityFqcn();
-        
-        foreach ($batchActionDto->getEntityIds() as $id) {
-            $user = $this->entityManager->find($className, $id);
-            if ($user) {
-                $user->setIsBlocked(false);
-            }
-        }
-        
+        $this->userRepository->updateBlockByIds($batchActionDto->getEntityIds(), false);
         $this->entityManager->flush();
-
         return $this->getRedirectResponse();
     }
 
     #[AdminRoute(path: '/batch-clean', name: 'batchCleanUnverified')]
     public function batchCleanUnverified(BatchActionDto $batchActionDto): Response
     {
-        $className = $batchActionDto->getEntityFqcn();
-        
-        foreach ($batchActionDto->getEntityIds() as $id) {
-            $user = $this->entityManager->find($className, $id);
-            
-            if ($user && !$user->isVerified()) {
-                $this->entityManager->remove($user);
-            }
-        }
-        
+        $this->userRepository->deleteByIds($batchActionDto->getEntityIds(), true);
         $this->entityManager->flush();
 
         return $this->getRedirectResponse();

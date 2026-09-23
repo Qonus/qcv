@@ -73,6 +73,31 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $qb->getQuery()->getOneOrNullResult();
     }
 
+    public function updateBlockByIds(array $ids, bool $block): int
+    {
+        return $this->createQueryBuilder('u')
+            ->update()
+            ->set('u.isBlocked', ':block')
+            ->where('u.id IN (:ids)')
+            ->setParameter('block', $block)
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->execute();
+    }
+    public function deleteByIds(array $ids, bool $onlyUnverified = false): int
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->delete()
+            ->where('u.id IN (:ids)')
+            ->setParameter('ids', $ids);
+        if ($onlyUnverified) {
+            $qb->andWhere('u.isVerified = :unverifiedStatus')
+            ->setParameter('unverifiedStatus', false);
+        }
+
+        return $qb->getQuery()->execute();
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

@@ -7,6 +7,7 @@ w:
 
 errors:
   header: "Error ocurred!"
+  account_blocked: "Your account has been blocked."
   404:
     header: "Oops! An error ocurred while loading this page!"
 

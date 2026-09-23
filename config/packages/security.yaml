@@ -24,6 +24,7 @@ security:
             custom_authenticators:
                 - App\Security\OAuth\GoogleAuthenticator
                 - App\Security\OAuth\GitHubAuthenticator
+            user_checker: App\Security\UserChecker
             form_login:
                 login_path: app_login
                 check_path: app_login

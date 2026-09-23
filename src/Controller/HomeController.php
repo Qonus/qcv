@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class HomeController extends AbstractController {
     public function __construct(
@@ -30,15 +31,6 @@ class HomeController extends AbstractController {
         $candidateCount = $this->userRepository->countByRole('ROLE_CANDIDATE');
         $recruiterCount = $this->userRepository->countByRole('ROLE_RECRUITER');
         $cvCount = $this->cvRepository->count();
-        dd([
-            'latestPositions' => $latestPositions,
-            'popularPositions' => $popularPositions,
-            'popularTags' => $popularTags,
-            'positionCount' => $positionCount,
-            'candidateCount' => $candidateCount,
-            'recruiterCount' => $recruiterCount,
-            'cvCount' => $cvCount,
-        ]);
 
         return $this->render('/index.html.twig', [
             'latestPositions' => $latestPositions,
