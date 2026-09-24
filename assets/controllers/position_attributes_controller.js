@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import TomSelect from 'tom-select';
 
 export default class extends Controller {
+    // TODO: redo this according to other tom selects
 
     connect() {
         this.states = {};

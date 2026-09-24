@@ -15,17 +15,18 @@
 
             {# Attribute Selector #}
             <div class="flex-grow-1" style="min-width: 180px;">
-                <select data-controller="tom-select" {{this.required?'required':''}}
+                <select data-controller="access-rule-attribute" {{this.required?'required':''}}
+                        data-access-rule-attribute-url-value="{{path('app_attribute_search')}}"
                         name="filters[{{ index }}][attributeId]"
                         id="attribute-{{ this.key|default('0') }}" 
                         class="form-select form-select-sm" 
                         autocomplete="off">
                     <option value="">-- {{ 'filter.select_attribute'|trans }} --</option>
-                    {% for attr in this.attributes %}
+                    {# {% for attr in this.attributes %}
                         <option value="{{ attr.id }}" {{attr.id == this.attributeId ? 'selected' : ''}}>
                             {{ attr.name }}
                         </option>
-                    {% endfor %}
+                    {% endfor %} #}
                 </select>
             </div>
 

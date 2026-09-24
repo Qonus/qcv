@@ -41,9 +41,13 @@ class CandidateAttributes
     }
 
     #[LiveAction]
-    public function addAttribute(#[LiveArg] int $id) {
+    public function selectAttribute(#[LiveArg] int $id) {
+        $attribute = $this->attributeRepository->find($id);
+        if (!$attribute) return;
+        $attributeValue = $this->attributeValueRepository->findOneBy(['candidate' => $this->getUser(), 'attribute' => $attribute]);
+        if ($attributeValue) return;
         $newAttributeValue = new AttributeValue();
-        $newAttributeValue->setAttribute($this->getAttribute($id));
+        $newAttributeValue->setAttribute($attribute);
         $newAttributeValue->setCandidate($this->getUser());
         $newAttributeValue->setValue(null);
         $this->em->persist($newAttributeValue);
@@ -64,8 +68,5 @@ class CandidateAttributes
         if (!$attributeValue) return;
         $this->em->remove($attributeValue);
         $this->em->flush();
-    }
-    private function getAttribute(int $id): Attribute {
-        return $this->attributeRepository->find($id);
     }
 }

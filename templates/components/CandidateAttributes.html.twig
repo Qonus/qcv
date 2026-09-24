@@ -49,7 +49,21 @@
             
             {# HIDDEN SEARCH ATTRIBUTE MODAL BODY #}
             <div class="modal-body">
-                <input 
+                <select data-controller="candidate-attributes"
+                        data-candidate-attributes-url-value="{{path('app_attribute_search', {forUser: true})}}"
+                        name="attribute"
+                        onchange="this.closest('.modal').querySelector('[data-bs-dismiss=\'modal\']').click();"
+                        id="attribute-{{ this.key|default('0') }}" 
+                        class="form-select"
+                        autocomplete="off">
+                    <option value="">-- {{ 'filter.select_attribute'|trans }} --</option>
+                    {# {% for attr in this.attributes %}
+                        <option value="{{ attr.id }}" {{attr.id == this.attributeId ? 'selected' : ''}}>
+                            {{ attr.name }}
+                        </option>
+                    {% endfor %} #}
+                </select>
+                {# <input 
                     type="text" 
                     class="form-control mb-3" 
                     placeholder="Search attributes..." 
@@ -66,7 +80,7 @@
                         data-live-id-param={{item.id}}>
                         {{item.name}} <span class="badge text-bg-light border">{{item.category}}</span>
                     </button>
-                {% endfor %}
+                {% endfor %} #}
                 </div>
             </div>
         </div>

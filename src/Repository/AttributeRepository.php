@@ -25,11 +25,19 @@ class AttributeRepository extends ServiceEntityRepository
 
 
     public function search(string $query): array {
-        return $this->createQueryBuilder('a')
-            ->andWhere("LOWER(a.name) LIKE LOWER(:q)")
+        $qb = $this->createQueryBuilder('a');
+
+        return $qb
+            ->join('a.category', 'c')
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->like('LOWER(a.name)', 'LOWER(:q)'),
+                    $qb->expr()->like('LOWER(c.name)', 'LOWER(:q)')
+                )
+            )
             ->setParameter('q', '%'.$query.'%')
             ->orderBy('a.name', 'ASC')
-            ->setMaxResults(20)
+            ->setMaxResults(15)
             ->getQuery()
             ->getResult();
     }
@@ -40,9 +48,15 @@ class AttributeRepository extends ServiceEntityRepository
             ->from(AttributeValue::class, 'av')
             ->where('av.attribute = a')
             ->andWhere('av.candidate = :user');
-
-        return $this->createQueryBuilder('a')
-            ->andWhere("LOWER(a.name) LIKE LOWER(:q)")
+        $qb = $this->createQueryBuilder('a');
+        return $qb
+            ->join('a.category', 'c')
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->like('LOWER(a.name)', 'LOWER(:q)'),
+                    $qb->expr()->like('LOWER(c.name)', 'LOWER(:q)')
+                )
+            )
             ->andWhere("NOT EXISTS ({$subQuery->getDQL()})")
             ->setParameter('q', '%'.$query.'%')
             ->setParameter('user', $user)

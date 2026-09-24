@@ -13,27 +13,34 @@ export default class extends Controller {
     async connect() {
         this.component = await getComponent(this.element.closest('[data-controller~="live"]'));
         const config = {
-            plugins: ['dropdown_input'],
             valueField: 'id',
             labelField: 'name',
-            searchField: 'name',
+            searchField: ['name', 'category'],
             sortField: 'name',
             optgroupField: 'category',
-            preload: true,
+            optgroupLabelField: 'name',
             onChange: (value) => {
                 this.component.action('selectAttribute', { id: value });
-            }
+                this.select.clear(true);
+            },
         };
 
         if (this.hasUrlValue) {
-            config.firstUrl = (query) => `${this.urlValue}?query=${encodeURIComponent(query)}`;
+            config.firstUrl = (query) => `${this.urlValue}&query=${encodeURIComponent(query)}`;
             config.load = (query, callback) => {
                 const url = config.firstUrl(query);
                 fetch(url)
                     .then(response => response.json())
-                    .then(json => {
-                        console.log(json);
-                        callback(json);
+                    .then(data => {
+                        const uniqueGroups = [...new Set(data.map(item => item.category))];
+                        uniqueGroups.forEach(groupName => {
+                            if (groupName && !this.select.optgroups[groupName]) {
+                                this.select.addOptionGroup(groupName, {
+                                    name: groupName
+                                });
+                            }
+                        });
+                        callback(data);
                     })
                     .catch(() => {
                         callback();

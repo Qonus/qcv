@@ -14,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\UniqueConstraint(name: 'UNIQ_ATTRIBUTE_NAME', fields: ['name'])]
 class Attribute
 {
+    // TODO: Recently used attributes;
+    // TODO: Category filtering.
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
