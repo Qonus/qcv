@@ -25,6 +25,10 @@
         <option value="c-level">C Level</option>
     </select>
 </div>
+<div class="mb-3">
+    <label class="form-label" for="maxProjects">{{ 'position.maxProjects'|trans }}</label>
+    <input type="number" value="{{position.maxProjects?? 3 }}" name="maxProjects" class="form-control form-control-lg" required />
+</div>
 
 <div class="mb-5">
 {{component('TagPicker', {entityClass: 'App\\Entity\\Position', entityId: position.id})}}

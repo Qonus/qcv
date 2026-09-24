@@ -94,6 +94,7 @@ position:
   description: "Description"
   company: "Company"
   level: "Level"
+  maxProjects: "Max Projects Allowed in CV"
   attributes: "Attributes"
   tags: "Tags"
   create: "+ Create"
@@ -145,7 +146,7 @@ project:
   plural: "Projects"
   name: "Project Name"
   period:
-    header: "Period"
+    label: "Period"
     from: "From"
     to: "To"
   description: "Description"

@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\CV;
+use App\Entity\Position;
 use App\Entity\Project;
+use App\Entity\Tag;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,16 +20,33 @@ class ProjectRepository extends ServiceEntityRepository
         parent::__construct($registry, Project::class);
     }
 
-    public function findByUser(User $candidate, ?string $query) {
+    public function findByUser(User $candidate, ?string $query = '') {
+        // WARNING: USING ORWHERE IS DANGEROUS, USE CAREFULLY
         return $this->createQueryBuilder('p')
-            ->andWhere('p.candidate = :candidate')
-            ->setParameter('candidate', $candidate)
             ->andWhere('LOWER(p.name) LIKE LOWER(:query)')
             ->orWhere('LOWER(p.description) LIKE LOWER(:query)')
             ->setParameter('query', '%'.$query.'%')
+            ->andWhere('p.candidate = :candidate')
+            ->setParameter('candidate', $candidate)
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function findByCV(CV $cv,) {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.candidate = :candidate')
+            ->setParameter('candidate', $cv->getCandidate())
+            ->innerJoin('p.tags', 'pt')
+            ->addSelect('COUNT(pt.id) AS HIDDEN score')
+            ->innerJoin('pt.positions', 'pos', 'WITH', 'pos = :position')
+            ->setParameter('position', $cv->getPosition())
+            ->groupBy('p.id')
+            ->having('COUNT(pt.id) > 0')
+            ->orderBy('score', 'DESC')
+            ->setMaxResults($cv->getPosition()->getMaxProjects())
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

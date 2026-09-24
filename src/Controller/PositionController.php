@@ -113,6 +113,7 @@ class PositionController extends AbstractController {
             $position->setName($request->request->get('title'));
             if ($request->request->get('level') != '') $position->setLevel(Level::from($request->request->get('level')));
             $position->setDescription($request->request->get('description'));
+            $position->setMaxProjects($request->request->get('maxProjects'));
             
             $attributeIds = $request->request->all('attributes');
             $attributes = $this->attributeRepository->findBy(['id' => $attributeIds]);

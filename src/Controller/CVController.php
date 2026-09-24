@@ -8,6 +8,7 @@ use App\Entity\Like;
 use App\Entity\User;
 use App\Repository\CVRepository;
 use App\Repository\LikeRepository;
+use App\Repository\ProjectRepository;
 use App\Service\CandidateService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,16 +25,19 @@ class CVController extends AbstractController {
         private LikeRepository $likeRepository,
         private CVRepository $cvRepository,
         private CandidateService $candidateService,
+        private ProjectRepository $projectRepository,
     ) {}
 
     #[Route(path:"/cv/show/{id}", name:"app_cv_show")]
-    public function show(CV $cv) {
+    public function show(CV $cv, #[CurrentUser]User $user) {
         if (!$cv) throw new NotFoundHttpException('CV not found');
         $candidate = $cv->getCandidate();
+        $projects = $this->projectRepository->findByCV($cv);
         return $this->render('cv/show.html.twig', [
             'cv' => $cv,
             'candidate' => $candidate,
             ...($this->candidateService->getCandidateAttributes($candidate)),
+            'projects' => $projects,
         ]);
     }
 
