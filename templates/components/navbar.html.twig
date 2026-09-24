@@ -10,18 +10,18 @@
     <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
         <ul class="navbar-nav mb-lg-0 align-items-center">
             <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="{{path("app_positions")}}">{{"navbar.positions"|trans}}</a>
+            <a class="nav-link" aria-current="page" href="{{path("app_positions")}}">{{"nav.positions"|trans}}</a>
             </li>
             {% if is_granted('ROLE_RECRUITER') %}
             <li class="nav-item">
             <a class="nav-link" aria-current="page"
-            href="{{path("app_admin")}}">{{"navbar.backOffice"|trans}}</a> </li>
+            href="{{path("app_admin")}}">{{"nav.admin"|trans}}</a> </li>
             {% endif %}
         </ul>
         <form class="d-flex" role="search">
             <input name="q" class="form-control me-2" value="{{ app.request.query.get('q') }}"
-            type="search" placeholder="{{'navbar.search'|trans}}" aria-label="Search"/>
-            <button class="btn btn-outline-success" type="submit">{{'navbar.search'|trans}}</button>
+            type="search" placeholder="{{'nav.search'|trans}}" aria-label="Search"/>
+            <button class="btn btn-outline-success" type="submit">{{'nav.search'|trans}}</button>
         </form>
         
         {% if app.user %}
@@ -32,15 +32,15 @@
                     {{ app.user.email }}
                 </a>
                 <ul style="z-index:99999000" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href={{ path('app_profile') }}>{{ 'navbar.profile'|trans }}</a></li>
+                <li><a class="dropdown-item" href={{ path('app_profile') }}>{{ 'nav.profile.label'|trans }}</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><h6 class="dropdown-header">{{'navbar.appearance'|trans}}</h6></li>
+                <li><h6 class="dropdown-header">{{'nav.appearance'|trans}}</h6></li>
                 <li><a class="dropdown-item {% if theme == 'dark' %}active{% endif %}"
-                    href={{ path('app_switch_theme', {theme: 'dark'}) }}>{{ 'navbar.dark'|trans }}</a></li>
+                    href={{ path('app_switch_theme', {theme: 'dark'}) }}>{{ 'nav.dark'|trans }}</a></li>
                 <li><a class="dropdown-item {% if theme == 'light' %}active{% endif %}"
-                    href={{ path('app_switch_theme', {theme: 'light'}) }}>{{ 'navbar.light'|trans }}</a></li>
+                    href={{ path('app_switch_theme', {theme: 'light'}) }}>{{ 'nav.light'|trans }}</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><h6 class="dropdown-header">{{ 'navbar.language'|trans }}</h6></li>
+                <li><h6 class="dropdown-header">{{ 'nav.language'|trans }}</h6></li>
                 <li><a class="dropdown-item {% if locale == 'en' %}active{% endif %}"
                     href={{ path('app_switch_locale', {locale: 'en'}) }}>English</a></li>
                 <li><a class="dropdown-item {% if locale == 'ru' %}active{% endif %}"
@@ -51,7 +51,7 @@
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
                         <button type="submit" class="dropdown-item" title="Logout" data-bs-toggle="tooltip">
                             <i class="bi bi-box-arrow-right"></i>
-                            <span class="">{{ 'navbar.logout'|trans }}</span>
+                            <span class="">{{ 'nav.logout'|trans }}</span>
                         </button>
                     </form>
                 </li>
@@ -61,7 +61,7 @@
         </ul>
         {% else %}
         <a class="btn btn-outline-primary" href={{ path('app_login') }}>
-            {{"navbar.login"|trans}}
+            {{"nav.login"|trans}}
         </a>
         {% endif %}
     </div>

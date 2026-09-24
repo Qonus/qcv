@@ -19,51 +19,58 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted("ROLE_RECRUITER")]
 class AttributeCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
         return Attribute::class;
     }
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInSingular('attribute.singular')
+            ->setEntityLabelInPlural('attribute.plural');
+    }
 
     public function configureFields(string $pageName): iterable
     {
 
-        yield TextField::new('name')
-            ->setHelp('Must be globally unique.');
+        yield TextField::new('name', 'attribute.name')
+            ->setHelp('attribute.help.name');
  
-        yield AssociationField::new('category')
+        yield AssociationField::new('category', 'attribute.category')
             // ->setCrudController(AttributeCategoryCrudController::class)
             ->autocomplete();
  
-        yield ChoiceField::new('dataType')
+        yield ChoiceField::new('dataType', 'attribute.data_type')
             ->setChoices([
-                'String (single line)' => AttributeDataType::STRING,
-                'Text (markdown)' => AttributeDataType::TEXT,
-                'Image (external URL)' => AttributeDataType::IMAGE,
-                'Numeric' => AttributeDataType::NUMERIC,
-                'Date' => AttributeDataType::DATE,
-                'Period (date range)' => AttributeDataType::PERIOD,
-                'Boolean' => AttributeDataType::BOOLEAN,
-                'One of many (dropdown)' => AttributeDataType::SELECT,
+                'attribute.data_types.string' => AttributeDataType::STRING,
+                'attribute.data_types.text' => AttributeDataType::TEXT,
+                'attribute.data_types.image' => AttributeDataType::IMAGE,
+                'attribute.data_types.numeric' => AttributeDataType::NUMERIC,
+                'attribute.data_types.date' => AttributeDataType::DATE,
+                'attribute.data_types.period' => AttributeDataType::PERIOD,
+                'attribute.data_types.boolean' => AttributeDataType::BOOLEAN,
+                'attribute.data_types.select' => AttributeDataType::SELECT,
             ])
             ->setFormTypeOption('disabled', $pageName === Crud::PAGE_EDIT);
 
-        yield CollectionField::new('options', 'Selectable Options')
+        yield CollectionField::new('options', 'attribute.options')
             ->setEntryType(AttributeOptionFormType::class)
             ->allowAdd()
             ->allowDelete()
             // ->byReference(false) // Required so Doctrine triggers addOption()/removeOption()
             ->hideOnIndex()
-            ->setHelp('Add options if this attribute uses the "One of many (dropdown)" type.');
+            ->setHelp('attribute.help.options');
             // ->renderFormWhen(
             //     fn ($attribute) => $attribute->getDataType() === AttributeDataType::SELECT
             // );
         
-        yield TextareaField::new('description')
+        yield TextareaField::new('description', 'attribute.description')
             ->hideOnIndex();
 
-        yield BooleanField::new('isBuiltin', 'Built-in')
+        yield BooleanField::new('isBuiltin', 'attribute.builtin')
             ->hideOnForm();
     }
 }

@@ -3,10 +3,10 @@
     <div class="card border shadow-sm">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="card-title mb-0 fw-bold text-secondary">
-                <i class="bi bi-filter me-1"></i> Access Rules & Filters
+                <i class="bi bi-filter me-1"></i> {{'access_rule.plural'|trans}}
             </h6>
             <span class="badge bg-secondary-subtle text-secondary rounded-pill">
-                {{ this.rules|length }} {{ this.rules|length == 1 ? 'Rule' : 'Rules' }}
+                {{ this.rules|length }} {#{{ this.rules|length == 1 ? 'access_rule.singular'|trans : 'access_rule.plural'|trans }} #}
             </span>
         </div>
 
@@ -15,7 +15,7 @@
                 <div class="text-center py-4 text-muted border border-dashed rounded">
                     <p class="mb-2">No access rules added yet.</p>
                     <button type="button" class="btn btn-sm btn-primary" data-action="live#action" data-live-action-param="addRule">
-                        + Add First Rule
+                        + {{'actions.create'|trans}}
                     </button>
                 </div>
             {% else %}
@@ -39,15 +39,8 @@
                             class="btn btn-sm btn-outline-primary fw-semibold" 
                             data-action="live#action" 
                             data-live-action-param="addRule">
-                        + Add Another Rule
+                        + {{'actions.create'|trans}}
                     </button>
-
-                    {# <button type="button" 
-                            class="btn btn-sm btn-success px-4" 
-                            data-action="live#action" 
-                            data-live-action-param="saveRules">
-                        Save Rules
-                    </button> #}
                 </div>
             {% endif %}
         </div>

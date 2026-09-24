@@ -2,13 +2,14 @@
     <div class="card-body p-3">
         <div class="d-flex align-items-center gap-2 flex-wrap">
             {% set attribute = this.attribute %}
+            {% set t = "access_rule." %}
             {# Match Type (AND / OR) Deleted TODO: add or later #}
             {# {% if this.index != 0 %}
             <div style="min-width: 90px;">
                 <select name="filters[{{ index }}][matchType]" {{this.required?'required':''}}
                 data-model="matchType" class="form-select form-select-sm fw-semibold" autocomplete="off">
-                    <option value="and" selected>{{ 'filter.match_type.and'|trans }}</option>
-                    <option value="or">{{ 'filter.match_type.or'|trans }}</option>
+                    <option value="and" selected>{{ (t~'match_type.and')|trans }}</option>
+                    <option value="or">{{ (t~'match_type.or')|trans }}</option>
                 </select>
             </div>
             {% endif %} #}
@@ -17,16 +18,25 @@
             <div class="flex-grow-1" style="min-width: 180px;">
                 <select data-controller="access-rule-attribute" {{this.required?'required':''}}
                         data-access-rule-attribute-url-value="{{path('app_attribute_search')}}"
+                        {# {% if this.attribute != null %}
+                        data-access-rule-attribute-default-value="{{ {id:this.attribute.id, name: this.attribute.name, category: this.attribute.category.name}|json_encode|e('html_attr') }}"
+                        {% endif %} #}
                         name="filters[{{ index }}][attributeId]"
                         id="attribute-{{ this.key|default('0') }}" 
-                        class="form-select form-select-sm" 
+                        class="form-select form-select-sm"
+                        value="{{this.attributeId}}"
                         autocomplete="off">
-                    <option value="">-- {{ 'filter.select_attribute'|trans }} --</option>
+                    <option value="">-- {{ (t~'select_attribute')|trans }} --</option>
                     {# {% for attr in this.attributes %}
                         <option value="{{ attr.id }}" {{attr.id == this.attributeId ? 'selected' : ''}}>
                             {{ attr.name }}
                         </option>
                     {% endfor %} #}
+                    {% if this.attribute != null %}
+                        <option value="{{ this.attribute.id }}" selected>
+                            {{ this.attribute.name }}
+                        </option>
+                    {% endif %}
                 </select>
             </div>
 
@@ -36,14 +46,14 @@
                 <select name="filters[{{ index }}][attributeDimension]" {{this.required?'required':''}}
                 data-model="attributeDimension" class="form-select form-select-sm" autocomplete="off">
                     {% if dataType != 'period' %}
-                        <option value="value" selected>{{ 'filter.target_property.value'|trans }}</option>
+                        <option value="value" selected>{{ (t~'target_property.value')|trans }}</option>
                         {% if dataType in ['string', 'text'] %}
-                            <option value="length">{{ 'filter.target_property.length'|trans }}</option>
+                            <option value="length">{{ (t~'target_property.length')|trans }}</option>
                         {% endif %}
                     {% else %}
-                        <option value="duration">{{ 'filter.target_property.duration'|trans }}</option>
-                        <option value="start_date">{{ 'filter.target_property.start_date'|trans }}</option>
-                        <option value="end_date">{{ 'filter.target_property.end_date'|trans }}</option>
+                        <option value="duration">{{ (t~'target_property.duration')|trans }}</option>
+                        <option value="start_date">{{ (t~'target_property.start_date')|trans }}</option>
+                        <option value="end_date">{{ (t~'target_property.end_date')|trans }}</option>
                     {% endif %}
                 </select>
             </div>
@@ -52,11 +62,11 @@
             <div style="min-width: 140px;">
                 <select name="filters[{{ index }}][operation]" {{this.required?'required':''}}
                 data-model="operation" class="form-select form-select-sm" autocomplete="off">
-                    <option value="equals" selected>{{ 'filter.operation.equals'|trans }}</option>
-                    <option value="not_equals">{{ 'filter.operation.not_equals'|trans }}</option>
+                    <option value="equals" selected>{{ (t~'operation.equals')|trans }}</option>
+                    <option value="not_equals">{{ (t~'operation.not_equals')|trans }}</option>
                     {% if dataType in ['numeric', 'date'] or this.attributeDimension in ['length', 'duration', 'start_date', 'end_date'] %}
-                        <option value="greater_than">{{ 'filter.operation.greater_than'|trans }}</option>
-                        <option value="less_than">{{ 'filter.operation.less_than'|trans }}</option>
+                        <option value="greater_than">{{ (t~'operation.greater_than')|trans }}</option>
+                        <option value="less_than">{{ (t~'operation.less_than')|trans }}</option>
                     {% endif %}
                 </select>
             </div>

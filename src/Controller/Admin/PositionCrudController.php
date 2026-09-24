@@ -20,7 +20,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted("ROLE_RECRUITER")]
 class PositionCrudController extends AbstractCrudController
 {
     public function __construct(

@@ -64,6 +64,7 @@ class AccessRuleForm {
     
     #[LiveAction]
     public function selectAttribute(#[LiveArg]int|string|null $id) {
+        if ($id == '') return;
         $this->attributeId = $id;
     }
 }

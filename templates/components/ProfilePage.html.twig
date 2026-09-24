@@ -12,34 +12,35 @@
                 >
                 <button type="button" class="btn btn-primary" onclick="document.getElementById('image-input').click();"
                 >
-                    Change Photo
+                    {{'actions.change'|trans}}
                 </button>
             </div>
-            <div data-loading="show" class="spinner-border spinner-border-sm text-primary mt-2" role="status">
+            {# <div data-loading="show" class="spinner-border spinner-border-sm text-primary mt-2" role="status">
                 <span class="visually-hidden">Uploading to Cloudinary...</span>
-            </div>
+            </div> #}
         </div>
         <div class="col-md-9">
+            {% set t = "attribute.builtin" %}
             <div class="form-floating mb-3">
                 <input type="text" class="form-control {{ this.firstName == '' ? 'is-invalid' : '' }}"
                     id="firstName"
                     data-model="debounce(200)|firstName"
                     value={{this.firstName}}>
-                <label for="firstName">{{ "profile.firstName"|trans }}</label>
+                <label for="firstName">{{ (t~".firstName")|trans }}</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control {{ this.lastName == '' ? 'is-invalid' : '' }}"
                     id="lastName"
                     data-model="debounce(200)|lastName"
                     value={{this.lastName}}>
-                <label for="lastName">{{ "profile.lastName"|trans }}</label>
+                <label for="lastName">{{ (t~".lastName")|trans }}</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control {{ this.location == '' ? 'is-invalid' : '' }}"
                     id="location"
                     data-model="debounce(200)|location"
                     value={{this.location}}>
-                <label for="location">{{ "profile.location"|trans }}</label>
+                <label for="location">{{ (t~".location")|trans }}</label>
             </div>
             <div class="d-flex justify-content-end mt-4">
                 <button type="submit" 

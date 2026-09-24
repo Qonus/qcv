@@ -3,7 +3,7 @@
 {% block body %}
 <div class="container position-relative">
 <div class="d-flex justify-content-between mb-4 sticky-top bg-body p-2" style="top:70px">
-    <h2>{{"position.header"|trans}}</h2>
+    <h2>{{"position.plural"|trans}}</h2>
     {% if is_granted('ROLE_RECRUITER') %}
     <a class="btn fs-5 btn-primary"
     href="{{path('app_position_create')}}">

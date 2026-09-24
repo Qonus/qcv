@@ -1,16 +1,13 @@
-home: "Home"
-w:
-  email: "Email"
-  likes: "Likes"
-  position: "Position"
-
-
 errors:
-  header: "Error ocurred!"
+  header: "Error occurred!"
   account_blocked: "Your account has been blocked."
+  version_conflict:
+    message: 'Someone else set this to <strong class="conflict-theirs-value"></strong> first.'
+    mine: 'Keep mine'
+    theirs: 'Use theirs'
   empty_fields: "All required fields must be filled."
   404:
-    header: "Oops! An error ocurred while loading this page!"
+    header: "Oops! An error occurred while loading this page!"
 
 auth:
   fields:
@@ -18,7 +15,6 @@ auth:
     password: "Password"
     remember_me: "Remember me"
     agree_terms: "I agree to the terms and conditions"
-
   login:
     page_title: "Log in!"
     card_title: "Please Log in!"
@@ -27,43 +23,73 @@ auth:
     submit: "Sign in"
     no_account: "Don't Have an Account?"
     sign_up: "Sign up"
-
   register:
     page_title: "Register"
     card_title: "Create an Account"
     submit: "Register"
     already_have_account: "Already have an account?"
     sign_in: "Sign in"
-
   social:
     divider: "or"
     google: "Continue with Google"
     github: "Continue with GitHub"
 
-navbar:
-  positions: "Positions"
-  backOffice: "Back Office"
-  profile: "Profile"
-  appearance: "Appearance"
-  dark: "Dark"
-  light: "Light"
-  language: "Locale"
-  logout: "Logout"
-  search: "Search"
-  login: "Sign in"
+user:
+  singular: "User"
+  plural: "Users"
+  email:
+    label: "Email"
+  role:
+    label: "Role"
+    candidate: "Candidate"
+    recruiter: "Recruiter"
+    admin: "Admin"
+  status:
+    label: "Status"
+    blocked: "Blocked"
+    verified: "Verified"
+    unverified: "Unverified"
+  actions:
+    block: "Block"
+    unblock: "Unblock"
+    clean: "Clean Unverified"
 
-profile:
-  me: "Me"
-  info: "Info"
-  projects: "Projects"
-  cvs: "CVs"
-  firstName: "First Name"
-  lastName: "Last Name"
-  location: "Location"
-  no_attributes: "No Attribute Values Found."
+attribute:
+  singular: "Attribute"
+  plural: "Attributes"
+  name: "Name"
+  category: "Category"
+  data_type: "Data Type"
+  options: "Options"
+  description: "Description"
+  builtin:
+    label: "Built-in"
+    firstName: "First Name"
+    lastName: "Last Name"
+    location: "Location"
+  help:
+    name: "Must be globally unique."
+    options: 'Add options if this attribute uses the "One of many (dropdown)" type.'
+  data_types:
+    string: "String (single line)"
+    text: "Text (markdown)"
+    image: "Image (external URL)"
+    numeric: "Numeric"
+    date: "Date"
+    period: "Period (date range)"
+    boolean: "Boolean"
+    select: "One of many (dropdown)"
 
+attribute_category:
+  singular: "Attribute Category"
+  plural: "Attribute Categories"
+  name: "Category Name"
+attribute_value:
+  singular: "Attribute Value"
+  plural: "Attribute Values"
 position:
-  header: "Positions"
+  singular: "Position"
+  plural: "Positions"
   title: "Title"
   description: "Description"
   company: "Company"
@@ -74,9 +100,49 @@ position:
   my_cv: "My CV"
   cvs: "CVs"
   discussions: "Discussions"
-  no_positions: "No Positions Found."
+cv:
+  singular: "CV"
+  plural: "CVs"
+  public: "Public"
+  private: "Private"
+  mandatory_fields: "Mandatory Fields"
+like:
+  singular: "Like"
+  plural: "Likes"
+access_rule:
+  singular: "Access Rule"
+  plural: "Access Rules"
+  match_type:
+    and: "AND"
+    or: "OR"
+    and_not: "AND NOT"
+    or_not: "OR NOT"
+  select_attribute: "Select Attribute"
+  target_property:
+    value: "Value"
+    length: "Length"
+    duration: "Duration"
+    start_date: "Start Date"
+    end_date: "End Date"
+  operation:
+    equals: "Equals"
+    not_equals: "Not Equals"
+    greater_than: "Greater Than"
+    less_than: "Less Than"
+    greater_eq_than: "Greater Or Equal Than"
+    less_eq_than: "Less Or Equal Than"
+    contains: "Contains"
+    starts_with: "Starts With"
+    contains_exact: "Contains Exact"
+
+discussion:
+  singular: "Discussion"
+  plural: "Discussions"
+  create: "+ Create Post"
 
 project:
+  singular: "Project"
+  plural: "Projects"
   name: "Project Name"
   period:
     header: "Period"
@@ -85,21 +151,34 @@ project:
   description: "Description"
   tags: "Tags"
 
-conflict:
-  message: 'Someone else set this to <strong class="conflict-theirs-value"></strong> first.'
-  mine: 'Keep mine'
-  theirs: 'Use theirs'
-
 candidate:
+  singular: "Candidate"
+  plural: "Candidates"
   me: "Me"
-  email: "Email"
   name: "Name"
-  location: "Location"
   info: "Info"
   projects: "Projects"
 
-discussion:
-  create: "+ Create Post"
+no_results: "No Results."
+
+nav:
+  positions: "Positions"
+  admin: "Back Office"
+  dashboard: "Dashboard"
+  home: "Home"
+  appearance: "Appearance"
+  dark: "Dark"
+  light: "Light"
+  language: "Locale"
+  logout: "Logout"
+  search: "Search"
+  login: "Sign in"
+  profile:
+    label: "Profile"
+    me: "Me"
+    info: "Info"
+    projects: "Projects"
+    cvs: "CVs"
 
 actions:
   edit: "Edit"
@@ -111,37 +190,4 @@ actions:
   open: "Open"
   back: "Back"
   submit: "Submit"
-
-
-filter:
-  match_type:
-    and: "AND"
-    or: "OR"
-    and_not: "AND NOT"
-    or_not: "OR NOT"
-
-  select_attribute: "Select Attribute"
-
-  target_property:
-    value: "Value"
-    length: "Length"
-    duration: "Duration"
-    start_date: "Start Date"
-    end_date: "End Date"
-
-  operation:
-    equals: "Equals"
-    not_equals: "Not Equals"
-    greater_than: "Greater Than"
-    less_than: "Less Than"
-    greater_eq_than: "Greater Or Equal Than"
-    less_eq_than: "Less Or Equal Than"
-    contains: "Contains"
-    starts_with: "Starts With"
-    contains_exact: "Contains Exact"
-  
-cv:
-  public: "Public"
-  private: "Private"
-  no_cvs: "No CVs yet."
-  mandatory_fields: "Mandatory Fields"
+  change: "Change"

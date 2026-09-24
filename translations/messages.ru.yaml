@@ -1,65 +1,197 @@
+errors:
+  header: "Произошла ошибка!"
+  account_blocked: "Ваш аккаунт заблокирован."
+  version_conflict:
+    message: 'Кто-то другой первым установил это значение: <strong class="conflict-theirs-value"></strong>.'
+    mine: 'Оставить моё'
+    theirs: 'Использовать чужое'
+  empty_fields: "Все обязательные поля должны быть заполнены."
+  404:
+    header: "Упс! Произошла ошибка при загрузке этой страницы!"
+
 auth:
   fields:
     email: "Электронная почта"
     password: "Пароль"
     remember_me: "Запомнить меня"
     agree_terms: "Я согласен с условиями использования"
-
   login:
-    page_title: "Вход!"
+    page_title: "Вход"
     card_title: "Пожалуйста, войдите!"
     logged_in_as: "Вы вошли как %username%,"
     logout: "Выйти"
     submit: "Войти"
-    no_account: "Ещё нет аккаунта?"
+    no_account: "Нет аккаунта?"
     sign_up: "Зарегистрироваться"
-
   register:
     page_title: "Регистрация"
-    card_title: "Создать аккаунт"
+    card_title: "Создание аккаунта"
     submit: "Зарегистрироваться"
     already_have_account: "Уже есть аккаунт?"
     sign_in: "Войти"
-
   social:
     divider: "или"
     google: "Продолжить через Google"
     github: "Продолжить через GitHub"
-navbar:
-  positions: "Вакансии"
-  profile: "Профиль"
-  appearance: "Оформление"
-  dark: "Тёмная"
-  light: "Светлая"
-  language: "Язык"
-  logout: "Выйти"
-  login: "Войти"
 
-profile:
-  firstName: "Имя"
-  lastName: "Фамилия"
-  location: "Локация"
-  save: "Сохранить"
+user:
+  singular: "Пользователь"
+  plural: "Пользователи"
+  email:
+    label: "Email"
+  role:
+    label: "Роль"
+    candidate: "Кандидат"
+    recruiter: "Рекрутер"
+    admin: "Администратор"
+  status:
+    label: "Статус"
+    blocked: "Заблокирован"
+    verified: "Подтвержден"
+    unverified: "Не подтвержден"
+  actions:
+    block: "Заблокировать"
+    unblock: "Разблокировать"
+    clean: "Очистить неподтвержденных"
+
+attribute:
+  singular: "Атрибут"
+  plural: "Атрибуты"
+  name: "Название"
+  category: "Категория"
+  data_type: "Тип данных"
+  options: "Опции"
+  description: "Описание"
+  builtin: "Встроенный"
+  help:
+    name: "Должно быть глобально уникальным."
+    options: 'Добавьте опции, если этот атрибут использует тип «Один из многих (выпадающий список)».'
+  data_types:
+    string: "Строка (однострочная)"
+    text: "Текст (markdown)"
+    image: "Изображение (внешняя ссылка)"
+    numeric: "Числовой"
+    date: "Дата"
+    period: "Период (диапазон дат)"
+    boolean: "Логический (Да/Нет)"
+    select: "Один из многих (выпадающий список)"
+
+attribute_category:
+  singular: ""
+  plural: "Категории атрибутов"
+  name: "Название Категории"
+
+attribute_value:
+  singular: "Значение атрибута"
+  plural: "Значения атрибутов"
+  builtin:
+    firstName: "Имя"
+    lastName: "Фамилия"
+    location: "Локация"
 
 position:
-  header: "Позиции"
+  singular: "Позиция"
+  plural: "Позиции"
   title: "Название"
   description: "Описание"
   company: "Компания"
   level: "Уровень"
-  cvs: "Резюме"
   attributes: "Атрибуты"
   tags: "Теги"
+  create: "+ Создать"
+  my_cv: "Моё резюме"
+  cvs: "Резюме"
   discussions: "Обсуждения"
-  edit: "Редактировать"
-  create: "Создать"
+
+cv:
+  singular: "Резюме"
+  plural: "Резюме"
+  public: "Публичное"
+  private: "Приватное"
+  mandatory_fields: "Обязательные поля"
+
+like:
+  singular: "Лайк"
+  plural: "Лайки"
+
+access_rule:
+  singular: "Правило доступа"
+  plural: "Правила доступа"
+  match_type:
+    and: "И"
+    or: "ИЛИ"
+    and_not: "И НЕ"
+    or_not: "ИЛИ НЕ"
+  select_attribute: "Выберите атрибут"
+  target_property:
+    value: "Значение"
+    length: "Длина"
+    duration: "Длительность"
+    start_date: "Дата начала"
+    end_date: "Дата окончания"
+  operation:
+    equals: "Равно"
+    not_equals: "Не равно"
+    greater_than: "Больше чем"
+    less_than: "Меньше чем"
+    greater_eq_than: "Больше или равно"
+    less_eq_than: "Меньше или равно"
+    contains: "Содержит"
+    starts_with: "Начинается с"
+    contains_exact: "Точное совпадение"
+
+discussion:
+  singular: "Обсуждение"
+  plural: "Обсуждения"
+  create: "+ Создать публикацию"
 
 project:
-  name: "Название Проекта"
+  singular: "Проект"
+  plural: "Проекты"
+  name: "Название проекта"
   period:
-    header: "Select Period"
-    from: "Начало"
-    to: "Конец"
-  description: "Description"
-  edit: "Edit"
-  create: "Create"
+    header: "Период"
+    from: "С"
+    to: "По"
+  description: "Описание"
+  tags: "Теги"
+
+candidate:
+  singular: "Кандидат"
+  plural: "Кандидаты"
+  me: "Я"
+  name: "Имя"
+  info: "Информация"
+  projects: "Проекты"
+
+no_results: "Результатов не найдено."
+
+nav:
+  positions: "Позиции"
+  admin: "Панель управления"
+  dashboard: "Дашборд"
+  home: "Главная"
+  appearance: "Внешний вид"
+  dark: "Тёмная"
+  light: "Светлая"
+  language: "Язык"
+  logout: "Выйти"
+  search: "Поиск"
+  login: "Войти"
+  profile:
+    label: "Профиль"
+    me: "Я"
+    info: "Информация"
+    projects: "Проекты"
+    cvs: "Резюме"
+
+actions:
+  edit: "Редактировать"
+  create: "Создать"
+  save: "Сохранить"
+  duplicate: "Дублировать"
+  delete: "Удалить"
+  apply: "Отправить Резюме"
+  open: "Открыть"
+  back: "Назад"
+  submit: "Отправить"

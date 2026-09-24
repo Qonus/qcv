@@ -16,6 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[IsGranted("ROLE_ADMIN")]
 class UserCrudController extends AbstractCrudController
@@ -23,29 +24,38 @@ class UserCrudController extends AbstractCrudController
     public function __construct(
         private AdminUrlGenerator $adminUrlGenerator,
         private EntityManagerInterface $entityManager,
-        private UserRepository $userRepository
+        private UserRepository $userRepository,
+        private TranslatorInterface $translator
     ) {}
 
     public static function getEntityFqcn(): string
     {
         return User::class;
     }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInSingular('user.singular')
+            ->setEntityLabelInPlural('user.plural');
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
-            EmailField::new('email'),
-            ChoiceField::new('role')
+            EmailField::new('email', 'user.email.label'),
+            ChoiceField::new('role', 'user.role.label')
                 ->setChoices([
-                    'Candidate' => 'ROLE_CANDIDATE',
-                    'Recruiter' => 'ROLE_RECRUITER',
-                    'Admin' => 'ROLE_ADMIN',
+                    'user.role.candidate' => 'ROLE_CANDIDATE',
+                    'user.role.recruiter' => 'ROLE_RECRUITER',
+                    'user.role.admin' => 'ROLE_ADMIN',
                 ])
                 ->renderExpanded(),
-            ChoiceField::new('status', 'Status')
+            ChoiceField::new('status', 'user.status.label')
                 ->setChoices([
-                    'Blocked' => 'blocked',
-                    'Verified' => 'verified',
-                    'Unverified' => 'unverified',
+                    'user.status.blocked' => 'blocked',
+                    'user.status.verified' => 'verified',
+                    'user.status.unverified' => 'unverified',
                 ])
                 ->renderAsBadges([
                     'blocked' => 'danger',
@@ -57,15 +67,15 @@ class UserCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        $blockBatch = Action::new('batchBlock', 'Block', 'fa fa-ban')
+        $blockBatch = Action::new('batchBlock', 'user.actions.block', 'fa fa-ban')
             ->linkToCrudAction('batchBlock')
             ->addCssClass('btn btn-warning');
 
-        $unblockBatch = Action::new('batchUnblock', 'Unblock', 'fa fa-unlock')
+        $unblockBatch = Action::new('batchUnblock', 'user.actions.unblock', 'fa fa-unlock')
             ->linkToCrudAction('batchUnblock')
             ->addCssClass('btn btn-success');
         
-        $cleanBatch = Action::new('batchCleanUnverified', 'Clean Unverified', 'fa fa-broom')
+        $cleanBatch = Action::new('batchCleanUnverified', 'user.actions.clean', 'fa fa-broom')
             ->linkToCrudAction('batchCleanUnverified')
             ->addCssClass('btn btn-danger');
 

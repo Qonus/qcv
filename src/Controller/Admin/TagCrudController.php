@@ -12,6 +12,6 @@ class TagCrudController extends AbstractCrudController {
     }
 
     public function configureFields(string $pageName): array|\Traversable {
-        yield TextField::new("name");
+        yield TextField::new("name", "tag.name");
     }
 }

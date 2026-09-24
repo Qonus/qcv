@@ -8,6 +8,7 @@ export default class extends Controller {
     static values = {
         options: {type: Object, default: {}},
         url: String,
+        default: {type: Object, default: null},
     }
 
     async connect() {
@@ -20,9 +21,10 @@ export default class extends Controller {
             sortField: 'name',
             optgroupField: 'category',
             optgroupLabelField: 'name',
+            allowEmptyOption: false,
             preload: true,
             onChange: (value) => {
-                this.component.action('selectAttribute', { id: value });
+                this.component.action('selectAttribute', { id: value ?? null });
             },
         };
 
@@ -48,8 +50,11 @@ export default class extends Controller {
                     });
             };
         }
-
         this.select = new TomSelect(this.element, config);
+        if (this.defaultValue != null) {
+            this.select.addOption(this.defaultValue);
+            this.select.setValue(this.defaultValue.id);
+        }
     }
 
     disconnect() {

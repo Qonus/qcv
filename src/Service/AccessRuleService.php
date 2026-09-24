@@ -91,12 +91,16 @@ class AccessRuleService {
         if (!$attributeValue) return false;
         $userValue = $attributeValue->getValue();
         $filterValue = $accessRule->getValue();
+        // dd($this->computeOperation(strlen($userValue), $accessRule->getOperation(), $filterValue));
         return match ($accessRule->getAttributeDimension()) {
-            AttributeDimension::VALUE,
-            AttributeDimension::LENGTH,
-            AttributeDimension::START_DATE,
-            AttributeDimension::END_DATE,
-            => $this->computeOperation($userValue, $accessRule->getOperation(), $filterValue),
+            AttributeDimension::LENGTH =>
+            $this->computeOperation(strlen($userValue), $accessRule->getOperation(), $filterValue),
+            AttributeDimension::START_DATE =>
+            $this->computeOperation($userValue, $accessRule->getOperation(), $filterValue['start']),
+            AttributeDimension::END_DATE =>
+            $this->computeOperation($userValue, $accessRule->getOperation(), $filterValue['end']),
+            AttributeDimension::VALUE =>
+            $this->computeOperation($userValue, $accessRule->getOperation(), $filterValue),
             AttributeDimension::DURATION => $this->computeOperation(
                 $this->getAbsoluteDaysBetween($userValue['start'], $userValue['end']),
                 $accessRule->getOperation(),
