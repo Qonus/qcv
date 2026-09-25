@@ -25,7 +25,7 @@ class Attribute
     private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: AttributeCategory::class, inversedBy: 'attributes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?AttributeCategory $category = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

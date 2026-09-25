@@ -20,6 +20,16 @@ class ProjectRepository extends ServiceEntityRepository
         parent::__construct($registry, Project::class);
     }
 
+    public function findByTag(?string $tag = '') {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.tags', 't')
+            ->andWhere('LOWER(t.name) LIKE LOWER(:tag)')
+            ->setParameter('tag', '%'.$tag.'%')
+            ->groupBy('p.id')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByUser(User $candidate, ?string $query = '') {
         // WARNING: USING ORWHERE IS DANGEROUS, USE CAREFULLY
         return $this->createQueryBuilder('p')

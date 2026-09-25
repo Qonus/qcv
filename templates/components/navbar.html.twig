@@ -21,6 +21,8 @@
         <form class="d-flex" role="search">
             <input name="q" class="form-control me-2" value="{{ app.request.query.get('q') }}"
             type="search" placeholder="{{'nav.search'|trans}}" aria-label="Search"/>
+            <input name="tag" value="{{ app.request.query.get('tag') }}"
+            type="hidden" aria-label="Tag"/>
             <button class="btn btn-outline-success" type="submit">{{'nav.search'|trans}}</button>
         </form>
         

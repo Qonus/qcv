@@ -17,18 +17,21 @@ class PositionRepository extends ServiceEntityRepository
         parent::__construct($registry, Position::class);
     }
     
-    public function search(?string $query) {
-        return $this->createQueryBuilder('p')
+    public function search(?string $query, ?string $tag = '') {
+        $qb = $this->createQueryBuilder('p')
             ->andWhere('LOWER(p.name) LIKE LOWER(:query)')
             ->orWhere('LOWER(p.company) LIKE LOWER(:query)')
             ->orWhere('LOWER(p.level) LIKE LOWER(:query)')
-            ->setParameter('query', '%'.$query.'%')
-            ->getQuery()
-            ->getResult()
-        ;
+            ->setParameter('query', '%'.$query.'%');
+        if ($tag != '') {
+            $qb = $qb->innerJoin('p.tags', 't')
+            ->andWhere('LOWER(t.name) LIKE LOWER(:tag)')
+            ->setParameter('tag', '%'.$tag.'%');
+        }
+        return $qb->getQuery()->getResult();
     }
 
-    public function latest(int $limit = 10) {
+    public function latest(?int $limit = null) {
         return $this->createQueryBuilder('p')
             ->orderBy('p.updatedAt', 'DESC')
             ->setMaxResults($limit)
@@ -36,7 +39,7 @@ class PositionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function popular(int $limit = 10) {
+    public function popular(?int $limit = null) {
         return $this->createQueryBuilder('p')
             ->select('p', 'COUNT(c.id) AS HIDDEN cvCount')
             ->leftJoin('p.cvs', 'c', Join::WITH, 'c.isPublic = true')

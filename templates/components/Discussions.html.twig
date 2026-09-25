@@ -5,7 +5,7 @@
             data-live-action-param="createPost">{{'discussion.create'|trans}}</button>
     </div>
     {% endif %}
-    {% set postArray = (this.editingPostId == -1 ? [{author:app.user, id:-1}]: [])|merge(this.posts) %}
+    {% set postArray = (this.editingPostId == -1 ? [{author:app.user, id:-1, content: ""}]: [])|merge(this.posts) %}
     {% for post in postArray %}
     <div class="card mb-3">
     <div class="card-body">
@@ -34,24 +34,25 @@
         <div>
             {{post.content|markdown_to_html}}
         </div>
-        {% endif %}
-        <div class="{{post.id != this.editingPostId ? 'd-none':''}}">
-        <div class="mb-3">
+        {% else %}
+        <div id="post {{post.id}}" class="mb-3">
             <div class="markdown-editor-wrapper">
                 <textarea
                 data-controller="easy-mde"
                 name="description"
                 class="form-control"
                  data-model="debounce(300)|content">
-                    {{this.content}}</textarea>
+                    {{post.content}}</textarea>
                 {% include 'components/autosave_conflict.html.twig' %}
             </div>
         </div>
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end gap-3">
+            <button class="btn btn-outline-secondary" data-action="live#action"
+            data-live-action-param="setEditingPost">{{'actions.cancel'|trans}}</button>
             <button class="btn btn-primary" data-action="live#action"
             data-live-action-param="savePost">{{'actions.save'|trans}}</button>
         </div>
-        </div>
+        {% endif %}
     </div>
     </div>
     {% endfor %}

@@ -20,7 +20,7 @@ input {
 }
 table tr td:has(.table-list-container) {
     max-width: 300px;
-    width: 300px;
+    /* width: 300px; */
 }
 table tr .table-list-container {
     max-width: 300px;

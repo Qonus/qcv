@@ -1,0 +1,70 @@
+{% macro positionTable(positions) %}
+<div class="table-responsive">
+    <table style="min-width: 600px; width: 100%;" class="table table-hover align-middle">
+        <tr>
+            <th>{{"position.company"|trans}}</th>
+            <th>{{"position.title"|trans}}</th>
+            <th>{{"position.level"|trans}}</th>
+            <th>{{"position.attributes"|trans}}</th>
+            <th>{{"position.tags"|trans}}</th>
+            <th></th>
+        </tr>
+        {% for position in positions %}
+        {% if is_granted('view', position) %}
+        <tr class="clickable-row" data-href="{{ path('app_position_show', {id: position.id}) }}">
+            <td>{{position.company??''}}</td>
+            <td>{{position.name??''}}</td>
+            <td>{{(position.level.value??'---')|capitalize}}</td>
+            <td><div class="table-list-container">
+                {% set attributes = position.attributes %}
+                {% set limit = 5 %}
+                {% for attribute in attributes|slice(0,limit) %}
+                <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
+                class="badge border">{{attribute}}</span>
+                {% endfor %}
+                {% if attributes|length > limit %}
+                <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
+                    class="badge border">+{{ attributes|length - limit }}</span>
+                {% endif %}
+            </div></td>
+            <td><div class="table-list-container">
+                {% set tags = position.tags %}
+                {% set limit = 7 %}
+                {% for tag in tags|slice(0,limit) %}
+                <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
+                    class="badge rounded-pill border">{{tag}}</span>
+                {% endfor %}
+                {% if tags|length > limit %}
+                <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
+                    class="badge rounded-pill border">+{{ tags|length - limit }}</span>
+                {% endif %}
+            </div></td>
+            <td class="text-end">
+                {% if is_granted('ROLE_RECRUITER') or is_granted("apply", position) %}
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-link" data-bs-toggle="dropdown">⋮</button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        {% if is_granted('ROLE_RECRUITER') %}
+                        <li><a class="dropdown-item"
+                        href="{{ path('app_position_edit', {id: position.id}) }}">{{'actions.edit'|trans}}</a></li>
+                        <li><a class="dropdown-item"
+                        href="{{ path('app_position_duplicate', {id: position.id}) }}">{{'actions.duplicate'|trans}}</a></li>
+                        <li><a class="dropdown-item text-danger"
+                        href="{{ path('app_position_delete', {id: position.id}) }}">{{'actions.delete'|trans}}</a></li>
+                        {% endif %}
+                        {% if is_granted("apply", position) %}
+                        <li><a class="dropdown-item"
+                        href="{{ path('app_position_apply', {id: position.id}) }}">{{'actions.apply'|trans}}</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+            </td>
+        </tr>
+        {% endif %}
+        {% else %}
+        <tr><td colspan="10" class="text-muted text-center py-4">{{'no_results'|trans}}</td></tr>
+        {% endfor %}
+    </table>
+</div>
+{% endmacro %}

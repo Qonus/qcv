@@ -1,17 +1,16 @@
 {% extends '/base.html.twig' %}
-
+{% import "macros/ui.html.twig" as ui %}
 {% block body %}
 <div class="jumbotron text-center">
   <h1>Quick CV</h1>
-  <p>Create CVs and Positions</p>
-  {# TODO: Add Tag Cloud with technology tags (linked to CVs for Recruiters or positions for Candidates) #}
+  <p>{{'nav.home.description'|trans}}</p>
 
-<div class="row g-3 mb-4">
+<div class="row g-3 m-4 mb-5">
     <div class="col-6 col-md-3">
         <div class="card border-0 shadow-sm text-center py-3">
             <div class="card-body">
                 <span class="fs-2 fw-bold text-primary d-block">{{ recruiterCount }}</span>
-                <span class="text-muted small text-uppercase fw-semibold">Recruiters</span>
+                <span class="text-muted fw-semibold">{{'nav.home.recruiters'|trans}}</span>
             </div>
         </div>
     </div>
@@ -20,7 +19,7 @@
         <div class="card border-0 shadow-sm text-center py-3">
             <div class="card-body">
                 <span class="fs-2 fw-bold text-success d-block">{{ candidateCount }}</span>
-                <span class="text-muted small text-uppercase fw-semibold">Candidates</span>
+                <span class="text-muted fw-semibold">{{'candidate.plural'|trans}}</span>
             </div>
         </div>
     </div>
@@ -29,7 +28,7 @@
         <div class="card border-0 shadow-sm text-center py-3">
             <div class="card-body">
                 <span class="fs-2 fw-bold text-info d-block">{{ cvCount }}</span>
-                <span class="text-muted small text-uppercase fw-semibold">CVs Uploaded</span>
+                <span class="text-muted fw-semibold">{{'nav.home.cvsUploaded'|trans}}</span>
             </div>
         </div>
     </div>
@@ -38,29 +37,26 @@
         <div class="card border-0 shadow-sm text-center py-3">
             <div class="card-body">
                 <span class="fs-2 fw-bold text-warning d-block">{{ positionCount }}</span>
-                <span class="text-muted small text-uppercase fw-semibold">Open Positions</span>
+                <span class="text-muted fw-semibold">{{'position.plural'|trans}}</span>
             </div>
         </div>
     </div>
 </div>
 </div>
-<div class="container">
-  <div class="row">
-    <div class="col-sm-4">
-      <h3>Column 1</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+<div class="container-md">
+    <div class="mb-5">
+    <h3>{{'nav.home.tagCloud'|trans}}:</h3>
+    {% for tag in popularTags %}
+        <a href={{ is_granted("ROLE_RECRUITER") ? path('app_projects', {tag: tag.name}) : path('app_positions', {tag: tag.name})}}
+    style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
+    class="badge m-1 fs-6 rounded-pill border">{{tag.name}}</a>
+    {% endfor %}
     </div>
-    <div class="col-sm-4">
-      <h3>Column 2</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-    </div>
-    <div class="col-sm-4">
-      <h3>Column 3</h3>        
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-    </div>
+    
+    <h3>{{'nav.home.latestPositions'|trans}}:</h3>
+    {{ ui.positionTable(latestPositions) }}
+    <h3>{{'nav.home.popularPositions'|trans}}:</h3>
+    {{ ui.positionTable(popularPositions) }}
   </div>
 </div>
 {% endblock %}

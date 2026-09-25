@@ -109,13 +109,13 @@ class CVController extends AbstractController {
         return $this->redirect($referer?? $this->generateUrl('app_home'));
     }
 
-    #[IsGranted('delete', 'cv')]
+    #[IsGranted('edit', 'cv')]
     #[Route('/cv/delete/{id}', name: 'app_cv_delete')]
     public function delete(CV $cv, Request $request, #[CurrentUser] User $user): Response
     {
         $this->em->remove($cv);
         $this->em->flush();
         $referer = $request->headers->get('referer');
-        return $this->redirect($referer?? $this->generateUrl('app_home'));
+        return $this->redirect($cv->getCandidate() == $user ? $this->generateUrl('app_candidate_cvs'): $referer);
     }
 }

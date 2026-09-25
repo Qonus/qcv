@@ -39,6 +39,18 @@ class CVRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function countCreatedInLast24Hours(): int
+    {
+        $twentyFourHoursAgo = new \DateTime('-24 hours');
+        return (int) $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->andWhere('c.createdAt >= :since')
+            ->andWhere('c.isPublic = true')
+            ->setParameter('since', $twentyFourHoursAgo)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
     //    /**
     //     * @return CV[] Returns an array of CV objects
     //     */

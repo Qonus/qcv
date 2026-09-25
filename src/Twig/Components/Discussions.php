@@ -54,15 +54,14 @@ class Discussions
     public function createPost() {
         $user = $this->getUser();
         if ($user == null) return;
-        $this->resetEditingPost();
-        $this->editingPostId = -1;
+        $this->setEditingPost(id: -1);
+        // dd($this->content);
     }
     #[LiveAction]
     public function editPost(#[LiveArg]int $id) {
         $post = $this->getMyPostFromId($id);
         if (!$post) return;
-        $this->editingPostId = $id;
-        $this->content = $post->getContent();
+        $this->setEditingPost($post->getContent(), $id);
     }
     #[LiveAction]
     public function deletePost(#[LiveArg]int $id) {
@@ -77,26 +76,27 @@ class Discussions
         $post = $this->getMyPostFromId($this->editingPostId);
         if (!$post && $this->editingPostId == -1) {
             $this->createAndFlushPost($this->content);
-            $this->resetEditingPost();
+            $this->setEditingPost();
             return;
         } else if (!$post) {
             return;
         }
         $post->setContent($this->content);
         $this->em->flush();
-        $this->resetEditingPost();
+        $this->setEditingPost();
     }
     private function createAndFlushPost(string $content) {
         $post = new Post();
         $post->setAuthor($this->getUser());
         $post->setPosition($this->position);
-        $post->setContent($this->content);
+        $post->setContent($content);
         $this->em->persist($post);
         $this->em->flush();
     }
-    private function resetEditingPost(): void {
-        $this->content = '';
-        $this->editingPostId = null;
+    #[LiveAction]
+    public function setEditingPost(string $content = '', ?int $id = null): void {
+        $this->content = $content;
+        $this->editingPostId = $id;
     }
     private function getMyPostFromId(?int $id): ?Post {
         if (!$id) return null;

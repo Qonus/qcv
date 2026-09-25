@@ -32,7 +32,7 @@ class TagRepository extends ServiceEntityRepository
         ->getResult();
     }
 
-    public function popular(int $limit = 20) {
+    public function popular(?int $limit = null) {
         return $this->createQueryBuilder('t')
             ->select('t', 'COUNT(DISTINCT position.id)+COUNT(DISTINCT project.id) AS HIDDEN usage')
             ->leftJoin('t.positions', 'position')

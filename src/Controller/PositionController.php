@@ -36,8 +36,10 @@ class PositionController extends AbstractController {
     }
 
     #[Route(path: "/position", name: "app_positions")]
+    // TODO: display searched tag in the template
     public function index(Request $request) {
-        $positions = $this->positionRepository->search($request->query->get('q'));
+        $tag = $request->query->get("tag");
+        $positions = $this->positionRepository->search($request->query->get('q'), $tag);
         return $this->render("position/index.html.twig", [
             "positions"=> $positions
         ]);
