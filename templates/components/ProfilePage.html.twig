@@ -1,4 +1,4 @@
-<div {{attributes}} class="tab-pane show active">
+<div {{attributes}} class="tab-pane show active" data-poll="delay(5000)|save">
     <div class="row g-4">
         <div class="col-md-3 text-center">
             <img src="{{ this.image ?: asset('images/avatar-placeholder.svg')}}"
@@ -20,6 +20,23 @@
             </div> #}
         </div>
         <div class="col-md-9">
+            <div class="save-status mb-4 fs-7 text-muted">
+                <span data-loading="action(save)|delay|show" class="text-primary fw-bold">
+                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                    Saving changes...
+                </span>
+                <span data-loading="action(save)|delay|hide">
+                    {% if this.isUnsaved and this.changed %}
+                    <span class="text-danger">
+                        x Unsaved
+                    </sapn>
+                    {% else %}
+                    <span class="text-success">
+                        ✓ Saved
+                    </sapn>
+                    {% endif %}
+                </span>
+            </div>
             {% set t = "attribute.builtin" %}
             <div class="form-floating mb-3">
                 <input type="text" class="form-control {{ this.firstName == '' ? 'is-invalid' : '' }}"

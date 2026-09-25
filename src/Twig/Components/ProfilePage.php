@@ -8,15 +8,12 @@ use App\Repository\AttributeRepository;
 use App\Repository\AttributeValueRepository;
 use App\Service\CandidateService;
 use App\Service\UploadService;
-use Cloudinary\Cloudinary;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
-use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent]
@@ -24,17 +21,23 @@ class ProfilePage
 {
     use DefaultActionTrait;
 
-    #[LiveProp(writable: true)]
+    #[LiveProp(writable: true, onUpdated: 'updated')]
     public string $firstName = '';
 
-    #[LiveProp(writable: true)]
+    #[LiveProp(writable: true, onUpdated: 'updated')]
     public string $lastName = '';
 
-    #[LiveProp(writable: true)]
+    #[LiveProp(writable: true, onUpdated: 'updated')]
     public string $location = '';
 
     #[LiveProp(writable: true)]
     public string $image = '';
+
+    #[LiveProp]
+    public bool $isUnsaved = true;
+    
+    #[LiveProp]
+    public bool $changed = false;
 
     public function __construct(
         private AttributeRepository $repo,
@@ -70,5 +73,11 @@ class ProfilePage
             BuiltinAttribute::LOCATION->value => $this->location,
             BuiltinAttribute::IMAGE_URL->value => $this->image,
         ]);
+        $this->isUnsaved = false;
+    }
+
+    public function updated(): void {
+        $this->changed = true;
+        $this->isUnsaved = true;
     }
 }

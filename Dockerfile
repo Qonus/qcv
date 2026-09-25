@@ -10,6 +10,7 @@ RUN install-php-extensions pdo_pgsql
 WORKDIR /app
 COPY --from=vendor /app/vendor ./vendor
 COPY . .
+RUN php bin/console assets:install
 RUN php bin/console importmap:install
 RUN php bin/console asset-map:compile
 RUN php bin/console cache:warmup
