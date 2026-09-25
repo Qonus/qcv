@@ -3,25 +3,26 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Attribute;
-use App\Entity\AttributeCategory;
-use App\Entity\AttributeOption;
 use App\Enum\AttributeDataType;
 use App\Form\AttributeOptionFormType;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[IsGranted("ROLE_RECRUITER")]
 class AttributeCrudController extends AbstractCrudController
 {
+    public function __construct(private TranslatorInterface $translator){}
     public static function getEntityFqcn(): string
     {
         return Attribute::class;
@@ -35,7 +36,7 @@ class AttributeCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-
+        yield HiddenField::new('version')->hideOnIndex();
         yield TextField::new('name', 'attribute.name')
             ->setHelp('attribute.help.name');
  
@@ -72,5 +73,19 @@ class AttributeCrudController extends AbstractCrudController
 
         yield BooleanField::new('isBuiltin', 'attribute.builtin')
             ->hideOnForm();
+    }
+
+    // TODO: Minor issue where user form data is lost on version conflict
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        try {
+            parent::updateEntity($entityManager, $entityInstance);
+        } catch (OptimisticLockException $e) {
+            $this->addFlash(
+                'error', 
+                $this->translator->trans('errors.version_conflict.message')
+            );
+            return;
+        }
     }
 }

@@ -1,3 +1,12 @@
+{% macro back() %}
+<button
+   class="mb-3 btn btn-lg btn-outline-secondary rounded-pill"
+   onclick="history.back()">
+    <i class="bi bi-arrow-left fs-5 leading-none"></i>
+    <span>{{'actions.back'|trans}}</span>
+</button>
+{% endmacro %}
+
 {% macro positionTable(positions) %}
 <div class="table-responsive">
     <table style="min-width: 600px; width: 100%;" class="table table-hover align-middle">

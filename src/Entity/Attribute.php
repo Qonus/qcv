@@ -12,10 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AttributeRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_ATTRIBUTE_NAME', fields: ['name'])]
+#[ORM\HasLifecycleCallbacks]
 class Attribute
 {
     // TODO: Recently used attributes;
-    // TODO: Category filtering.
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -36,6 +36,29 @@ class Attribute
 
     #[ORM\Column]
     private ?bool $isBuiltin = false;
+
+    #[ORM\Version]
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $version = 0;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default'=>'CURRENT_TIMESTAMP'])]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['default'=>'CURRENT_TIMESTAMP'])]
+    private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTime();
+    }
 
     /**
      * @var Collection<int, AttributeOption>
@@ -145,4 +168,16 @@ class Attribute
 
         return $this;
     }
+    
+    public function getVersion(): ?int
+    {
+        return $this->version;
+    }
+    public function setVersion(?int $version): void
+    {
+        $this->version = $version;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
+    public function getUpdatedAt(): ?\DateTimeInterface { return $this->updatedAt; }
 }

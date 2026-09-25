@@ -3,11 +3,17 @@
 {% block body %}
 <div class="container">
 {% include 'components/flashes.html.twig'%}
+<div class="d-flex justify-content-between">
+    <h1>{{'position.form.header'|trans}}</h1>
+    {% import 'macros/ui.html.twig' as ui %}
+    {{ui.back()}}
+</div>
 <form method="POST">
 <input type="hidden" name="_token" value="{{ csrf_token('position_form') }}">
+<input type="hidden" name="version" value="{{ position.version }}">
 <div class="mb-3">
     <label class="form-label" for="company">{{ 'position.company'|trans }}</label>
-    <input type="text" value="{{position.company??''}}" name="company" id="company" class="form-control form-control-lg" />
+    <input type="text" value="{{oldData['company']??position.company??''}}" name="company" id="company" class="form-control form-control-lg" />
 </div>
 <div class="mb-5">
     <label class="form-label" for="title">{{ 'position.title'|trans }}</label>

@@ -2,10 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\AccessRule;
 use App\Entity\CV;
 use App\Entity\Position;
-use App\Entity\PositionAttribute;
 use App\Entity\User;
 use App\Enum\Level;
 use App\Repository\AttributeRepository;
@@ -14,6 +12,7 @@ use App\Repository\PositionRepository;
 use App\Service\AccessRuleService;
 use App\Service\AutosaveService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,47 +101,60 @@ class PositionController extends AbstractController {
         /** @var Position */
         $position = $this->positionRepository->find($id);
         if (!$position) {
-            throw $this->createNotFoundException('The position does not exist');
+            throw $this->createNotFoundException($translator->trans('errors.404.no_position'));
         }
 
         if ($request->isMethod('POST')) {
             // dd($request->request);
-            // CSRF Validation
-            if (!$this->isCsrfTokenValid('position_form', $request->request->get('_token'))) {
-                throw $this->createAccessDeniedException('Invalid CSRF token.');
-            }
-            $position->setCompany($request->request->get('company'));
-            $position->setName($request->request->get('title'));
-            if ($request->request->get('level') != '') $position->setLevel(Level::from($request->request->get('level')));
-            $position->setDescription($request->request->get('description'));
-            $position->setMaxProjects($request->request->get('maxProjects'));
-            
-            $attributeIds = $request->request->all('attributes');
-            $attributes = $this->attributeRepository->findBy(['id' => $attributeIds]);
-            $position->setAttributes($attributes);
-
-            $accessRules = $request->request->all('filters');
-            foreach ($position->getAccessRules() as $existingRule) {
-                $position->getAccessRules()->removeElement($existingRule);
-                $this->em->remove($existingRule);
-            }
-            foreach ($accessRules as $accessRule) {
-                if ($accessRule['attributeId'] == null || $accessRule['attributeDimension'] == null || $accessRule['operation'] == null || $accessRule['filterValue'] == null) {
-                    $this->addFlash('error', $translator->trans('errors.empty_fields'));
-                    return $this->redirectToRoute('app_position_edit', ['id' => $position->getId()]);
+            try {
+                // CSRF Validation
+                if (!$this->isCsrfTokenValid('position_form', $request->request->get('_token'))) {
+                    throw $this->createAccessDeniedException('Invalid CSRF token.');
                 }
-                $newAccessRule = $this->accessRuleService->createAccessRule(
-                    $position,
-                    $accessRule['matchType']??'and',
-                    $this->attributeRepository->find($accessRule['attributeId']),
-                    $accessRule['attributeDimension'],
-                    $accessRule['operation'],
-                    $accessRule['filterValue']
-                );
-                $this->em->persist($newAccessRule);
-            }
+                if ($position->getVersion() != $request->request->get("version")) {
+                    $this->addFlash("error", $translator->trans("errors.version_conflict.message"));
+                    return $this->render("position/edit.html.twig", [
+                        "position" => $position
+                    ]);
+                }
+                $position->setCompany($request->request->get('company'));
+                $position->setName($request->request->get('title'));
+                if ($request->request->get('level') != '') $position->setLevel(Level::from($request->request->get('level')));
+                $position->setDescription($request->request->get('description'));
+                $position->setMaxProjects($request->request->get('maxProjects'));
+                
+                $attributeIds = $request->request->all('attributes');
+                $attributes = $this->attributeRepository->findBy(['id' => $attributeIds]);
+                $position->setAttributes($attributes);
 
-            $this->em->flush();
+                $accessRules = $request->request->all('filters');
+                foreach ($position->getAccessRules() as $existingRule) {
+                    $position->getAccessRules()->removeElement($existingRule);
+                    $this->em->remove($existingRule);
+                }
+                foreach ($accessRules as $accessRule) {
+                    if ($accessRule['attributeId'] == null || $accessRule['attributeDimension'] == null || $accessRule['operation'] == null || $accessRule['filterValue'] == null) {
+                        $this->addFlash('error', $translator->trans('errors.empty_fields'));
+                        return $this->redirectToRoute('app_position_edit', ['id' => $position->getId()]);
+                    }
+                    $newAccessRule = $this->accessRuleService->createAccessRule(
+                        $position,
+                        $accessRule['matchType']??'and',
+                        $this->attributeRepository->find($accessRule['attributeId']),
+                        $accessRule['attributeDimension'],
+                        $accessRule['operation'],
+                        $accessRule['filterValue']
+                    );
+                    $this->em->persist($newAccessRule);
+                }
+
+                $this->em->flush();
+            } catch (OptimisticLockException) {
+                $this->addFlash("error", $translator->trans("errors.version_conflict.message"));
+                return $this->render("position/edit.html.twig", [
+                    "position" => $position
+                ]);
+            }
 
             $this->addFlash('success', 'Position updated successfully.');
             return $this->redirectToRoute('app_position_show', ['id' => $position->getId()]);

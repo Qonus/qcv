@@ -3,8 +3,14 @@
 {% block body %}
 <div class="container">
 {% include 'components/flashes.html.twig' %}
+<div class="d-flex justify-content-between">
+    <h1>{{'project.form.header'|trans}}</h1>
+    {% import 'macros/ui.html.twig' as ui %}
+    {{ui.back()}}
+</div>
 <form method="POST">
 <input type="hidden" name="_token" value="{{ csrf_token('project_form') }}">
+<input type="hidden" name="version" value="{{ project.version }}">
 <div class="mb-5">
     <label class="form-label" for="title">{{ 'project.name'|trans }}</label>
     <input type="text" value="{{project.name??''}}" name="name" id="name" class="form-control form-control-lg" required autofocus />
