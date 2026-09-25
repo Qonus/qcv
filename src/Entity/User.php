@@ -104,6 +104,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
         if ($this->isBlocked !== $user->isBlocked()) {
             return false;
         }
+        if ($this->getRoles() !== $user->getRoles()) {
+            return false;
+        }
         return true;
     }
 

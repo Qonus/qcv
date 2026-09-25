@@ -34,10 +34,7 @@ class ProfilePage
     public string $image = '';
 
     #[LiveProp]
-    public bool $isUnsaved = true;
-    
-    #[LiveProp]
-    public bool $changed = false;
+    public bool $isUnsaved = false;
 
     public function __construct(
         private AttributeRepository $repo,
@@ -77,7 +74,6 @@ class ProfilePage
     }
 
     public function updated(): void {
-        $this->changed = true;
         $this->isUnsaved = true;
     }
 }

@@ -5,11 +5,15 @@
                 class="rounded-circle mb-2 border" width="140" height="140" style="object-fit: cover;" id="profile-photo-preview">
             <br>
 
-            <div>
+            <div class="col">
                 <input type="file" name="image" id="image-input" accept="image/*" style="display: none;"
                 data-action="change->live#action"
                 data-live-action-param="files(image)|uploadImage"
                 >
+                <p data-loading="action(uploadImage)|delay|show" class="text-primary fw-bold">
+                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                    {{'actions.loading'|trans}}...
+                </p>
                 <button type="button" class="btn btn-primary" onclick="document.getElementById('image-input').click();"
                 >
                     {{'actions.change'|trans}}
@@ -20,23 +24,6 @@
             </div> #}
         </div>
         <div class="col-md-9">
-            <div class="save-status mb-4 fs-7 text-muted">
-                <span data-loading="action(save)|delay|show" class="text-primary fw-bold">
-                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
-                    Saving changes...
-                </span>
-                <span data-loading="action(save)|delay|hide">
-                    {% if this.isUnsaved and this.changed %}
-                    <span class="text-danger">
-                        x Unsaved
-                    </sapn>
-                    {% else %}
-                    <span class="text-success">
-                        ✓ Saved
-                    </sapn>
-                    {% endif %}
-                </span>
-            </div>
             {% set t = "attribute.builtin" %}
             <div class="form-floating mb-3">
                 <input type="text" class="form-control {{ this.firstName == '' ? 'is-invalid' : '' }}"
@@ -59,7 +46,26 @@
                     value={{this.location}}>
                 <label for="location">{{ (t~".location")|trans }}</label>
             </div>
-            <div class="d-flex justify-content-end mt-4">
+            <div class="d-flex justify-content-between mt-4">
+                <div class="save-status fs-7 text-muted">
+                    <span data-loading="action(save)|delay|show" class="text-primary fw-bold">
+                        <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                        {{'actions.saving'|trans}}...
+                    </span>
+                    <span data-loading="action(save)|delay|hide">
+                        {% if this.isUnsaved %}
+                        <span class="text-primary">
+                            {# x Unsaved #}
+                            <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                            {{'actions.saving'|trans}}...
+                        </sapn>
+                        {% else %}
+                        <span class="text-success">
+                            ✓ {{'actions.saved'|trans}}
+                        </sapn>
+                        {% endif %}
+                    </span>
+                </div>
                 <button type="submit" 
                         class="btn btn-primary px-4" 
                         data-action="live#action" 
