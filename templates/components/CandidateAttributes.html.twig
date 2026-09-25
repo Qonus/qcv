@@ -32,7 +32,7 @@
         {% else %}
         <div class="card">
             <div class="card-body">
-                {{'profile.no_attributes'|trans}}
+                {{'no_results'|trans}}
             </div>
         </div>
         {% endfor %}
@@ -56,13 +56,16 @@
                         id="attribute-{{ this.key|default('0') }}" 
                         class="form-select"
                         autocomplete="off">
-                    <option value="">-- {{ 'filter.select_attribute'|trans }} --</option>
-                    {# {% for attr in this.attributes %}
-                        <option value="{{ attr.id }}" {{attr.id == this.attributeId ? 'selected' : ''}}>
-                            {{ attr.name }}
-                        </option>
+                    <option value="">-- {{ 'access_rule.select_attribute'|trans }} --</option>
+                    {# {% for categoryName, attributes in this.groupedResults %}
+                        <optgroup label="{{ categoryName }}">
+                            {% for attr in attributes %}
+                                <option value="{{ attr.id }}">
+                                    {{ attr.name }}
+                                </option>
+                            {% endfor %}
+                        </optgroup>
                     {% endfor %} #}
-                </select>
                 {# <input 
                     type="text" 
                     class="form-control mb-3" 

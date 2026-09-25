@@ -63,9 +63,7 @@ class ProjectController extends AbstractController {
 
     #[IsGranted('edit', 'project')]
     #[Route(path:"/project/edit/{id}", name: "app_project_edit")]
-    public function edit(int $id, Request $request, EntityManagerInterface $em) {
-        /** @var Project */
-        $project = $this->projectRepository->find($id);
+    public function edit(Project $project, Request $request, EntityManagerInterface $em) {
         if (!$project) {
             throw $this->createNotFoundException('The project does not exist');
         }

@@ -19,7 +19,7 @@ class PositionAttribute
     private ?Position $position = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Attribute $attribute = null;
 
     #[ORM\Column(nullable: true)]

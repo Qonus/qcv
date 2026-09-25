@@ -2,7 +2,6 @@
 
 namespace App\Twig\Components;
 
-use App\Entity\Attribute;
 use App\Entity\AttributeValue;
 use App\Entity\User;
 use App\Repository\AttributeRepository;
@@ -54,6 +53,16 @@ class CandidateAttributes
         $this->em->flush();
     }
 
+
+    // public function getGroupedResults(): array
+    // {
+    //     $grouped = [];
+    //     foreach ($this->getResults() as $attribute) {
+    //         $categoryName = $attribute->getCategory()?->getName() ?? '---';
+    //         $grouped[$categoryName][] = $attribute;
+    //     }
+    //     return $grouped;
+    // }
     public function getResults(): array {
         return $this->attributeRepository->searchNewForUser($this->getUser(), $this->query);
     }

@@ -41,7 +41,7 @@ class AttributeCrudController extends AbstractCrudController
             ->setHelp('attribute.help.name');
  
         yield AssociationField::new('category', 'attribute.category')
-            // ->setCrudController(AttributeCategoryCrudController::class)
+            ->setCrudController(AttributeCategoryCrudController::class)
             ->autocomplete();
  
         yield ChoiceField::new('dataType', 'attribute.data_type')
@@ -61,17 +61,13 @@ class AttributeCrudController extends AbstractCrudController
             ->setEntryType(AttributeOptionFormType::class)
             ->allowAdd()
             ->allowDelete()
-            // ->byReference(false) // Required so Doctrine triggers addOption()/removeOption()
             ->hideOnIndex()
             ->setHelp('attribute.help.options');
-            // ->renderFormWhen(
-            //     fn ($attribute) => $attribute->getDataType() === AttributeDataType::SELECT
-            // );
         
         yield TextareaField::new('description', 'attribute.description')
             ->hideOnIndex();
 
-        yield BooleanField::new('isBuiltin', 'attribute.builtin')
+        yield BooleanField::new('isBuiltin', 'attribute.builtin.label')
             ->hideOnForm();
     }
 

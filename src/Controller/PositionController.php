@@ -97,9 +97,7 @@ class PositionController extends AbstractController {
 
     #[IsGranted('ROLE_RECRUITER')]
     #[Route(path: "/position/edit/{id}", name: "app_position_edit")]
-    public function edit(int $id, Request $request, TranslatorInterface $translator) {
-        /** @var Position */
-        $position = $this->positionRepository->find($id);
+    public function edit(Position $position, Request $request, TranslatorInterface $translator) {
         if (!$position) {
             throw $this->createNotFoundException($translator->trans('errors.404.no_position'));
         }

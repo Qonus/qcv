@@ -3,7 +3,7 @@
 {% block contents %}
 <div class="tab-pane active">
     <div class="d-flex justify-content-end mb-3">
-        <a href={{ path('app_project_create') }} class="btn btn-primary btn-sm">+ {{'actions.create'}}</a>
+        <a href={{ path('app_project_create') }} class="btn btn-primary btn-sm">+ {{'actions.create'|trans}}</a>
     </div>
     <table class="table table-hover align-middle">
         <thead><tr><th>{{'project.name'|trans}}</th><th>{{'project.period.label'|trans}}</th><th>{{'project.tags'|trans}}</th><th class="text-end"></th></tr></thead>

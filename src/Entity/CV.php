@@ -20,11 +20,11 @@ class CV
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'cvs')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Position $position = null;
 
     #[ORM\ManyToOne(inversedBy: 'cvs')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?User $candidate = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['default'=>'CURRENT_TIMESTAMP'])]

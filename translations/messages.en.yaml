@@ -200,5 +200,6 @@ actions:
   apply: "Apply"
   open: "Open"
   back: "Back"
+  cancel: "Cancel"
   submit: "Submit"
   change: "Change"

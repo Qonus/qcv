@@ -3,7 +3,7 @@
         name="attributes[]"
         class="form-select form-select-lg" 
         autocomplete="off">
-    <option value="">{{ 'filter.select_attribute'|trans }}</option>
+    <option value="">{{ 'access_rule.select_attribute'|trans }}</option>
     {% for attr in this.attributes %}
         <option value="{{ attr.id }}" {{ attr.id in this.selectedAttributeIds ? 'selected' : '' }}>
             {{ attr.name }}

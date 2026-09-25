@@ -23,7 +23,7 @@ class AttributeValue
     private ?User $candidate = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Attribute $attribute = null;
 
     #[ORM\Column(length: 255, nullable: true)]
