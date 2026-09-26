@@ -30,6 +30,7 @@ class PositionController extends AbstractController {
         private AttributeRepository $attributeRepository,
         private AutosaveService $autosaveService,
         private AccessRuleService $accessRuleService,
+        private TranslatorInterface $translator,
         private CVRepository $cvRepository,
         private EntityManagerInterface $em) {
     }
@@ -97,9 +98,9 @@ class PositionController extends AbstractController {
 
     #[IsGranted('ROLE_RECRUITER')]
     #[Route(path: "/position/edit/{id}", name: "app_position_edit")]
-    public function edit(Position $position, Request $request, TranslatorInterface $translator) {
+    public function edit(Position $position, Request $request) {
         if (!$position) {
-            throw $this->createNotFoundException($translator->trans('errors.404.no_position'));
+            throw $this->createNotFoundException($this->translator->trans('errors.404.no_position'));
         }
 
         if ($request->isMethod('POST')) {
@@ -110,7 +111,7 @@ class PositionController extends AbstractController {
                     throw $this->createAccessDeniedException('Invalid CSRF token.');
                 }
                 if ($position->getVersion() != $request->request->get("version")) {
-                    $this->addFlash("error", $translator->trans("errors.version_conflict.message"));
+                    $this->addFlash("error", $this->translator->trans("errors.version_conflict.message"));
                     return $this->render("position/edit.html.twig", [
                         "position" => $position
                     ]);
@@ -132,7 +133,7 @@ class PositionController extends AbstractController {
                 }
                 foreach ($accessRules as $accessRule) {
                     if ($accessRule['attributeId'] == null || $accessRule['attributeDimension'] == null || $accessRule['operation'] == null || $accessRule['filterValue'] == null) {
-                        $this->addFlash('error', $translator->trans('errors.empty_fields'));
+                        $this->addFlash('error', $this->translator->trans('errors.empty_fields'));
                         return $this->redirectToRoute('app_position_edit', ['id' => $position->getId()]);
                     }
                     $newAccessRule = $this->accessRuleService->createAccessRule(
@@ -148,13 +149,13 @@ class PositionController extends AbstractController {
 
                 $this->em->flush();
             } catch (OptimisticLockException) {
-                $this->addFlash("error", $translator->trans("errors.version_conflict.message"));
+                $this->addFlash("error", $this->translator->trans("errors.version_conflict.message"));
                 return $this->render("position/edit.html.twig", [
                     "position" => $position
                 ]);
             }
 
-            $this->addFlash('success', 'Position updated successfully.');
+            $this->addFlash('success', $this->translator->trans('success.updated'));
             return $this->redirectToRoute('app_position_show', ['id' => $position->getId()]);
         }
 
@@ -206,6 +207,7 @@ class PositionController extends AbstractController {
     {
         $this->em->remove($position);
         $this->em->flush();
+        $this->addFlash('success', $this->translator->trans('success.deleted'));
         return $this->redirectToRoute('app_positions');
     }
 }

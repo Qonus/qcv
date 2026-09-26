@@ -15,13 +15,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier)
-    {
-    }
+    public function __construct(
+        private EmailVerifier $emailVerifier,
+        private TranslatorInterface $translator
+    ){}
 
     #[Route('/register', name: 'app_register')]
     public function register(
@@ -84,7 +86,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        $this->addFlash('success', 'Your email address has been verified.');
+        $this->addFlash('success', $this->translator->trans('success.verified'));
         $security->login($user, 'form_login', 'main');
 
         return $this->redirectToRoute('app_home');

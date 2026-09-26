@@ -2,7 +2,6 @@ import { Controller } from '@hotwired/stimulus';
 import { getComponent } from '@symfony/ux-live-component';
 import TomSelect from 'tom-select';
 import 'tom-select/dist/css/tom-select.bootstrap5.css';
-// import 'tom-select/dist/css/tom-select.default.min.css';
 
 export default class extends Controller {
     static values = {
@@ -19,9 +18,11 @@ export default class extends Controller {
             sortField: 'name',
             optgroupField: 'category',
             optgroupLabelField: 'name',
+            preload: true,
             onChange: (value) => {
                 this.component.action('selectAttribute', { id: value });
                 this.select.clear(true);
+                this.select.clearOptions();
             },
         };
 

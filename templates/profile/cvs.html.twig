@@ -13,7 +13,7 @@
                 <td class="text-end"><a href="{{ path('app_cv_show', {id: cv.id}) }}" class="btn btn-sm btn-outline-primary">{{'actions.open'|trans}}</a></td>
             </tr>
         {% else %}
-            <tr><td colspan="4" class="text-muted text-center py-4">{{'cv.no_cvs'|trans}}</td></tr>
+            <tr><td colspan="4" class="text-muted text-center py-4">{{'no_results'|trans}}</td></tr>
         {% endfor %}
         </tbody>
     </table>

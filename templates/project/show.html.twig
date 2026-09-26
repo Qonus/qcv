@@ -22,7 +22,7 @@
     <h2>{{project.name}}</h2>
     <a class="btn btn-lg btn-outline-secondary" href="{{path('app_project_edit', {id: project.id})}}">{{'actions.edit'|trans}}</a>
 </div>
-{{"project.period.header"|trans}}:<h3>{{project.startDate|date('Y.m.d')}} - {{project.endDate|date('Y.m.d')}}</h3>
+{{"project.period.label"|trans}}:<h3>{{project.startDate|date('Y.m.d')}} - {{project.endDate|date('Y.m.d')}}</h3>
 <div style="max-height:600px; overflow-x:auto" class="card p-4 m-2">
 {{project.description|markdown_to_html}}
 </div>

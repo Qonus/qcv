@@ -18,12 +18,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CVController extends AbstractController {
     public function __construct(
         private EntityManagerInterface $em,
         private LikeRepository $likeRepository,
         private CVRepository $cvRepository,
+        private TranslatorInterface $translator,
         private CandidateService $candidateService,
         private ProjectRepository $projectRepository,
     ) {}
@@ -66,7 +68,7 @@ class CVController extends AbstractController {
                 $this->em->flush();
                 return $this->redirectToRoute("app_candidate_cvs");
             } else {
-                $this->addFlash("error", "All Required fields must be created, filled and saved!");
+                $this->addFlash("error", $this->translator->trans('errors.empty_fields'));
             }
         }
         return $this->render('cv/edit.html.twig', [

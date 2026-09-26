@@ -15,11 +15,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProjectController extends AbstractController {
     private const EDITABLE_FIELDS = ['name', 'description', 'startDateFromString', 'endDateFromString'];
     public function __construct(
         private ProjectRepository $projectRepository,
+        private TranslatorInterface $translator,
         private EntityManagerInterface $em,
         private AutosaveService $autosaveService) {
 
@@ -81,7 +83,7 @@ class ProjectController extends AbstractController {
 
             $em->flush();
 
-            $this->addFlash('success', 'Project updated successfully.');
+            $this->addFlash('success', $this->translator->trans('success.updated'));
             return $this->redirectToRoute('app_project_show', ['id' => $project->getId()]);
         }
 
@@ -105,6 +107,7 @@ class ProjectController extends AbstractController {
     {
         $this->em->remove($project);
         $this->em->flush();
+        $this->addFlash('success', $this->translator->trans('success.deleted'));
         $referer = $request->headers->get('referer');
         return $this->redirect($referer?? $this->generateUrl('app_home'));
     }

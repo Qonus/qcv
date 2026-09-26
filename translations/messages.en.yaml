@@ -12,6 +12,11 @@ errors:
     no_position: "Position doesn't exist."
     no_project: "Project doesn't exist."
     no_cv: "CV doesn't exist."
+success:
+  updated: "Updated Successfully!"
+  created: "Created Successfully!"
+  deleted: "Deleted Successfully!"
+  verified: "Your email address has been verified."
 
 auth:
   fields:
