@@ -2,12 +2,14 @@
 
 namespace App\Twig\Components;
 
+use App\Entity\AttributeValue;
 use App\Entity\User;
 use App\Enum\BuiltinAttribute;
 use App\Repository\AttributeRepository;
 use App\Repository\AttributeValueRepository;
 use App\Service\CandidateService;
 use App\Service\UploadService;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,20 +23,23 @@ class ProfilePage
 {
     use DefaultActionTrait;
 
-    #[LiveProp(writable: true, onUpdated: 'updated')]
-    public string $firstName = '';
+    #[LiveProp(writable: ['value'], onUpdated: ['value' => 'updated'])]
+    public array $firstName = ['value'=> '', 'version'=>''];
 
-    #[LiveProp(writable: true, onUpdated: 'updated')]
-    public string $lastName = '';
+    #[LiveProp(writable: ['value'], onUpdated: ['value' => 'updated'])]
+    public array $lastName = ['value'=> '', 'version'=>''];
 
-    #[LiveProp(writable: true, onUpdated: 'updated')]
-    public string $location = '';
+    #[LiveProp(writable: ['value'], onUpdated: ['value' => 'updated'])]
+    public array $location = ['value'=> '', 'version'=>''];
 
-    #[LiveProp(writable: true)]
-    public string $image = '';
+    #[LiveProp(writable: ['value'])]
+    public array $image = ['value'=> '', 'version'=>''];
 
     #[LiveProp]
     public bool $isUnsaved = false;
+
+    #[LiveProp]
+    public bool $conflict = false;
 
     public function __construct(
         private AttributeRepository $repo,
@@ -43,6 +48,31 @@ class ProfilePage
         private UploadService $uploadService,
         private Security $security)
     {
+    }
+
+    public function mount(
+        AttributeValue $firstName,
+        AttributeValue $lastName,
+        AttributeValue $location,
+        AttributeValue $image,
+    ) {
+        $this->firstName = [
+            'value' => $firstName->getValue(),
+            'version' => $firstName->getVersion(),
+        ];
+        $this->lastName = [
+            'value' => $lastName->getValue(),
+            'version' => $lastName->getVersion(),
+        ];
+        $this->location = [
+            'value' => $location->getValue(),
+            'version' => $location->getVersion(),
+        ];
+        $this->image = [
+            'value' => $image->getValue(),
+            'version' => $image->getVersion(),
+        ];
+
     }
 
     public function getUser(): ?User
@@ -57,20 +87,24 @@ class ProfilePage
         $image = $request->files->get('image');
         if (!$image) return;
         $imageUrl = $this->uploadService->uploadImage($image);
-        $this->image = $imageUrl;
+        $this->image['value'] = $imageUrl;
         $this->save();
     }
 
     // TODO: automatically call this function every 5-10 seconds during editing
     #[LiveAction]
     public function save(): void {
-        $this->candidateService->saveBuiltinValues($this->getUser(), [
-            BuiltinAttribute::FIRST_NAME->value => $this->firstName,
-            BuiltinAttribute::LAST_NAME->value => $this->lastName,
-            BuiltinAttribute::LOCATION->value => $this->location,
-            BuiltinAttribute::IMAGE_URL->value => $this->image,
-        ]);
-        $this->isUnsaved = false;
+        try {
+            $this->candidateService->saveBuiltinValues($this->getUser(), [
+                BuiltinAttribute::FIRST_NAME->value => $this->firstName,
+                BuiltinAttribute::LAST_NAME->value => $this->lastName,
+                BuiltinAttribute::LOCATION->value => $this->location,
+                BuiltinAttribute::IMAGE_URL->value => $this->image,
+            ]);
+            $this->isUnsaved = false;
+        } catch (OptimisticLockException) {
+            $this->conflict = true;
+        }
     }
 
     public function updated(): void {

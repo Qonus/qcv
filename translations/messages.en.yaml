@@ -2,11 +2,16 @@ errors:
   header: "Error occurred!"
   account_blocked: "Your account has been blocked."
   version_conflict:
-    message: 'Someone else already changed this resource. Go Back to keep your version'
+    message: 'Someone else already changed this resource.'
   empty_fields: "All required fields must be filled."
+  403:
+    header: "Access Denied!"
+    description: "You are not authorized to access this page."
   404:
     header: "Oops! An error occurred while loading this page!"
     no_position: "Position doesn't exist."
+    no_project: "Project doesn't exist."
+    no_cv: "CV doesn't exist."
 
 auth:
   fields:

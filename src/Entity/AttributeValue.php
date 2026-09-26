@@ -59,6 +59,10 @@ class AttributeValue
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['default'=>'CURRENT_TIMESTAMP'])]
     private ?\DateTimeInterface $updatedAt = null;
+
+    public function __tostring() {
+        return $this->getValue();
+    }
     
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
@@ -251,6 +255,10 @@ class AttributeValue
     public function getVersion(): ?int
     {
         return $this->version;
+    }
+    public function setVersion(?int $version)
+    {
+        $this->version = $version;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }

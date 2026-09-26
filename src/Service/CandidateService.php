@@ -33,10 +33,10 @@ class CandidateService
                 $valuesByName[$value->getAttribute()->getName()] = $value;
             }
             $builtinValues = [
-                'firstName' => ($valuesByName[BuiltinAttribute::FIRST_NAME->value] ?? null)?->getValue() ?? '',
-                'lastName'  => ($valuesByName[BuiltinAttribute::LAST_NAME->value]  ?? null)?->getValue() ?? '',
-                'location'  => ($valuesByName[BuiltinAttribute::LOCATION->value]   ?? null)?->getValue() ?? '',
-                'image'     => ($valuesByName[BuiltinAttribute::IMAGE_URL->value]  ?? null)?->getValue() ?? '',
+                'firstName' => ($valuesByName[BuiltinAttribute::FIRST_NAME->value] ?? null) ?? '',
+                'lastName'  => ($valuesByName[BuiltinAttribute::LAST_NAME->value]  ?? null) ?? '',
+                'location'  => ($valuesByName[BuiltinAttribute::LOCATION->value]   ?? null) ?? '',
+                'image'     => ($valuesByName[BuiltinAttribute::IMAGE_URL->value]  ?? null) ?? '',
             ];
         }
         return [
@@ -53,19 +53,19 @@ class CandidateService
     }
 
     /**
-     * @param array<string, string> $builtinValues Key-value pairs ['First Name' => 'John', ...]
+     * @param array<string, array> $builtinValues Key-value pairs ['First Name' => 'John', ...]
      */
     public function saveBuiltinValues(User $user, array $builtinValues): void
     {
         // TODO: Add Optimistic Locking check
         foreach ($builtinValues as $attributeName => $value) {
-            $this->updateOrCreateBuiltin($user, $attributeName, (string) $value);
+            $this->updateOrCreateBuiltin($user, $attributeName, (string) $value['value'], (int) $value['version']);
         }
 
         $this->em->flush();
     }
 
-    private function updateOrCreateBuiltin(User $user, string $attributeName, mixed $newValue): void
+    private function updateOrCreateBuiltin(User $user, string $attributeName, mixed $newValue, int $version): void
     {
         $attributeValue = $this->attributeValueRepository->findOneByUserAndName($user, $attributeName);
 
@@ -82,5 +82,6 @@ class CandidateService
         }
 
         $attributeValue->setValue($newValue);
+        $attributeValue->setVersion($version);
     }
 }

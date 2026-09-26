@@ -1,7 +1,7 @@
 <div {{attributes}} class="tab-pane show active" data-poll="delay(5000)|save">
     <div class="row g-4">
         <div class="col-md-3 text-center">
-            <img src="{{ this.image ?: asset('images/avatar-placeholder.svg')}}"
+            <img src="{{ this.image.value ?: asset('images/avatar-placeholder.svg')}}"
                 class="rounded-circle mb-2 border" width="140" height="140" style="object-fit: cover;" id="profile-photo-preview">
             <br>
 
@@ -28,22 +28,19 @@
             <div class="form-floating mb-3">
                 <input type="text" class="form-control {{ this.firstName == '' ? 'is-invalid' : '' }}"
                     id="firstName"
-                    data-model="debounce(200)|firstName"
-                    value={{this.firstName}}>
+                    data-model="debounce(200)|firstName.value">
                 <label for="firstName">{{ (t~".firstName")|trans }}</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control {{ this.lastName == '' ? 'is-invalid' : '' }}"
                     id="lastName"
-                    data-model="debounce(200)|lastName"
-                    value={{this.lastName}}>
+                    data-model="debounce(200)|lastName.value">
                 <label for="lastName">{{ (t~".lastName")|trans }}</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control {{ this.location == '' ? 'is-invalid' : '' }}"
                     id="location"
-                    data-model="debounce(200)|location"
-                    value={{this.location}}>
+                    data-model="debounce(200)|location.value">
                 <label for="location">{{ (t~".location")|trans }}</label>
             </div>
             <div class="d-flex justify-content-between mt-4">
@@ -53,7 +50,11 @@
                         {{'actions.saving'|trans}}...
                     </span>
                     <span data-loading="action(save)|delay|hide">
-                        {% if this.isUnsaved %}
+                        {% if this.isUnsaved and this.conflict %}
+                        <span class="text-danger">
+                            x {{'errors.version_conflict.message'|trans}}
+                        </sapn>
+                        {% elseif this.isUnsaved %}
                         <span class="text-primary">
                             {# x Unsaved #}
                             <span class="spinner-border spinner-border-sm me-1" role="status"></span>
