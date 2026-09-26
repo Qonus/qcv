@@ -49,7 +49,7 @@ class ProjectController extends AbstractController {
         ]);
     }
 
-    #[IsGranted('edit', 'project')]
+    #[IsGranted('ROLE_CANDIDATE')]
     #[Route(path: "/project/create", name: "app_project_create")]
     public function create(EntityManagerInterface $em, #[CurrentUser] $user) {
         $project = new Project();
