@@ -2,8 +2,9 @@
 {% block title %}CVs{% endblock %}
 {% block body %}
 <div class="container">
+<div class="table-responsive">
     <table class="table table-hover align-middle">
-        <thead><tr><th>{{'w.position'|trans}}</th><th>{{'w.email'|trans}}</th><th class="text-end">{{'w.likes'|trans}}</th><th class="text-end"></th></tr></thead>
+        <thead><tr><th>{{'position.singular'|trans}}</th><th>{{'user.email.label'|trans}}</th><th class="text-end">{{'like.plural'|trans}}</th><th class="text-end"></th></tr></thead>
         <tbody>
         {% for cv in cvs %}
             {% set liked = cv in liked_cvs %}
@@ -14,12 +15,22 @@
                     {{ cv.likes|length }}
                     <i class="bi {{ liked ? 'bi-heart-fill':'bi-heart'}} ms-2 text-danger">
                 </button></td>
-                <td class="text-end"><a href="{{ path('app_cv_show', {id: cv.id}) }}" class="btn btn-sm btn-outline-primary">{{'actions.open'|trans}}</a></td>
+                <td class="text-end"><div class="dropdown">
+                    <button class="btn btn-link" data-bs-toggle="dropdown">⋮</button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ path('app_cv_show', {id: cv.id}) }}">{{'actions.open'|trans}}</a></li>
+                        {% if is_granted("edit", cv) %}
+                        <li><a class="dropdown-item" href="{{ path('app_cv_edit', {id: cv.id}) }}">{{'actions.edit'|trans}}</a></li>
+                        <li><a class="dropdown-item text-danger" href="{{ path('app_cv_delete', {id: cv.id}) }}">{{'actions.delete'|trans}}</a></li>
+                        {% endif %}
+                    </ul>
+                </div></td>
             </tr>
         {% else %}
             <tr><td colspan="4" class="text-muted text-center py-4">{{'no_results'|trans}}</td></tr>
         {% endfor %}
         </tbody>
     </table>
+</div>
 </div>
 {% endblock %}

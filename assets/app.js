@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', function() {
             internalTextArea.dataset[key] = originalDataset[key];
         });
     }
-});
 
-document.addEventListener('DOMContentLoaded', function() {
+
+
     document.querySelectorAll('.clickable-row').forEach(row => {
         row.style.cursor = 'pointer';
 

@@ -31,6 +31,11 @@
         <!-- EasyMDE CSS & JS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
         <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+
+        {# Set easy admin theme #}
+        <script>
+        localStorage.setItem('ea/colorScheme', '{{theme}}');
+        </script>
     </head>
     <body>
         {% include('components/navbar.html.twig') %}
