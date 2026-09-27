@@ -41,7 +41,7 @@ class PositionController extends AbstractController {
     // TODO: display searched tag in the template
     public function index(Request $request) {
         $tag = $request->query->get("tag");
-        $positions = $this->positionRepository->search($request->query->get('q'), $tag);
+        $positions = $this->positionRepository->popular(query: $request->query->get('q'), tag: $tag);
         return $this->render("position/index.html.twig", [
             "positions"=> $positions
         ]);

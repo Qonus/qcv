@@ -39,14 +39,30 @@ class PositionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function popular(?int $limit = null) {
-        return $this->createQueryBuilder('p')
+    public function popular(?string $query = null, ?string $tag = null, ?int $limit = null) {
+        $qb = $this->createQueryBuilder('p')
             ->select('p', 'COUNT(c.id) AS HIDDEN cvCount')
             ->leftJoin('p.cvs', 'c', Join::WITH, 'c.isPublic = true')
             ->groupBy('p.id')
             ->orderBy('cvCount', 'DESC')
-            ->setMaxResults($limit)
-            ->getQuery()
+            ->setMaxResults($limit);
+        if ($query) {
+            $qb->where(
+                $qb->expr()->orX(
+                    $qb->expr()->like('LOWER(p.name)', 'LOWER(:q)'),
+                    $qb->expr()->like('LOWER(p.description)', 'LOWER(:q)'),
+                    $qb->expr()->like('LOWER(p.level)', 'LOWER(:q)'),
+                    $qb->expr()->like('LOWER(p.company)', 'LOWER(:q)'),
+                )
+            )
+            ->setParameter("q", '%'.$query.'%');
+        }
+        if ($tag) {
+            $qb->innerJoin('p.tags', 't')
+            ->andWhere('LOWER(t.name) LIKE LOWER(:tag)')
+            ->setParameter('tag', '%'.$tag.'%');
+        }
+        return $qb->getQuery()
             ->getResult();
     }
 

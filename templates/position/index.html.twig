@@ -19,7 +19,7 @@
             <th>{{"position.company"|trans}}</th>
             <th>{{"position.title"|trans}}</th>
             <th>{{"position.level"|trans}}</th>
-            <th>{{"position.attributes"|trans}}</th>
+            <th>{{"cv.plural"|trans}}</th>
             <th>{{"tag.plural"|trans}}</th>
             <th></th>
         </tr>
@@ -30,7 +30,8 @@
             <td>{{position.company??''}}</td>
             <td>{{position.name??''}}</td>
             <td>{{(position.level.value??'---')|capitalize}}</td>
-            <td><div class="table-list-container">
+            <td class="fs-5">{{position.cvs|length}}<i class="bi bi-file-earmark-post ms-2"></td>
+            {# <td><div class="table-list-container">
                 {% set attributes = position.attributes %}
                 {% set limit = 5 %}
                 {% for attribute in attributes|slice(0,limit) %}
@@ -41,7 +42,7 @@
                 <span style="color: var(--bs-body) !important; background-color: var(--bs-info-bg-subtle)"
                     class="badge border">+{{ attributes|length - limit }}</span>
                 {% endif %}
-            </div></td>
+            </div></td> #}
             <td><div class="table-list-container">
                 {% set tags = position.tags %}
                 {% set limit = 7 %}
