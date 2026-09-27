@@ -49,7 +49,7 @@ class TagController extends AbstractController {
     #[Route(path:"/tag/search", name: "app_tag_search")]
     public function search(Request $request) {
         $query = $request->query->get('query');
-        $tags = $this->tagRepository->search($query);
+        $tags = $this->tagRepository->popular(query: $query, limit: 8);
         $data = array_map(fn($t)=> ['id'=>$t->getId(),'name'=>$t->getName()], $tags);
         return $this->json($data);
     }

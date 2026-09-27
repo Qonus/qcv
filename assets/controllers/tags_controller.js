@@ -19,9 +19,6 @@ export default class extends Controller {
             valueField: 'id',
             labelField: 'name',
             searchField: 'name',
-            sortField: 'name',
-            // TODO: sort by score in future
-            // sortField: 'score',
             options: this.hasInitialValue ? this.initialValue : [],
             items: initialItems,
             preload: true,

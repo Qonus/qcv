@@ -37,7 +37,8 @@ class TagRepository extends ServiceEntityRepository
     public function popular(
         ?Project $project = null,
         ?Position $position = null,
-        ?int $limit = null) {
+        ?int $limit = null,
+        ?string $query = null) {
         $qb = $this->createQueryBuilder('t')
             ->select('t', 'COUNT(DISTINCT position.id)+COUNT(DISTINCT project.id) AS HIDDEN usage')
             ->leftJoin('t.positions', 'position')
@@ -45,6 +46,10 @@ class TagRepository extends ServiceEntityRepository
             ->groupBy('t.id')
             ->orderBy('usage', 'DESC')
             ->setMaxResults($limit);
+        if ($query) {
+            $qb->andWhere("LOWER(t.name) LIKE LOWER(:q)")
+            ->setParameter("q", '%'.$query.'%');
+        }
         if ($position) {
             $qb->andWhere('position = :position')
             ->setParameter('position', $position);
