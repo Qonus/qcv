@@ -24,7 +24,6 @@
                         name="filters[{{ index }}][attributeId]"
                         id="attribute-{{ this.key|default('0') }}" 
                         class="form-select form-select-sm"
-                        value="{{this.attributeId}}"
                         autocomplete="off">
                     <option value="">-- {{ (t~'select_attribute')|trans }} --</option>
                     {# {% for attr in this.attributes %}

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Project;
 use App\Entity\User;
 use App\Repository\ProjectRepository;
+use App\Repository\TagRepository;
 use App\Service\AutosaveService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -21,6 +22,7 @@ class ProjectController extends AbstractController {
     private const EDITABLE_FIELDS = ['name', 'description', 'startDateFromString', 'endDateFromString'];
     public function __construct(
         private ProjectRepository $projectRepository,
+        private TagRepository $tagRepository,
         private TranslatorInterface $translator,
         private EntityManagerInterface $em,
         private AutosaveService $autosaveService) {
@@ -80,6 +82,10 @@ class ProjectController extends AbstractController {
             $project->setStartDate(new \DateTime($request->request->get('startDate')));
             $project->setEndDate(new \DateTime($request->request->get('endDate')));
             $project->setDescription($request->request->get('description'));
+
+            $tagIds = $request->request->all('tags');
+            $tags = $this->tagRepository->findBy(['id' => $tagIds]);
+            $project->setTags($tags);
 
             $em->flush();
 

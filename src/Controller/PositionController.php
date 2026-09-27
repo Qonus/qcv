@@ -9,6 +9,7 @@ use App\Enum\Level;
 use App\Repository\AttributeRepository;
 use App\Repository\CVRepository;
 use App\Repository\PositionRepository;
+use App\Repository\TagRepository;
 use App\Service\AccessRuleService;
 use App\Service\AutosaveService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,6 +29,7 @@ class PositionController extends AbstractController {
     public function __construct(
         private PositionRepository $positionRepository,
         private AttributeRepository $attributeRepository,
+        private TagRepository $tagRepository,
         private AutosaveService $autosaveService,
         private AccessRuleService $accessRuleService,
         private TranslatorInterface $translator,
@@ -124,6 +126,10 @@ class PositionController extends AbstractController {
                 $position->setDescription($request->request->get('description'));
                 $position->setMaxProjects($request->request->get('maxProjects'));
                 
+                $tagIds = $request->request->all('tags');
+                $tags = $this->tagRepository->findBy(['id' => $tagIds]);
+                $position->setTags($tags);
+
                 $attributeIds = $request->request->all('attributes');
                 $attributes = $this->attributeRepository->findBy(['id' => $attributeIds]);
                 $position->setAttributes($attributes);
@@ -165,11 +171,11 @@ class PositionController extends AbstractController {
             "position" => $position
         ]);
     }
-    private function handlePositionEditError($position) {
-        return $this->render("position/edit.html.twig", [
-            "position" => $position
-        ]);
-    }
+    // private function handlePositionEditError($position) {
+    //     return $this->render("position/edit.html.twig", [
+    //         "position" => $position
+    //     ]);
+    // }
 
     #[IsGranted('ROLE_RECRUITER')]
     #[Route('/position/save/{id}', name: 'app_position_save', methods: ['PATCH'])]

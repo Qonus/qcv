@@ -37,7 +37,17 @@
 </div>
 
 <div class="mb-5">
-{{component('TagPicker', {entityClass: 'App\\Entity\\Position', entityId: position.id})}}
+<label class="form-label" for="tags[]">{{ 'tag.plural'|trans }}</label>
+<select {{ stimulus_controller('tags', {
+            initial: position.tagsArray|default([]),
+            searchUrl: path('app_tag_search'),
+            createUrl: path('app_tag_create')
+        }) }}
+        name="tags[]" multiple
+        class="form-select form-select-lg"
+        autocomplete="off">
+</select>
+{# {{component('TagPicker', {entityClass: 'App\\Entity\\Position', entityId: position.id})}} #}
 </div>
 
 <div class="mb-5">

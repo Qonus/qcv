@@ -4,6 +4,7 @@ namespace App\Twig\Components;
 
 use App\Entity\Tag;
 use App\Entity\TaggableEntity;
+use App\Repository\TagRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -14,6 +15,7 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 #[AsLiveComponent]
 class TagPicker
 {
+    // Deprecated, DO NOT MIX WITH NON-AUTOSAVE/SUBMIT FORMS.
     use DefaultActionTrait;
 
     #[LiveProp]
@@ -25,7 +27,10 @@ class TagPicker
     #[LiveProp(writable: true)]
     public string $query = '';
 
-    public function __construct(private readonly EntityManagerInterface $em) {}
+    public function __construct(
+        private EntityManagerInterface $em,
+        private TagRepository $tagRepository
+    ) {}
 
     private function getEntity(): TaggableEntity
     {
@@ -47,18 +52,14 @@ class TagPicker
         if ($this->query === '') {
             return [];
         }
-
         $existingNames = array_map(static fn (Tag $t) => $t->getName(), $this->getTags());
-
-        $qb = $this->em->getRepository(Tag::class)->createQueryBuilder('t')
+        $qb = $this->tagRepository->createQueryBuilder('t')
             ->andWhere('t.name LIKE :q')->setParameter('q', $this->query . '%')
             ->orderBy('t.name', 'ASC')
             ->setMaxResults(8);
-
         if ($existingNames) {
             $qb->andWhere('t.name NOT IN (:existing)')->setParameter('existing', $existingNames);
         }
-
         return $qb->getQuery()->getResult();
     }
 
@@ -69,7 +70,6 @@ class TagPicker
                 return true;
             }
         }
-
         return false;
     }
 
@@ -77,24 +77,22 @@ class TagPicker
     public function addTag(#[LiveArg] ?int $id = null, #[LiveArg] ?string $name = null): void
     {
         $tag = null;
-
-        if (null !== $id) {
-            $tag = $this->em->getRepository(Tag::class)->find($id);
+        if ($id != null) {
+            $tag = $this->tagRepository->find($id);
         } elseif (null !== $name && '' !== trim($name)) {
             $name = trim($name);
-            $tag = $this->em->getRepository(Tag::class)->findOneBy(['name' => $name]);
+            $tag = $this->tagRepository->findOneBy(['name' => $name]);
             if (!$tag) {
                 $tag = new Tag();
                 $tag->setName($name);
                 $this->em->persist($tag);
             }
         }
-
         if ($tag) {
             $this->getEntity()->addTag($tag);
         }
-
-        $this->em->flush();
+        // This flush advances the version fabricating version conflicts
+        // $this->em->flush();
         $this->query = '';
     }
 

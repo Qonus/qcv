@@ -69,7 +69,7 @@
     <h2>{{'candidate.projects'|trans}}</h2>
 
     <table class="table table-hover align-middle">
-        <thead><tr><th>{{'project.name'|trans}}</th><th>{{'project.period.label'|trans}}</th><th>{{'project.tags'|trans}}</th><th class="text-end"></th></tr></thead>
+        <thead><tr><th>{{'project.name'|trans}}</th><th>{{'project.period.label'|trans}}</th><th>{{'tag.plural'|trans}}</th><th class="text-end"></th></tr></thead>
         <tbody>
         {% for project in projects %}
             <tr class="clickable-row" data-href="{{ path('app_project_show', {id: project.id}) }}">

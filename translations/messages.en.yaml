@@ -107,7 +107,6 @@ position:
   level: "Level"
   maxProjects: "Max Projects Allowed in CV"
   attributes: "Attributes"
-  tags: "Tags"
   create: "+ Create"
   my_cv: "My CV"
   cvs: "CVs"
@@ -121,6 +120,9 @@ cv:
 like:
   singular: "Like"
   plural: "Likes"
+tag:
+  singular: "Tag"
+  plural: "Tags"
 access_rule:
   singular: "Access Rule"
   plural: "Access Rules"
@@ -163,7 +165,6 @@ project:
     from: "From"
     to: "To"
   description: "Description"
-  tags: "Tags"
 
 candidate:
   singular: "Candidate"

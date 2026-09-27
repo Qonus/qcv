@@ -9,10 +9,11 @@ use Doctrine\Common\Collections\Collection;
 // one TagPicker component serves both instead of one-per-entity.
 interface TaggableEntity
 {
-    /** @return Collection<int, Tag> */
-    public function getTags(): Collection;
+    public function setTags(array $tags);
 
     public function addTag(Tag $tag): static;
 
     public function removeTag(Tag $tag): static;
+
+    public function getTagsArray(): array;
 }

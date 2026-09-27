@@ -132,6 +132,24 @@ class Position implements TaggableEntity
         return $this->tags;
     }
 
+    public function getTagsArray(): array
+    {
+        $tags = array_map(fn($tag) => [
+            'id' => $tag->getId(),
+            'name' => $tag->getName(),
+        ], $this->getTags()->toArray());
+        return $tags;
+    }
+
+    public function setTags(array $tags) {
+        foreach ($this->getTags() as $existingTag) {
+            $this->removeTag($existingTag);
+        }
+        foreach ($tags as $tag) {
+            $this->addTag($tag);
+        }
+    }
+
     public function addTag(Tag $tag): static
     {
         if (!$this->tags->contains($tag)) {
