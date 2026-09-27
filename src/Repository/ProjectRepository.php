@@ -20,9 +20,12 @@ class ProjectRepository extends ServiceEntityRepository
         parent::__construct($registry, Project::class);
     }
 
-    public function findByTag(?string $tag = '') {
+    public function findByTag(?string $tag = '', ?string $query = '') {
         return $this->createQueryBuilder('p')
             ->innerJoin('p.tags', 't')
+            ->andWhere('LOWER(p.name) LIKE LOWER(:query)')
+            ->orWhere('LOWER(p.description) LIKE LOWER(:query)')
+            ->setParameter('query', '%'.$query.'%')
             ->andWhere('LOWER(t.name) LIKE LOWER(:tag)')
             ->setParameter('tag', '%'.$tag.'%')
             ->groupBy('p.id')

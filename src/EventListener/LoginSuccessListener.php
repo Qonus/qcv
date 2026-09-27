@@ -10,17 +10,13 @@ class LoginSuccessListener
 {
     public function __invoke(LoginSuccessEvent $event): void
     {
-        // $user = $event->getUser();
-        
-        // if (!$user instanceof User) {
-        //     return;
-        // }
-
-        // $request = $event->getRequest();
-        
-        // // Populate the session locale with user's preferred locale
-        // if ($user->getLocale()) {
-        //     $request->getSession()->set('_locale', $user->getLocale());
-        // }
+        $user = $event->getUser();
+        if (!$user instanceof User) {
+            return;
+        }
+        $request = $event->getRequest();
+        if ($user->getLocale()) {
+            $request->getSession()->set('_locale', $user->getLocale());
+        }
     }
 }

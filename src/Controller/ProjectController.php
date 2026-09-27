@@ -36,7 +36,7 @@ class ProjectController extends AbstractController {
     public function index(Request $request, #[CurrentUser] User $user): Response
     {
         $tag = $request->query->get("tag");
-        $projects = $this->projectRepository->findByTag($tag);
+        $projects = $this->projectRepository->findByTag(tag: $tag, query: $request->query->get('q'));
         return $this->render('project/index.html.twig', [
             'projects' => $projects
         ]);

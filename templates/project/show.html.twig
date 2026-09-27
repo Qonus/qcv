@@ -3,11 +3,8 @@
 {% block body %}
 <div class="container">
 
-<a href="{{ path('app_candidate_projects') }}" style="top:70px"
-   class="mb-3 sticky-top btn btn-lg bg-body btn-outline-secondary text-body rounded-pill">
-    <i class="bi bi-arrow-left fs-5 leading-none"></i>
-    <span>{{'actions.back'|trans}}</span>
-</a>
+{% import 'macros/ui.html.twig' as ui %}
+{{ui.back()}}
 {% for label, messages in app.flashes %}
     {% for message in messages %}
         {% set alert_type = label == 'error' ? 'danger' : label %}

@@ -23,7 +23,7 @@ class HomeController extends AbstractController {
     public function index(): Response {
         $latestPositions = $this->positionRepository->latest(20);
         $popularPositions = $this->positionRepository->popular(20);
-        $popularTags = $this->tagRepository->popular(20);
+        $popularTags = $this->tagRepository->popular(limit: 20);
         // TODO: Use these results in the template
 
         // Statistics
