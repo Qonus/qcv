@@ -33,6 +33,7 @@ class CVRepository extends ServiceEntityRepository
                 Join::WITH,
                 'av.attribute = a AND av.candidate = :candidate'
             )
+            ->andWhere('a.isBuiltin = false')
             ->andWhere('pa.position = :position')
             ->setParameter('position', $position)
             ->setParameter('candidate', $candidate)

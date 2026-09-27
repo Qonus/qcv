@@ -2,12 +2,24 @@ errors:
   header: "Произошла ошибка!"
   account_blocked: "Ваш аккаунт заблокирован."
   version_conflict:
-    message: 'Кто-то другой первым установил это значение: <strong class="conflict-theirs-value"></strong>.'
+    message: 'Кто-то другой уже изменил этот ресурс.'
     mine: 'Оставить моё'
     theirs: 'Использовать чужое'
   empty_fields: "Все обязательные поля должны быть заполнены."
+  403:
+    header: "Доступ запрещен!"
+    description: "У вас нет прав для доступа к этой странице."
   404:
     header: "Упс! Произошла ошибка при загрузке этой страницы!"
+    no_position: "Позиция не существует."
+    no_project: "Проект не существует."
+    no_cv: "Резюме не существует."
+
+success:
+  updated: "Успешно обновлено!"
+  created: "Успешно создано!"
+  deleted: "Успешно удалено!"
+  verified: "Ваш адрес электронной почты подтвержден."
 
 auth:
   fields:
@@ -62,7 +74,11 @@ attribute:
   data_type: "Тип данных"
   options: "Опции"
   description: "Описание"
-  builtin: "Встроенный"
+  builtin:
+    label: "Встроенный"
+    firstName: "Имя"
+    lastName: "Фамилия"
+    location: "Локация"
   help:
     name: "Должно быть глобально уникальным."
     options: 'Добавьте опции, если этот атрибут использует тип «Один из многих (выпадающий список)».'
@@ -73,29 +89,28 @@ attribute:
     numeric: "Числовой"
     date: "Дата"
     period: "Период (диапазон дат)"
-    boolean: "Логический (Да/Нет)"
+    boolean: "Логический"
     select: "Один из многих (выпадающий список)"
 
 attribute_category:
-  singular: ""
+  singular: "Категория атрибута"
   plural: "Категории атрибутов"
-  name: "Название Категории"
+  name: "Название категории"
 
 attribute_value:
   singular: "Значение атрибута"
   plural: "Значения атрибутов"
-  builtin:
-    firstName: "Имя"
-    lastName: "Фамилия"
-    location: "Локация"
 
 position:
   singular: "Позиция"
   plural: "Позиции"
+  form:
+    header: "Редактировать позицию"
   title: "Название"
   description: "Описание"
   company: "Компания"
   level: "Уровень"
+  maxProjects: "Максимальное количество проектов в резюме"
   attributes: "Атрибуты"
   tags: "Теги"
   create: "+ Создать"
@@ -148,9 +163,11 @@ discussion:
 project:
   singular: "Проект"
   plural: "Проекты"
+  form:
+    header: "Редактировать проект"
   name: "Название проекта"
   period:
-    header: "Период"
+    label: "Период"
     from: "С"
     to: "По"
   description: "Описание"
@@ -170,7 +187,14 @@ nav:
   positions: "Позиции"
   admin: "Панель управления"
   dashboard: "Дашборд"
-  home: "Главная"
+  home: 
+    label: "Главная"
+    description: "Создание резюме и позиций"
+    cvsUploaded: "Резюме, загруженные за последние 24 часа"
+    recruiters: "Рекрутеры"
+    tagCloud: "Облако тегов"
+    latestPositions: "Последние позиции"
+    popularPositions: "Популярные позиции"
   appearance: "Внешний вид"
   dark: "Тёмная"
   light: "Светлая"
@@ -189,9 +213,15 @@ actions:
   edit: "Редактировать"
   create: "Создать"
   save: "Сохранить"
+  saving: "Сохранение"
+  saved: "Сохранено"
+  unsaved: "Не Сохранено"
+  loading: "Загрузка"
   duplicate: "Дублировать"
   delete: "Удалить"
-  apply: "Отправить Резюме"
+  apply: "Отправить резюме"
   open: "Открыть"
   back: "Назад"
+  cancel: "Отмена"
   submit: "Отправить"
+  change: "Изменить"

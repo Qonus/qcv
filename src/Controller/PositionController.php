@@ -70,16 +70,19 @@ class PositionController extends AbstractController {
         ]);
     }
 
-    #[IsGranted('apply', 'position')]
     #[Route(path: '/position/apply/{id}', name: 'app_position_apply')]
     public function apply(Position $position, #[CurrentUser]User $candidate) {
         $cv = $this->cvRepository->findOneBy(['position' => $position, 'candidate'=>$candidate]);
-        if ($cv == null) {
+        if ($cv == null && $this->isGranted('apply', $position)) {
             $cv = new CV();
             $cv->setCandidate($candidate);
             $cv->setPosition($position);
             $this->em->persist($cv);
             $this->em->flush();
+        }
+        elseif ($cv == null) {
+            $this->addFlash('danger', $this->translator->trans('errors.empty_fields'));
+            return $this->redirectToRoute('app_profile');
         }
         return $this->redirectToRoute('app_cv_edit', ['id' => $cv->getId()]);
     }

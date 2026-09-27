@@ -26,19 +26,19 @@
         <div class="col-md-9">
             {% set t = "attribute.builtin" %}
             <div class="form-floating mb-3">
-                <input type="text" class="form-control {{ this.firstName == '' ? 'is-invalid' : '' }}"
+                <input type="text" class="form-control {{ this.firstName.value == '' ? 'is-invalid' : '' }}"
                     id="firstName"
                     data-model="debounce(200)|firstName.value">
                 <label for="firstName">{{ (t~".firstName")|trans }}</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control {{ this.lastName == '' ? 'is-invalid' : '' }}"
+                <input type="text" class="form-control {{ this.lastName.value == '' ? 'is-invalid' : '' }}"
                     id="lastName"
                     data-model="debounce(200)|lastName.value">
                 <label for="lastName">{{ (t~".lastName")|trans }}</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control {{ this.location == '' ? 'is-invalid' : '' }}"
+                <input type="text" class="form-control {{ this.location.value == '' ? 'is-invalid' : '' }}"
                     id="location"
                     data-model="debounce(200)|location.value">
                 <label for="location">{{ (t~".location")|trans }}</label>
@@ -53,17 +53,17 @@
                         {% if this.isUnsaved and this.conflict %}
                         <span class="text-danger">
                             x {{'errors.version_conflict.message'|trans}}
-                        </sapn>
+                        </span>
                         {% elseif this.isUnsaved %}
                         <span class="text-primary">
                             {# x Unsaved #}
                             <span class="spinner-border spinner-border-sm me-1" role="status"></span>
                             {{'actions.saving'|trans}}...
-                        </sapn>
+                        </span>
                         {% else %}
                         <span class="text-success">
                             ✓ {{'actions.saved'|trans}}
-                        </sapn>
+                        </span>
                         {% endif %}
                     </span>
                 </div>

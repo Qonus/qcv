@@ -207,6 +207,7 @@ actions:
   save: "Save"
   saving: "Saving"
   saved: "Saved"
+  unsaved: "Unsaved"
   loading: "Loading"
   duplicate: "Duplicate"
   delete: "Delete"

@@ -123,8 +123,9 @@ class AttributeValue
         };
     }
 
+    // Boolean, String
     public function getValueExists(): bool {
-        if ($this->getValue() === null) return false;
+        if ($this->getValue() === null || $this->getValue() == '') return false;
         if ($this->getAttribute()->getDataType() != AttributeDataType::PERIOD) {
             return true;
         }

@@ -5,6 +5,7 @@
     <div class="d-flex justify-content-end mb-3">
         <a href={{ path('app_project_create') }} class="btn btn-primary btn-sm">+ {{'actions.create'|trans}}</a>
     </div>
+    <div class="table-responsive">
     <table class="table table-hover align-middle">
         <thead><tr><th>{{'project.name'|trans}}</th><th>{{'project.period.label'|trans}}</th><th>{{'project.tags'|trans}}</th><th class="text-end"></th></tr></thead>
         <tbody>
@@ -28,8 +29,11 @@
                     <div class="dropdown">
                         <button class="btn btn-link" data-bs-toggle="dropdown">⋮</button>
                         <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ path('app_project_show', {id: project.id}) }}">{{'actions.open'|trans}}</a></li>
+                            {% if is_granted("edit", project) %}
                             <li><a class="dropdown-item" href="{{ path('app_project_edit', {id: project.id}) }}">{{'actions.edit'|trans}}</a></li>
-                            <li><button class="dropdown-item text-danger" data-project-delete="{{ project.id }}">{{'actions.delete'|trans}}</button></li>
+                            <li><a class="dropdown-item text-danger" href="{{ path('app_project_delete', {id: project.id}) }}">{{'actions.delete'|trans}}</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </td>
@@ -39,5 +43,6 @@
         {% endfor %}
         </tbody>
     </table>
+    </div>
 </div>
 {% endblock %}

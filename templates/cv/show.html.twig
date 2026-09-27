@@ -15,9 +15,9 @@
     <h2>{{'candidate.me'|trans}}</h2>
     <div class="card mb-3 p-2">
         {% for field in [
-            {name:'candidate.email'|trans, value: candidate.email},
+            {name:'user.email.label'|trans, value: candidate.email},
             {name:'candidate.name'|trans, value: firstName ~ ' ' ~ lastName},
-            {name:'candidate.location'|trans, value: location},
+            {name:'attribute.builtin.location'|trans, value: location},
             ] %}
         <div class="d-flex gap-3 align-items-center">
             <strong>{{field.name}}</strong>

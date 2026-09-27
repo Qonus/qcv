@@ -10,7 +10,16 @@
                 <td>{{ cv.position.name }}</td>
                 <td><span class="badge {{ cv.isPublic ? 'text-bg-success' : 'text-bg-secondary' }}">{{ cv.isPublic ? "cv.public"|trans : "cv.private"|trans }}</span></td>
                 <td>{{ cv.likes|length }}</td>
-                <td class="text-end"><a href="{{ path('app_cv_show', {id: cv.id}) }}" class="btn btn-sm btn-outline-primary">{{'actions.open'|trans}}</a></td>
+                <td class="text-end"><div class="dropdown">
+                    <button class="btn btn-link" data-bs-toggle="dropdown">⋮</button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ path('app_cv_show', {id: cv.id}) }}">{{'actions.open'|trans}}</a></li>
+                        {% if is_granted("edit", cv) %}
+                        <li><a class="dropdown-item" href="{{ path('app_cv_edit', {id: cv.id}) }}">{{'actions.edit'|trans}}</a></li>
+                        <li><a class="dropdown-item text-danger" href="{{ path('app_cv_delete', {id: cv.id}) }}">{{'actions.delete'|trans}}</a></li>
+                        {% endif %}
+                    </ul>
+                </div></td>
             </tr>
         {% else %}
             <tr><td colspan="4" class="text-muted text-center py-4">{{'no_results'|trans}}</td></tr>

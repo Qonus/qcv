@@ -28,11 +28,14 @@ class AttributeValueEditor
     #[LiveProp]
     public bool $required = true;
 
-    #[LiveProp(writable: true)]
+    #[LiveProp(writable: true, onUpdated: 'updated')]
     public ?string $value = '';
 
-    #[LiveProp(writable: ['start', 'end'])]
+    #[LiveProp(writable: ['start', 'end'], onUpdated: ['start'=>'updated', 'end'=>'updated'])]
     public ?array $periodValue = ['start' => '', 'end' => ''];
+
+    #[LiveProp]
+    public bool $isSaved = true;
 
     public function __construct(
         private AttributeRepository $attributeRepository,
@@ -62,12 +65,20 @@ class AttributeValueEditor
     #[LiveAction]
     public function save() {
         // dd(['value' => $this->value, 'period' => $this->periodValue]);
+
         if ($this->isPeriod()) {
+            if ($this->periodValue =='') return;
             $this->attributeValueHydrator->setValueFromString($this->attributeValue, $this->periodValue);
         } else {
+            if ($this->value =='') return;
             $this->attributeValueHydrator->setValueFromString($this->attributeValue, $this->value);
         }
         $this->em->flush();
+        $this->isSaved = true;
+    }
+
+    public function updated() {
+        $this->isSaved = false;
     }
 
     private function isPeriod(): bool {

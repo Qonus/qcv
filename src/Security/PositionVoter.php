@@ -47,7 +47,7 @@ class PositionVoter extends Voter {
         if (!$this->canView($position, $token, $vote)) return false;
         if (!$this->candidateService->builtinValuesExist($token->getUser())){
             $vote?->addReason(sprintf(
-                "The logged in user's builtin values are missing",
+                "Missing Builtin values!",
             ));
             return false;
         }
