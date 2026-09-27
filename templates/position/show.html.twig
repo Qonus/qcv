@@ -17,7 +17,7 @@
 </div>
 {{"position.company"|trans}}:<h3>{{position.company}}</h3>
 <div style="max-height:600px; overflow-x:auto" class="card p-4 m-2">
-{{position.description|markdown_to_html}}
+{{position.description??''|markdown_to_html}}
 </div>
 <div class="mb-3">
 <h5>{{"position.attributes"|trans}}:</h5>

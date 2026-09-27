@@ -101,6 +101,26 @@ class ProfilePage
                 BuiltinAttribute::LOCATION->value => $this->location,
                 BuiltinAttribute::IMAGE_URL->value => $this->image,
             ]);
+            $this->firstName['version'] = 
+                $this->attributeValueRepository->findOneByUserAndName(
+                    $this->getUser(),
+                    BuiltinAttribute::FIRST_NAME->value
+                )->getVersion();
+            $this->lastName['version'] = 
+                $this->attributeValueRepository->findOneByUserAndName(
+                    $this->getUser(),
+                    BuiltinAttribute::LAST_NAME->value
+                )->getVersion();
+            $this->location['version'] = 
+                $this->attributeValueRepository->findOneByUserAndName(
+                    $this->getUser(),
+                    BuiltinAttribute::LOCATION->value
+                )->getVersion();
+            $this->image['version'] = 
+                $this->attributeValueRepository->findOneByUserAndName(
+                    $this->getUser(),
+                    BuiltinAttribute::IMAGE_URL->value
+                )->getVersion();
             $this->isUnsaved = false;
         } catch (OptimisticLockException) {
             $this->conflict = true;

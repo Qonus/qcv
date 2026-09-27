@@ -57,9 +57,9 @@ class ProjectController extends AbstractController {
         $project = new Project();
         $project->setCandidate($user);
         $project->setName('Untitled project');
-
         $em->persist($project);
         $em->flush();
+        $this->addFlash('success', $this->translator->trans('success.created'));
         return $this->redirectToRoute('app_project_edit', ['id' => $project->getId()]);
     }
 

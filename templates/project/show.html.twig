@@ -24,7 +24,7 @@
 </div>
 {{"project.period.label"|trans}}:<h3>{{project.startDate|date('Y.m.d')}} - {{project.endDate|date('Y.m.d')}}</h3>
 <div style="max-height:600px; overflow-x:auto" class="card p-4 m-2">
-{{project.description|markdown_to_html}}
+{{project.description??''|markdown_to_html}}
 </div>
 <div class="mb-5">
 <h5>{{"project.tags"|trans}}:</h5>

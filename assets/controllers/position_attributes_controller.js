@@ -36,33 +36,29 @@ export default class extends Controller {
             // }
         });
 
-        // Event listener on the Tom Select wrapper to capture toggle button clicks
-        this.select.wrapper.addEventListener('click', (event) => {
-            const toggleBtn = event.target.closest('.state-toggle-btn');
-            if (!toggleBtn) return;
-
-            // Stop Tom Select from triggering drop-down or item removal on click
-            event.stopPropagation();
-            event.preventDefault();
-
-            const attrId = toggleBtn.dataset.id;
-            this.toggleState(attrId);
-        });
+        // this.select.wrapper.addEventListener('click', (event) => {
+        //     const toggleBtn = event.target.closest('.state-toggle-btn');
+        //     if (!toggleBtn) return;
+        //     event.stopPropagation();
+        //     event.preventDefault();
+        //     const attrId = toggleBtn.dataset.id;
+        //     this.toggleState(attrId);
+        // });
     }
 
-    toggleState(id) {
-        // Toggle state between 'optional' and 'required'
-        this.states[id] = this.states[id] === 'required' ? 'optional' : 'required';
+    // toggleState(id) {
+    //     // Toggle state between 'optional' and 'required'
+    //     this.states[id] = this.states[id] === 'required' ? 'optional' : 'required';
 
-        // Refresh Tom Select items to trigger re-rendering with new state badge
-        this.select.refreshItems();
+    //     // Refresh Tom Select items to trigger re-rendering with new state badge
+    //     this.select.refreshItems();
 
-        // Dispatch a custom event or update a hidden form input with this.states JSON
-        this.element.dispatchEvent(new CustomEvent('attributes:changed', {
-            detail: { states: this.states },
-            bubbles: true
-        }));
-    }
+    //     // Dispatch a custom event or update a hidden form input with this.states JSON
+    //     this.element.dispatchEvent(new CustomEvent('attributes:changed', {
+    //         detail: { states: this.states },
+    //         bubbles: true
+    //     }));
+    // }
 
     disconnect() {
         if (this.select) {

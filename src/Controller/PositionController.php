@@ -89,10 +89,9 @@ class PositionController extends AbstractController {
     public function create() {
         $position = new Position();
         $position->setName('Untitled Position');
-        // $position->setIsPublic(false); // stays hidden from candidates until the recruiter actually configures it
-
         $this->em->persist($position);
         $this->em->flush();
+        $this->addFlash('success', $this->translator->trans('success.created'));
         return $this->redirectToRoute('app_position_edit', ['id' => $position->getId()]);
     }
 
