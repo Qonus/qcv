@@ -27,7 +27,7 @@
             <strong class="fs-6">{{attributeValue.attribute.name}}</strong>
         </div>
         <div class="card-body align-items-center gap-4">
-            {{attributeValue.value??''|markdown_to_html}}
+            {{(attributevalue.value??'')|markdown_to_html}}
         </div>
     </div>
     {% else %}

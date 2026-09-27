@@ -32,7 +32,7 @@
         
         {% if post.id != this.editingPostId %}
         <div>
-            {{post.content??''|markdown_to_html}}
+            {{(post.content??'')|markdown_to_html}}
         </div>
         {% else %}
         <div id="post {{post.id}}" class="mb-3">
