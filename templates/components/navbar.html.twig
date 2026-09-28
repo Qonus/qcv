@@ -26,15 +26,20 @@
             <button class="btn btn-outline-success" type="submit">{{'nav.search'|trans}}</button>
         </form>
         
-        {% if app.user %}
+        {# {% if app.user %} #}
         <ul class="navbar-nav">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" data-bs-boundary="viewport" aria-expanded="false">
-                    <img src="{{ app.user.image ?: asset('images/avatar-placeholder.svg') }}" class="rounded-circle border" width="40" height="40" style="object-fit: cover;">
-                    {{ app.user.email }}
+                    <img src="{{ app.user ? app.user.image?:asset('images/avatar-placeholder.svg') : asset('images/avatar-placeholder.svg') }}" class="rounded-circle border" width="40" height="40" style="object-fit: cover;">
+                    {{ app.user ? app.user.email : 'user.guest'|trans }}
                 </a>
                 <ul style="z-index:99999000" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                {% if app.user %}
                 <li><a class="dropdown-item" href={{ path('app_profile') }}>{{ 'nav.profile.label'|trans }}</a></li>
+                {% else %}
+                <li><a class="dropdown-item active" href={{ path('app_login') }}>{{ 'auth.login.submit'|trans }}</a></li>
+                <li><a class="dropdown-item" href={{ path('app_register') }}>{{ 'auth.register.submit'|trans }}</a></li>
+                {% endif %}
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header">{{'nav.appearance'|trans}}</h6></li>
                 <li><a class="dropdown-item {% if theme == 'dark' %}active{% endif %}"
@@ -47,6 +52,7 @@
                     href={{ path('app_switch_locale', {locale: 'en'}) }}>English</a></li>
                 <li><a class="dropdown-item {% if locale == 'ru' %}active{% endif %}"
                     href={{ path('app_switch_locale', {locale: 'ru'}) }}>Русский</a></li>
+                {% if app.user %}
                 <li><hr class="dropdown-divider"></li>
                 <li class="">
                     <form action={{path('app_logout')}} method="POST" class="d-flex m-0">
@@ -57,15 +63,16 @@
                         </button>
                     </form>
                 </li>
+                {% endif %}
             </ul>
             </li>
             
         </ul>
-        {% else %}
+        {# {% else %}
         <a class="btn btn-outline-primary" href={{ path('app_login') }}>
             {{"nav.login"|trans}}
         </a>
-        {% endif %}
+        {% endif %} #}
     </div>
   </div>
 </nav>

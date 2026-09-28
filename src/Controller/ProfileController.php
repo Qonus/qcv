@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -29,6 +30,15 @@ class ProfileController extends AbstractController
         return $this->render('profile/index.html.twig', [
             ...($this->candidateService->getCandidateAttributes($user, true, false)),
         ]);
+    }
+
+    #[Route('/delete', name: 'app_profile_delete', methods: ['GET'])]
+    public function delete(#[CurrentUser] User $user, Request $request, TokenStorageInterface $tokenStorage): Response {
+        $tokenStorage->setToken(null);
+        $request->getSession()->invalidate();
+        $this->em->remove($user);
+        $this->em->flush();
+        return $this->redirectToRoute('app_home');
     }
 
     #[Route('/attributes', name: 'app_candidate_attributes')]

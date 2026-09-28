@@ -57,10 +57,9 @@ class AccessRuleService {
             'operation' => $accessRule->getOperation()->value,
             'filterValue' => match($accessRule->getFilterValueType()) {
                 FilterValueType::BOOLEAN => $accessRule->getValue() ? 'true' : 'false',
-                FilterValueType::STRING => $accessRule->getValue(),
-                FilterValueType::DURATION => $accessRule->getValue(),
-                FilterValueType::NUMBER => $accessRule->getValue(),
                 FilterValueType::DATE => $accessRule->getValue()->format('Y-m-d'),
+                FilterValueType::OPTION => $accessRule->getValue()->getId(),
+                default => $accessRule->getValue()
             },
         ];
     }

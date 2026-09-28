@@ -51,6 +51,7 @@ user:
   plural: "Пользователи"
   email:
     label: "Email"
+  guest: "Гость"
   role:
     label: "Роль"
     candidate: "Кандидат"
@@ -128,6 +129,10 @@ cv:
 like:
   singular: "Лайк"
   plural: "Лайки"
+
+tag:
+  singular: "Тег"
+  plural: "Теги"
 
 access_rule:
   singular: "Правило доступа"

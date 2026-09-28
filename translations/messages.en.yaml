@@ -48,6 +48,7 @@ user:
   plural: "Users"
   email:
     label: "Email"
+  guest: "Guest"
   role:
     label: "Role"
     candidate: "Candidate"
@@ -183,7 +184,7 @@ nav:
   home: 
     label: "Home"
     description: "Create CVs and Positions"
-    cvsUploaded: "CVs Uploaded last 24 hours"
+    cvsUploaded: "CVs last 24 hours"
     recruiters: "Recruiters"
     tagCloud: "Tag Cloud"
     latestPositions: "Latest Positions"

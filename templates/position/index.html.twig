@@ -30,7 +30,9 @@
             <td>{{position.company??''}}</td>
             <td>{{position.name??''}}</td>
             <td>{{(position.level.value??'---')|capitalize}}</td>
-            <td class="fs-5">{{position.cvs|length}}<i class="bi bi-file-earmark-post ms-2"></td>
+            <td><div class="fs-5 d-flex">
+            {{position.cvs|length}}<i class="bi bi-file-earmark-post ms-2">
+            </div></td>
             {# <td><div class="table-list-container">
                 {% set attributes = position.attributes %}
                 {% set limit = 5 %}
