@@ -30,7 +30,7 @@
         <ul class="navbar-nav">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" data-bs-boundary="viewport" aria-expanded="false">
-                    <img src="{{ app.user ? app.user.image?:asset('images/avatar-placeholder.svg') : asset('images/avatar-placeholder.svg') }}" class="rounded-circle border" width="40" height="40" style="object-fit: cover;">
+                    <img src="{{ app.user and app.user.image ? app.user.image : asset('images/avatar-placeholder.svg') }}" class="rounded-circle border" width="40" height="40" style="object-fit: cover;">
                     {{ app.user ? app.user.email : 'user.guest'|trans }}
                 </a>
                 <ul style="z-index:99999000" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">

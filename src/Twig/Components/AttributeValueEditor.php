@@ -66,15 +66,23 @@ class AttributeValueEditor
     public function save() {
         // dd(['value' => $this->value, 'period' => $this->periodValue]);
 
+        if (!$this->isValidValue()) return;
         if ($this->isPeriod()) {
-            if ($this->periodValue =='') return;
             $this->attributeValueHydrator->setValueFromString($this->attributeValue, $this->periodValue);
         } else {
-            if ($this->value =='') return;
             $this->attributeValueHydrator->setValueFromString($this->attributeValue, $this->value);
         }
         $this->em->flush();
         $this->isSaved = true;
+        dd($this->isSaved);
+    }
+
+    public function isValidValue(): bool {
+        if ($this->isPeriod() &&
+        $this->periodValue['start'] == '' &&
+        $this->periodValue['end'] == '') return false;
+        if (!$this->isPeriod() && $this->value == '') return false;
+        return true;
     }
 
     public function updated() {
