@@ -423,13 +423,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
         return $this;
     }
 
-    public function getImage(): ?string {
+    public function getValue(string $attributeName): mixed {
         foreach ($this->attributeValues as $attributeValue) {
-            if ($attributeValue->getAttribute()->getName() == BuiltinAttribute::IMAGE_URL->value) {
+            if ($attributeValue->getAttribute()->getName() == $attributeName) {
                 return $attributeValue->getValue();
             }
         }
         return null;
+    }
+
+    public function getImage(): ?string {
+        return $this->getValue(BuiltinAttribute::IMAGE_URL->value);
+    }
+
+    public function getFirstName(): ?string {
+        return $this->getValue(BuiltinAttribute::FIRST_NAME->value);
+    }
+
+    public function getLastName(): ?string {
+        return $this->getValue(BuiltinAttribute::LAST_NAME->value);
+    }
+
+    public function getLocation(): ?string {
+        return $this->getValue(BuiltinAttribute::LOCATION->value);
     }
 
     /**

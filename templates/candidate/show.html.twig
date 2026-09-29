@@ -2,19 +2,8 @@
 
 {% block body %}
 <div class="container">
-    <h2>{{'candidate.me'|trans}}</h2>
-    <div class="card mb-3 p-2">
-        {% for field in [
-            {name:'user.email.label'|trans, value: candidate.email},
-            {name:'candidate.name'|trans, value: firstName ~ ' ' ~ lastName},
-            {name:'attribute.builtin.location'|trans, value: location},
-            ] %}
-        <div class="d-flex gap-3 align-items-center">
-            <strong>{{field.name}}</strong>
-            <span class="fs-5">{{field.value}}</span>
-        </div>
-    {% endfor %}
-    </div>
+    {% import 'macros/ui.html.twig' as ui%}
+    {{ ui.me(candidate) }}
 
     <h2>{{'candidate.info'|trans}}</h2>
     {% for attributeValue in attributeValues %}
@@ -27,7 +16,7 @@
             <strong class="fs-6">{{attributeValue.attribute.name}}</strong>
         </div>
         <div class="card-body align-items-center gap-4">
-            {{(attributevalue.value??'')|markdown_to_html}}
+            {{(attributeValue.value??'')|markdown_to_html}}
         </div>
     </div>
     {% else %}

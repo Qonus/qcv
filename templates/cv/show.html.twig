@@ -2,7 +2,6 @@
 
 {% block body %}
 <div class="container mt-5">
-    {% include 'components/flashes.html.twig' %}
     <div class="mb-5">
         {% if is_granted('edit', cv) %}
         <div class="d-flex float-end flex-wrap gap-2 mb-3">
@@ -12,27 +11,8 @@
         {% endif %}
         <a class="link h2" href="{{path('app_position_show', {id: cv.position.id})}}">{{cv.position.name}}</a>
     </div>
-    <h2>{{'candidate.me'|trans}}</h2>
-    <div class="mb-3 card p-3">
-    <div class="d-flex align-content-center gap-3">
-        <div class="d-flex">
-            <img src="{{ app.user and app.user.image ? app.user.image : asset('images/avatar-placeholder.svg') }}"
-                class="rounded-circle mb-2 border" width="140" height="140" style="object-fit: cover;" id="profile-photo-preview">
-        </div>
-        <div class="my-auto d-flex flex-column gap-2 fs-5">
-        {% for field in [
-            {name:'user.email.label'|trans, value: candidate.email},
-            {name:'candidate.name'|trans, value: firstName ~ ' ' ~ lastName},
-            {name:'attribute.builtin.location'|trans, value: location},
-            ] %}
-        <div class="d-flex gap-3 align-items-center">
-            <strong>{{field.name}}</strong>
-            <span class="fs-5">{{field.value}}</span>
-        </div>
-        {% endfor %}
-        </div>
-    </div>
-    </div>
+    {% import 'macros/ui.html.twig' as ui%}
+    {{ ui.me(candidate) }}
 
     <h2>{{'candidate.info'|trans}}</h2>
     {% for attributeValue in attributeValues %}

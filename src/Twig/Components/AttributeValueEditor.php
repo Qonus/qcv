@@ -74,7 +74,6 @@ class AttributeValueEditor
         }
         $this->em->flush();
         $this->isSaved = true;
-        dd($this->isSaved);
     }
 
     public function isValidValue(): bool {
