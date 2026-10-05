@@ -34,13 +34,22 @@ class="fs-6 badge rounded-pill border">{{tag}}</span>
 {% endfor %}
 </div>
 
+{% if is_granted("edit", position) %}
+<div class="mb-5">
+<form action="{{path('app_position_api_token_generate', {id: position.id})}}" method="POST">
+    <input type="hidden" name="_token" value="{{ csrf_token('position_api_token'~position.id) }}">
+    <button type="submit" class="mb-3 btn btn-lg btn-outline-primary">{{'actions.generate'|trans}}</button>
+</form>
+<h5>{{'position.api_token.singular'|trans}}: {{position.apiTokenHash ?? '---'}}</h5>
+</div>
+{% endif %}
 <div class="d-flex gap-2 mb-5">
-    {% if is_granted("ROLE_RECRUITER") %}
+    {% if is_granted("edit", position) %}
     <a class="btn btn-lg btn-outline-secondary" href="{{path('app_position_cvs', {id: position.id})}}">{{'position.cvs'|trans}}</a>
     {% endif %}
     {% if cv != null %}
     <a class="btn btn-lg btn-outline-secondary" href="{{path('app_cv_show', {id: cv.id})}}">{{'position.my_cv'|trans}}</a>
-    {% elseif is_granted("ROLE_CANDIDATE") %}
+    {% elseif is_granted("apply", position) %}
     <a class="btn btn-lg btn-outline-primary" href="{{path('app_position_apply', {id: position.id})}}">{{'actions.apply'|trans}}</a>
     {% endif %}
 </div>

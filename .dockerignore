@@ -1,6 +1,8 @@
 docker/db/data
 docker/db/data/*
 
+odoo/
+
 .git
 .gitignore
 var/

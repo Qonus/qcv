@@ -17,6 +17,7 @@ success:
   created: "Created Successfully!"
   deleted: "Deleted Successfully!"
   verified: "Your email address has been verified."
+  generated: "Generated Successfully!"
 
 auth:
   fields:
@@ -100,6 +101,8 @@ attribute_value:
 position:
   singular: "Position"
   plural: "Positions"
+  api_token:
+    singular: "Api Token"
   form:
     header: "Edit Position"
   title: "Title"
@@ -219,3 +222,4 @@ actions:
   cancel: "Cancel"
   submit: "Submit"
   change: "Change"
+  generate: "Generate"

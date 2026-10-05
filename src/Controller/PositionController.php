@@ -12,6 +12,7 @@ use App\Repository\PositionRepository;
 use App\Repository\TagRepository;
 use App\Service\AccessRuleService;
 use App\Service\AutosaveService;
+use App\Service\PositionAggregator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,6 +36,31 @@ class PositionController extends AbstractController {
         private TranslatorInterface $translator,
         private CVRepository $cvRepository,
         private EntityManagerInterface $em) {
+    }
+
+    #[IsGranted('edit', 'position')]
+    #[Route('/position/api-token/{id}', name: 'app_position_api_token_generate', methods: ['POST'])]
+    public function generate(Position $position, Request $request, EntityManagerInterface $em): Response
+    {
+        if (!$this->isCsrfTokenValid('position_api_token'.$position->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
+        $token = bin2hex(random_bytes(32));
+        $position->setApiTokenHash($token);
+        $em->flush();
+        // TODO: translate the message
+        $this->addFlash('success', $this->translator->trans('success.generated'));
+        return $this->redirectToRoute('app_position_show', ['id' => $position->getId()]);
+    }
+
+    #[Route('/api/v1/position-results', methods: ['GET'])]
+    public function results(Request $request, PositionRepository $repo, PositionAggregator $agg): JsonResponse
+    {
+        $h = $request->headers->get('Authorization', '');
+        if (!str_starts_with($h, 'Bearer ')) return $this->json(['error' => 'missing token'], 401);
+        $position = $repo->findOneBy(['apiTokenHash' => substr($h,7)]);
+        if (!$position) return $this->json(['error' => 'invalid token'], 401);
+        return $this->json($agg->aggregate($position));
     }
 
     #[Route(path: "/position", name: "app_positions")]

@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: "${ODOO_DB_PASSWORD}"
+    volumes:
+      - odoo-db:/var/lib/postgresql/data
+  odoo:
+    image: odoo:18.0
+    depends_on: 
+      - db
+    command: "odoo --http-interface=0.0.0.0 --proxy-mode"
+    ports:
+      - "9082:8069"
+    environment: 
+      HOST: db
+      USER: odoo
+      PASSWORD: "${ODOO_DB_PASSWORD}"
+    volumes:
+      - odoo-data:/var/lib/odoo
+      - ./addons:/mnt/extra-addons
+    # extra_hosts: ["host.docker.internal:host-gateway"]
+  adminer:
+    image: adminer:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    ports:
+      - "10082:8080"
+volumes: 
+  odoo-db:
+  odoo-data:

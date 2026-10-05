@@ -21,9 +21,9 @@ class HomeController extends AbstractController {
 
     #[Route(path: '/', name: 'app_home')]
     public function index(): Response {
-        $latestPositions = $this->positionRepository->latest(limit: 20);
-        $popularPositions = $this->positionRepository->popular(limit: 20);
-        $popularTags = $this->tagRepository->popular(limit: 20);
+        $latestPositions = $this->positionRepository->latest(limit: 5);
+        $popularPositions = $this->positionRepository->popular(limit: 5);
+        $popularTags = $this->tagRepository->popular(limit: 15);
         // TODO: Use these results in the template
 
         // Statistics

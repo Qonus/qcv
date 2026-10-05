@@ -1,0 +1,8 @@
+<odoo>
+  <menuitem id="menu_qcv_root" name="QCV">
+    <menuitem id="qcv_first_level_menu" name="Quick CV">
+      <menuitem id="menu_qcv_positions" name="Positions" action="action_qcv_position" />
+    <!-- <menuitem id="menu_qcv_import" name="Import" action="action_qcv_import"/> -->
+    </menuitem>
+  </menuitem>
+</odoo>

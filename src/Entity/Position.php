@@ -73,6 +73,9 @@ class Position implements TaggableEntity
     #[ORM\OneToMany(targetEntity: AccessRule::class, mappedBy: 'position', orphanRemoval: true)]
     private Collection $accessRules;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $apiTokenHash = null;
+
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
     {
@@ -371,6 +374,18 @@ class Position implements TaggableEntity
                 $accessRule->setPosition(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getApiTokenHash(): ?string
+    {
+        return $this->apiTokenHash;
+    }
+
+    public function setApiTokenHash(?string $apiTokenHash): static
+    {
+        $this->apiTokenHash = $apiTokenHash;
 
         return $this;
     }

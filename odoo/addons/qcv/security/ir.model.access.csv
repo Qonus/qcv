@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_qcv_position,qcv.position,model_qcv_position,base.group_user,1,1,1,1
+access_qcv_position_attr,qcv.position.attribute,model_qcv_position_attribute,base.group_user,1,1,1,1
