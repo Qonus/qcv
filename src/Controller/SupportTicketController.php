@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\PositionRepository;
+use App\Repository\UserRepository;
 use App\Service\DropboxClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\{ChoiceType, TextareaType};
@@ -20,7 +21,8 @@ class SupportTicketController extends AbstractController
 
     public function __construct(
         private TranslatorInterface $translator,
-        private PositionRepository $positionRepository
+        private PositionRepository $positionRepository,
+        private UserRepository $userRepository,
     ) {}
 
     #[Route('/support/ticket', name: 'app_support_ticket')]
@@ -32,20 +34,21 @@ class SupportTicketController extends AbstractController
         $from = $request->query->get('from');
         $request->query->remove('from');
         $referer = $this->generateUrl($from, [...$request->query]);
-        $form = $this->createFormBuilder(['priority' => 'average'])
+        $form = $this->createFormBuilder(['priority' => 'Average'])
             ->add('summary', TextareaType::class, [
                 'label' => 'support.summary.label',
                 'constraints' => [new NotBlank(), new Length(max: 2000)],
                 'attr' => ['rows' => 5],
             ])
             ->add('priority', ChoiceType::class, [
-                'choices' => ['support.priority.high' => 'high', 'support.priority.average' => 'average', 'support.priority.low' => 'low'],
+                'choices' => ['support.priority.high' => 'High', 'support.priority.average' => 'Average', 'support.priority.low' => 'Low'],
                 'label' => 'support.priority.label'])
             ->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $d = $form->getData();
+            $admins = array_map(fn($u) => $u->getEmail(), $this->userRepository->findByRole("ROLE_ADMIN"));
             $payload = [
                 'reportedBy' => $this->esc(sprintf('%s %s (%s), %s',
                     $user->getFirstName(),
@@ -53,8 +56,9 @@ class SupportTicketController extends AbstractController
                     $user->getEmail(),
                     $user->getRole())),
                 'position' => $this->getPosition($from, $request->query->get('id')),
-                'link' => $request->getSchemeAndHttpHost().$from,
+                'link' => $request->getSchemeAndHttpHost().$referer,
                 'priority' => $d['priority'],
+                'adminEmails' => $admins,
                 'summary' => $this->esc($d['summary']),
                 'createdAt' => (new \DateTimeImmutable())->format(DATE_ATOM),
             ];
@@ -63,12 +67,10 @@ class SupportTicketController extends AbstractController
                 $payload['position'] = $position ? $this->esc($position->getName()) : null;
             }
             $file = sprintf('/tickets/ticket-%s-%s.json', date('Ymd-His'), bin2hex(random_bytes(3)));
-
             try {
                 $dropbox->upload($file, json_encode($payload,
                     JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
                 $this->addFlash('success', $this->translator->trans('success.sent'));
-
                 return $this->redirect($referer);
             } catch (\RuntimeException $e) {
                 $this->addFlash('danger', 'Could not send the ticket: '.$e->getMessage());
