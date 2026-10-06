@@ -64,6 +64,14 @@ user:
     block: "Block"
     unblock: "Unblock"
     clean: "Clean Unverified"
+  salesforce:
+    company: "Company / organization"
+    website: "Website"
+    phone: "Phone"
+    job: "Job title"
+    city: "City"
+    notes: "Notes"
+    news_checkbox: "I agree to receive newsletters"
 
 attribute:
   singular: "Attribute"

@@ -26,3 +26,10 @@ services:
     Cloudinary\Cloudinary:
         arguments:
             $config: '%env(resolve:CLOUDINARY_URL)%'
+    
+    App\Service\SalesforceClient:
+        arguments:
+            $domain: '%env(SALESFORCE_DOMAIN)%'
+            $clientId: '%env(SALESFORCE_CLIENT_ID)%'
+            $clientSecret: '%env(SALESFORCE_CLIENT_SECRET)%'
+            $apiVersion: '%env(SALESFORCE_API_VERSION)%'

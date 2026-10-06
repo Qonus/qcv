@@ -86,6 +86,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
     #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'recruiter', orphanRemoval: true)]
     private Collection $likes;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $salesforceAccountId = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $salesforceContactId = null;
+
     public function __construct()
     {
         $this->oauthAccounts = new ArrayCollection();
@@ -474,6 +480,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Equatab
                 $like->setRecruiter(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSalesforceAccountId(): ?string
+    {
+        return $this->salesforceAccountId;
+    }
+
+    public function setSalesforceAccountId(?string $salesforceAccountId): static
+    {
+        $this->salesforceAccountId = $salesforceAccountId;
+
+        return $this;
+    }
+
+    public function getSalesforceContactId(): ?string
+    {
+        return $this->salesforceContactId;
+    }
+
+    public function setSalesforceContactId(?string $salesforceContactId): static
+    {
+        $this->salesforceContactId = $salesforceContactId;
 
         return $this;
     }
