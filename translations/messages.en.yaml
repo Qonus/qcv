@@ -14,6 +14,7 @@ errors:
     no_cv: "CV doesn't exist."
 success:
   updated: "Updated Successfully!"
+  sent: "Sent Successfully!"
   created: "Created Successfully!"
   deleted: "Deleted Successfully!"
   verified: "Your email address has been verified."
@@ -185,6 +186,17 @@ candidate:
   name: "Name"
   info: "Info"
   projects: "Projects"
+support:
+  ticket: "Support Ticket"
+  page: "Page"
+  help: "Need Help?"
+  summary:
+    label: "Summary"
+  priority:
+    label: "Priority"
+    high: "High"
+    average: "Average"
+    low: "Low"
 
 no_results: "No Results."
 
@@ -217,6 +229,7 @@ nav:
 actions:
   edit: "Edit"
   create: "Create"
+  send: "Send"
   save: "Save"
   saving: "Saving"
   saved: "Saved"

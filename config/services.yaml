@@ -33,3 +33,9 @@ services:
             $clientId: '%env(SALESFORCE_CLIENT_ID)%'
             $clientSecret: '%env(SALESFORCE_CLIENT_SECRET)%'
             $apiVersion: '%env(SALESFORCE_API_VERSION)%'
+    
+    App\Service\DropboxClient:
+        arguments:
+            $appKey: '%env(DROPBOX_APP_KEY)%'
+            $appSecret: '%env(DROPBOX_APP_SECRET)%'
+            $refreshToken: '%env(DROPBOX_REFRESH_TOKEN)%'

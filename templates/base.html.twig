@@ -1,5 +1,7 @@
 {% set theme = app.user ? app.user.theme.value : app.request.cookies.get("theme") %}
 {% set locale = app.request.locale %}
+{% set current_route = app.request.attributes.get('_route') %}
+{% set params = app.request.attributes.get('_route_params') %}
 <!DOCTYPE html>
 <html lang={{ locale }} data-bs-theme={{ theme }}>
     <head>
@@ -46,10 +48,13 @@
         {% endblock %}
         {% block body %}Hello World!{% endblock %}
         <div class="mb-5 d-flex gap-4 justify-content-center" style="margin-top:200px">
-        Qonys 2026
-        <a href="https://github.com/Qonus/qcv">
-        QCV GitHub
-        </a>
+            Qonys 2026
+            <a href="https://github.com/Qonus/qcv">
+                QCV GitHub
+            </a>
+            <a href="{{path('app_support_ticket', {from: current_route, ...params})}}">
+                {{'support.help'|trans}}
+            </a>
         </div>
     </body>
 </html>
