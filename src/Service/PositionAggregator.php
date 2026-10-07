@@ -30,9 +30,16 @@ class PositionAggregator {
         }
         return [
             'id' => $position->getId(),
+            'company' => $position->getCompany(),
             'title' => $position->getName(),
+            'description' => $position->getDescription(),
+            'level' => $position->getLevel(),
+            'maxProject' => $position->getMaxProjects(),
+            'tags' => $position->getTagsArray(),
             'cv_count' => $position->getCvs()->count(),
-            'attributes' => $attributes
+            'attributes' => $attributes,
+            'created_at' => $position->getCreatedAt(),
+            'updated_at' => $position->getUpdatedAt(),
         ];
     }
 }

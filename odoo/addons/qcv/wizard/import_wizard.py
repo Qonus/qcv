@@ -20,8 +20,18 @@ class CvImportWizard(models.TransientModel):
             raise UserError(f"Import failed: {e}")
 
         Position = self.env['qcv.position'].sudo() 
-        vals = {'title': data['title'], 'source_id': data['id'],
-                'cv_count': data.get('cv_count', 0), 'imported_at': fields.Datetime.now()}
+        vals = {
+            'source_id': data['id'],
+            'company': data['company'],
+            'title': data['title'],
+            'description': data['description'],
+            'level': data['level'],
+            'maxProjects': data['maxProjects'],
+            'cv_count': data.get('cv_count', 0),
+            'imported_at': fields.Datetime.now(),
+            'created_at': data['created_at'],
+            'tags': ' '.join(f"#{tag['name']}" for tag in data.get('tags', [])),
+        }
         pos = Position.search([('source_id', '=', data['id'])], limit=1)
         if pos:
             pos.write(vals)
@@ -29,8 +39,12 @@ class CvImportWizard(models.TransientModel):
         else:
             pos = Position.create(vals)
         pos.attribute_ids = [Command.create({
-            'title': a['name'], 'attr_type': a['type'], 'answers_count': a.get('count', 0),
-            'avg_value': a.get('avg', 0), 'min_value': a.get('min', 0), 'max_value': a.get('max', 0),
+            'name': a['name'],
+            'data_type': a['type'],
+            'answers_count': a.get('count', 0),
+            'avg_value': a.get('avg', 0),
+            'min_value': a.get('min', 0),
+            'max_value': a.get('max', 0),
             'top_values': ', '.join(f"{t['value']} ({t['count']})" for t in a.get('top_values', [])),
         }) for a in data['attributes']]
         return {'type': 'ir.actions.act_window', 'res_model': 'qcv.position',
