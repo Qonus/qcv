@@ -38,8 +38,8 @@ class PositionAggregator {
             'tags' => $position->getTagsArray(),
             'cv_count' => $position->getCvs()->count(),
             'attributes' => $attributes,
-            'created_at' => $position->getCreatedAt(),
-            'updated_at' => $position->getUpdatedAt(),
+            'created_at' => $position->getCreatedAt()->format("Y-m-d H:i:s"),
+            'updated_at' => $position->getUpdatedAt()->format("Y-m-d H:i:s"),
         ];
     }
 }
