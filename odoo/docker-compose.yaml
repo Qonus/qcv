@@ -9,11 +9,9 @@ services:
       - odoo-db:/var/lib/postgresql/data
   odoo:
     image: odoo:18.0
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     depends_on: 
       - db
-    command: "odoo --http-interface=0.0.0.0 --proxy-mode"
+    command: "odoo --http-interface=0.0.0.0"
     ports:
       - "9082:8069"
     environment: 
@@ -23,7 +21,8 @@ services:
     volumes:
       - odoo-data:/var/lib/odoo
       - ./addons:/mnt/extra-addons
-    # extra_hosts: ["host.docker.internal:host-gateway"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   adminer:
     image: adminer:latest
     restart: unless-stopped
