@@ -3,10 +3,10 @@ from odoo import Command, fields, models
 from odoo.exceptions import UserError
 
 class CvImportWizard(models.TransientModel):
-    _name = 'cv.import.wizard'
+    _name = 'qcv.import.wizard'
     _description = 'Import position results'
 
-    base_url = fields.Char(required=True, default='https://your-app.example.com')
+    base_url = fields.Char(required=True, default='https://qcv.qonys.com')
     api_token = fields.Char(required=True)
 
     def action_import(self):
@@ -29,9 +29,9 @@ class CvImportWizard(models.TransientModel):
         else:
             pos = Position.create(vals)
         pos.attribute_ids = [Command.create({
-            'title': a['title'], 'attr_type': a['type'], 'answers_count': a.get('count', 0),
+            'title': a['name'], 'attr_type': a['type'], 'answers_count': a.get('count', 0),
             'avg_value': a.get('avg', 0), 'min_value': a.get('min', 0), 'max_value': a.get('max', 0),
             'top_values': ', '.join(f"{t['value']} ({t['count']})" for t in a.get('top_values', [])),
         }) for a in data['attributes']]
-        return {'type': 'ir.actions.act_window', 'res_model': 'cv.position',
+        return {'type': 'ir.actions.act_window', 'res_model': 'qcv.position',
                 'res_id': pos.id, 'view_mode': 'form'}

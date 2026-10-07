@@ -9,6 +9,8 @@ services:
       - odoo-db:/var/lib/postgresql/data
   odoo:
     image: odoo:18.0
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on: 
       - db
     command: "odoo --http-interface=0.0.0.0 --proxy-mode"

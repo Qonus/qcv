@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Attribute;
 use App\Entity\AttributeValue;
 use App\Entity\User;
 use App\Enum\AttributeDataType;
@@ -16,6 +17,78 @@ class AttributeValueRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, AttributeValue::class);
+    }
+
+    public function getNumericStats(Attribute $attribute): array
+    {
+        return $this->createQueryBuilder('a')
+            ->select(
+                'AVG(a.valueNumeric) AS avg',
+                'MIN(a.valueNumeric) AS min',
+                'MAX(a.valueNumeric) AS max'
+            )
+            ->where('a.attribute = :attribute')
+            ->setParameter('attribute', $attribute)
+            ->getQuery()
+            ->getSingleResult();
+    }
+
+    public function getTopValues(Attribute $attribute, int $limit = 5): array
+    {
+        $field = match ($attribute->getDataType()) {
+            AttributeDataType::STRING  => 'valueString',
+            AttributeDataType::IMAGE   => 'valueImageUrl',
+            AttributeDataType::TEXT    => 'valueText',
+            AttributeDataType::BOOLEAN => 'valueBoolean',
+            default                    => 'valueString',
+        };
+        $results = $this->createQueryBuilder('v')
+            ->select(sprintf('v.%s as val', $field), 'COUNT(v.id) as count')
+            ->where('v.attribute = :attribute')
+            ->andWhere(sprintf('v.%s IS NOT NULL', $field))
+            ->setParameter('attribute', $attribute)
+            ->groupBy(sprintf('v.%s', $field))
+            ->orderBy('count', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+        $topValues = [];
+        foreach ($results as $row) {
+            $rawVal = $row['val'];
+            $displayVal = match ($attribute->getDataType()) {
+                AttributeDataType::BOOLEAN => $rawVal ? 'True' : 'False',
+                AttributeDataType::SELECT  => $rawVal->getName(),
+                default                    => (string) $rawVal,
+            };
+            $topValues[] = [
+                'value' => $displayVal,
+                'count' => (int) $row['count'],
+            ];
+        }
+        return [
+            // 'count'      => $totalCount,
+            'top_values' => $topValues,
+        ];
+    }
+
+    public function getTopOptionValues(Attribute $attribute, int $limit = 3) {
+        $results = $this->createQueryBuilder('v')
+            ->innerJoin('v.valueOption', 'opt')
+            ->select('opt.value as val', 'COUNT(v.id) as count') 
+            ->where('v.attribute = :attribute')
+            ->setParameter('attribute', $attribute)
+            ->groupBy('opt.id', 'opt.value')
+            ->orderBy('count', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+        $topValues = array_map(fn($row) => [
+            'value' => (string) $row['val'],
+            'count' => (int) $row['count'],
+        ], $results);
+        return [
+            'top_values' => $topValues,
+        ];
     }
 
     public function findOneByUserAndName(User $user, string $attributeName, bool $isBuiltin = true): ?AttributeValue {
