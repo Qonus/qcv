@@ -1,16 +1,18 @@
 <odoo>
-  <!-- <record id="view_qcv_position_list" model="ir.ui.view">
+  <record id="view_qcv_position_list" model="ir.ui.view">
     <field name="name">qcv.position.list</field><field name="model">qcv.position</field>
     <field name="arch" type="xml">
       <list create="false" edit="false" delete="false">
         <field name="company"/>
         <field name="title"/>
+        <field name="level"/>
         <field name="cv_count"/>
         <field name="imported_at"/>
+        <field name="tags"/>
       </list>
     </field>
   </record>
-  <record id="view_qcv_position_form" model="ir.ui.view">
+  <!-- <record id="view_qcv_position_form" model="ir.ui.view">
     <field name="name">qcv.position.form</field><field name="model">qcv.position</field>
     <field name="arch" type="xml">
       <form create="false" edit="false" delete="false">
