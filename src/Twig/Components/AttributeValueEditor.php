@@ -80,7 +80,9 @@ class AttributeValueEditor
         if ($this->isPeriod() &&
         $this->periodValue['start'] == '' &&
         $this->periodValue['end'] == '') return false;
-        if (!$this->isPeriod() && $this->value == '') return false;
+        if (!$this->isPeriod() && 
+            $this->getDataType() != AttributeDataType::BOOLEAN &&
+            $this->value === '') return false;
         return true;
     }
 
@@ -89,6 +91,10 @@ class AttributeValueEditor
     }
 
     private function isPeriod(): bool {
-        return ($this->attributeValue->getAttribute()->getDataType() == AttributeDataType::PERIOD);
+        return ($this->getDataType() == AttributeDataType::PERIOD);
+    }
+
+    private function getDataType(): AttributeDataType {
+        return $this->attributeValue->getAttribute()->getDataType();
     }
 }
