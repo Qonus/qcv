@@ -34,7 +34,7 @@ class PositionAggregator {
             'title' => $position->getName(),
             'description' => $position->getDescription(),
             'level' => $position->getLevel(),
-            'maxProject' => $position->getMaxProjects(),
+            'maxProjects' => $position->getMaxProjects(),
             'tags' => $position->getTagsArray(),
             'cv_count' => $position->getCvs()->count(),
             'attributes' => $attributes,
